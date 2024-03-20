@@ -49,7 +49,6 @@ return {
 			end
 		end,
 		opts = {
-			sources = { "filesystem", "buffers", "git_status", "document_symbols" },
 			open_files_do_not_replace_types = { "aerial", "qf", "terminal" },
 			filesystem = {
 				bind_to_cwd = false,
@@ -72,11 +71,6 @@ return {
 		"windwp/nvim-spectre",
 		cmd = { "Spectre" },
 		opts = { open_cmd = "noswapfile vnew" },
-	},
-	{
-		"AckslD/muren.nvim",
-		config = true,
-		cmd = { "MurenToggle", "MurenFresh", "MurenUnique" },
 	},
 
 	-- fuzzy finder
@@ -163,13 +157,47 @@ return {
 		"folke/flash.nvim",
 		event = "VeryLazy",
 		config = true,
-		-- stylua: ignore
 		keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-			{ "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+			{
+				"s",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").jump()
+				end,
+				desc = "Flash",
+			},
+			{
+				"S",
+				mode = { "n", "o", "x" },
+				function()
+					require("flash").treesitter()
+				end,
+				desc = "Flash Treesitter",
+			},
+			{
+				"r",
+				mode = "o",
+				function()
+					require("flash").remote()
+				end,
+				desc = "Remote Flash",
+			},
+			{
+				"R",
+				mode = { "o", "x" },
+				function()
+					require("flash").treesitter_search()
+				end,
+				desc = "Treesitter Search",
+			},
+			{
+				"<c-s>",
+				mode = { "c" },
+				function()
+					require("flash").toggle()
+				end,
+				desc = "Toggle Flash Search",
+			},
 		},
 	},
 
@@ -191,18 +219,25 @@ return {
 				map("n", "[h", gs.prev_hunk, "Prev Hunk")
 
 				-- Actions
-				-- stylua: ignore start
 				map("n", "<leader>hs", gs.stage_hunk, "Stage Hunk")
-				map("v", "<leader>hs", function() gs.stage_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") }) end, "Stage Hunk")
+				map("v", "<leader>hs", function()
+					gs.stage_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") })
+				end, "Stage Hunk")
 				map("n", "<leader>hS", gs.stage_buffer, "Stage Buffer")
 				map("n", "<leader>hr", gs.reset_hunk, "Reset Hunk")
-				map("v", "<leader>hr", function() gs.reset_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") }) end, "Reset Hunk")
+				map("v", "<leader>hr", function()
+					gs.reset_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") })
+				end, "Reset Hunk")
 				map("n", "<leader>hR", gs.reset_buffer, "Reset Buffer")
 				map("n", "<leader>hu", gs.undo_stage_hunk, "Undo Stage Hunk")
 				map("n", "<leader>hp", gs.preview_hunk, "Preview Hunk")
-				map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Blame Line")
+				map("n", "<leader>hb", function()
+					gs.blame_line({ full = true })
+				end, "Blame Line")
 				map("n", "<leader>hd", gs.diffthis, "Diff This")
-				map("n", "<leader>hD", function() gs.diffthis("~") end, "Diff This (working copy)")
+				map("n", "<leader>hD", function()
+					gs.diffthis("~")
+				end, "Diff This (working copy)")
 				map("n", "<leader>tb", gs.toggle_current_line_blame, "Toggle Blame")
 				map("n", "<leader>td", gs.toggle_deleted, "Toggle Deleted")
 
@@ -253,7 +288,12 @@ return {
 			filter_kind = false,
 			show_guides = true,
 		},
-	    -- stylua: ignore
-	    keys = { { "<leader>cs", function() require("aerial").toggle() end, desc = "Aerial (Symbols)" } },
+		keys = { {
+			"<leader>cs",
+			function()
+				require("aerial").toggle()
+			end,
+			desc = "Aerial (Symbols)",
+		} },
 	},
 }

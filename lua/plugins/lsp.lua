@@ -32,47 +32,6 @@ return {
 			})
 
 			-- lspconfig
-			local on_attach = function(client, bufnr)
-				vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-
-				local methods = vim.lsp.protocol.Methods
-
-                -- stylua: ignore
-				local keymaps = {
-					{ "gD", vim.lsp.buf.declaration, method = methods.textDocument_declaration },
-					{ "<C-k>", vim.lsp.buf.signature_help, method = methods.textDocument_signatureHelp },
-					{ "<leader>rn", vim.lsp.buf.rename, method = methods.textDocument_rename },
-					{ "<leader>ca", vim.lsp.buf.code_action, mode = { "n", "v" }, method = methods.textDocument_codeAction },
-                    { "gd", function() require("glance").open("definitions") end,      method = methods.textDocument_definition },
-                    { "gi", function() require("glance").open("implementations") end,  method = methods.textDocument_implementation },
-                    { "gr", function() require("glance").open("references") end,       method = methods.textDocument_references },
-                    { "gt", function() require("glance").open("type_definitions") end, method = methods.textDocument_typeDefinition },
-				}
-
-				for _, keys in ipairs(keymaps) do
-					if client.supports_method(keys.method) then
-						vim.keymap.set(keys.mode or "n", keys[1], keys[2], { buffer = bufnr, desc = keys.method })
-					end
-				end
-
-				if client.supports_method(methods.textDocument_documentHighlight) then
-					local group = vim.api.nvim_create_augroup("lsp_document_highlight", {})
-					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-						group = group,
-						buffer = bufnr,
-						callback = vim.lsp.buf.document_highlight,
-					})
-					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-						group = group,
-						buffer = bufnr,
-						callback = vim.lsp.buf.clear_references,
-					})
-				end
-
-				-- if client.supports_method(methods.textDocument_inlayHint) then
-				-- 	vim.lsp.inlay_hint.enable(bufnr, true)
-				-- end
-			end
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -129,7 +88,6 @@ return {
 				handlers = {
 					function(server)
 						local opts = servers[server]
-						opts.on_attach = on_attach
 						opts.capabilities = capabilities
 						require("lspconfig")[server].setup(opts)
 					end,
@@ -174,40 +132,5 @@ return {
 				ensure_installed()
 			end
 		end,
-	},
-
-	-- lsp enhancement
-	{
-		"nvimdev/lspsaga.nvim",
-		event = { "LspAttach" },
-		opts = {
-			symbol_in_winbar = { enable = false },
-			lightbulb = { enable = false },
-		},
-        -- stylua: ignore
-        keys = {
-            { "gh",    function() require("lspsaga.finder"):new({}) end,   silent = true, desc = "Lsp Finder" },
-            { "<M-o>", function() require("lspsaga.symbol"):outline() end, silent = true, desc = "Lspsaga Outline" },
-        },
-	},
-
-	{
-		"dnlhc/glance.nvim",
-		cmd = "Glance",
-		opts = {
-			hooks = {
-				before_open = function(results, open, jump)
-					local uri = vim.uri_from_bufnr(0)
-					if #results == 1 then
-						local target_uri = results[1].uri or results[1].targetUri
-						if target_uri == uri then
-							jump(results[1])
-						end
-					else
-						open(results)
-					end
-				end,
-			},
-		},
 	},
 }

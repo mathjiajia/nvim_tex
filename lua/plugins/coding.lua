@@ -104,13 +104,12 @@ return {
 						},
 					}),
 				},
-				matching = { disallow_prefix_unmatching = true },
 				sources = {
 					{ name = "nvim_lsp" },
 					{ name = "luasnip", option = { show_autosnippets = true } },
-					{ name = "buffer", keyword_length = 2 },
+					{ name = "buffer" },
 					{ name = "path", keyword_length = 2 },
-					{ name = "rg", keyword_length = 3 },
+					{ name = "rg", keyword_length = 2 },
 				},
 			})
 
@@ -159,28 +158,5 @@ return {
 			{ "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
 			{ "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
 		},
-	},
-
-	-- better text-objects
-	{
-		"echasnovski/mini.ai",
-		keys = {
-			{ "a", mode = { "o", "x" } },
-			{ "i", mode = { "o", "x" } },
-		},
-		config = function()
-			local ai = require("mini.ai")
-			ai.setup({
-				n_lines = 500,
-				custom_textobjects = {
-					o = ai.gen_spec.treesitter({
-						a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-						i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-					}, {}),
-					f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-					c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-				},
-			})
-		end,
 	},
 }
