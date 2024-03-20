@@ -5,12 +5,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		branch = "main",
 		build = ":TSUpdate",
-		opts = {
-			ensure_install = {
-				"comment",
-				"latex",
-			},
-		},
+		opts = { auto_install = true },
 	},
 
 	-- file explorer

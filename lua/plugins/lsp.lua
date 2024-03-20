@@ -71,6 +71,16 @@ return {
 									"%l",
 									"%p",
 								},
+								-- executable = "zathura",
+								-- args = {
+								-- 	"--synctex-editor-command",
+								-- 	vim.fn.stdpath("data")
+								-- 		.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file '%%%{input}' -line %%%{line} -server ]]
+								-- 		.. vim.v.servername,
+								-- 	"--synctex-forward",
+								-- 	"%l:1:%f",
+								-- 	"%p",
+								-- },
 								-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
 								-- args = { "%l", "%p", "%f" },
 							},
