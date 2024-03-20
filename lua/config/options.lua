@@ -82,6 +82,3 @@ opt.updatetime = 200
 -- 24 various
 opt.virtualedit = "block"
 opt.signcolumn = "yes"
-
--- Theme
-vim.cmd.colorscheme("bamboo_vulgaris")

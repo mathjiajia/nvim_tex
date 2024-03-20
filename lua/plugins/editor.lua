@@ -301,9 +301,7 @@ return {
 
 	{
 		"numToStr/FTerm.nvim",
-		keys = {
-			{ "<M-g>" },
-		},
+		keys = { "<M-g>" },
 		config = function()
 			local fterm = require("FTerm")
 

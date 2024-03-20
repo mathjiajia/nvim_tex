@@ -60,7 +60,7 @@ return {
 								args = {
 									"--reuse-window",
 									"--execute-command",
-									"turn_on_synctex", -- Open Sioyek in synctex mode.
+									"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
 									"--inverse-search",
 									vim.fn.stdpath("data")
 										.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file %%%1 -line %%%2 -server ]]
