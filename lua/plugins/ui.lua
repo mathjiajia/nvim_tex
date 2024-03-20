@@ -24,29 +24,9 @@ return {
 		end,
 	},
 
-	-- highlight patterns in text
-	{
-		"echasnovski/mini.hipatterns",
-		event = "BufReadPre",
-		config = function()
-			local hi = require("mini.hipatterns")
-			hi.setup({
-				highlighters = {
-					hex_color = hi.gen_highlighter.hex_color(),
-				},
-			})
-		end,
-	},
-
 	-- winbar
 	{
 		"Bekaboo/dropbar.nvim",
-		config = true,
-	},
-
-	-- statuscolumn
-	{
-		"luukvbaal/statuscol.nvim",
 		config = true,
 	},
 
