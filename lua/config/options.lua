@@ -53,7 +53,6 @@ opt.pumheight = 10
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.softtabstop = 4
-opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
 -- 14 folding
 opt.foldlevel = 99

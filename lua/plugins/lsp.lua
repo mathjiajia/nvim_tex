@@ -9,7 +9,7 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 		},
-		event = "LazyFile",
+		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		config = function()
 			-- diagnostic keymaps
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Float Diagnostics" })
@@ -92,8 +92,6 @@ return {
 					settings = {
 						texlab = {
 							build = {
-								-- executable = "tectonic",
-								-- args = { "-X", "compile", "%f", "--synctex", "--keep-logs", "--keep-intermediates" },
 								-- forwardSearchAfter = true,
 								args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
 								onSave = true,
@@ -161,7 +159,6 @@ return {
 				"markdownlint-cli2",
 				"prettierd",
 				"stylua",
-				-- "tectonic",
 			}
 			local function ensure_installed()
 				for _, tool in ipairs(tools) do

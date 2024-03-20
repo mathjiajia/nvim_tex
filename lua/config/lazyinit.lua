@@ -11,17 +11,8 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- add event aliases
-local event = require("lazy.core.handler.event")
-event.mappings.LazyFile = { id = "LazyFile", event = { "BufReadPost", "BufNewFile", "BufWritePre" } }
-event.mappings["User LazyFile"] = event.mappings.LazyFile
-
 require("lazy").setup("plugins", {
 	change_detection = { notify = false },
-	dev = {
-		path = "~/Projects",
-		patterns = { "mathjiajia" },
-	},
 	performance = {
 		rtp = {
 			disabled_plugins = {

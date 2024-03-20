@@ -79,7 +79,6 @@ return {
 	-- indent guides for Neovim
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		-- event = "LazyFile",
 		config = function()
 			local highlight = {
 				"RainbowRed",
@@ -208,7 +207,7 @@ return {
 	-- rainbow delimiters
 	{
 		"HiPhish/rainbow-delimiters.nvim",
-		event = "LazyFile",
+		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		init = function()
 			vim.g.rainbow_delimiters = { query = { latex = "rainbow-delimiters" } }
 		end,

@@ -249,7 +249,7 @@ return {
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
-		event = "LazyFile",
+		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		opts = {
 			preview_config = { border = "none" },
 			on_attach = function(bufnr)
