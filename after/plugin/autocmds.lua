@@ -46,14 +46,6 @@ autocmd("BufReadPost", {
 	desc = "Last Position",
 })
 
--- Autoformat autocmd
-autocmd("BufWritePre", {
-	group = augroup("LazyFormat", {}),
-	callback = function(event)
-		Util.format.format({ buf = event.buf })
-	end,
-})
-
 -- Opens non-text files in the default program instead of in Neovim
 autocmd("BufReadPost", {
 	group = augroup("openFile", {}),

@@ -22,8 +22,6 @@ vim.keymap.set("n", "<leader>uc", function() Util.toggle("conceallevel", false, 
 vim.keymap.set("n", "<leader>us", function() Util.toggle("spell") end, { desc = "Toggle Spelling" })
 vim.keymap.set("n", "<leader>uw", function() Util.toggle("wrap") end, { desc = "Toggle Word Wrap" })
 vim.keymap.set("n", "<leader>uL", function() Util.toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
-vim.keymap.set("n", "<leader>uf", function() Util.format.toggle() end, { desc = "Toggle auto format (global)" })
-vim.keymap.set("n", "<leader>uF", function() Util.format.toggle(true) end, { desc = "Toggle auto format (buffer)" })
 vim.keymap.set("n", "<leader>ul", function() Util.toggle.number() end, { desc = "Toggle Line Numbers" })
 vim.keymap.set("n", "<leader>ud", function() Util.toggle.diagnostics() end, { desc = "Toggle Diagnostics" })
 vim.keymap.set("n", "<leader>uh", function() Util.toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
@@ -32,11 +30,3 @@ vim.keymap.set("n", "<leader>uT", function() Util.toggle.ts_highlight() end, { d
 -- lazygit
 vim.keymap.set("n", "<M-g>", function() Util.terminal({ "lazygit" }, { cwd = Util.root(), esc_esc = false }) end, { desc = "LazyGit (root dir)" })
 vim.keymap.set("n", "<M-S-g>", function() Util.terminal({ "lazygit" }, { esc_esc = false }) end, { desc = "LazyGit (cwd)" })
-
--- floating terminal
-local lazyterm = function() Util.terminal(nil, { cwd = Util.root() }) end
-
-vim.keymap.set("n", "<C-/>", lazyterm, { desc = "Terminal (root dir)" })
-vim.keymap.set("t", "<C-/>", vim.cmd.close, { desc = "Hide Terminal" })
-vim.keymap.set("n", "<leader>ft", lazyterm, { desc = "Terminal (root dir)" })
-vim.keymap.set("n", "<leader>fT", function() Util.terminal() end, { desc = "Terminal (cwd)" })

@@ -94,21 +94,14 @@ return {
 		cmd = "Telescope",
 		keys = {
 			{ "<leader><space>", Util.telescope("files", { cwd = "%:p:h" }), desc = "Find Files (current)" },
-			-- find
-			{ "<leader>fb", Util.telescope("buffers"), desc = "Buffers" },
-			{ "<leader>fc", Util.telescope.config_files(), desc = "Find Config File" },
-			{ "<leader>ff", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
-			{ "<leader>fF", Util.telescope("files"), desc = "Find Files (cwd)" },
-			{ "<leader>fm", Util.telescope("builtin"), desc = "Telescope Meta" },
-			-- search
-			{ "<leader>sb", Util.telescope("current_buffer_fuzzy_find"), desc = "Current Buf Fuzzy Find" },
-			{ "<leader>sg", Util.telescope("live_grep", { cwd = false }), desc = "Live Grep (root dir)" },
-			{ "<leader>sG", Util.telescope("live_grep"), desc = "Live Grep (cwd)" },
-			{ "<leader>sh", Util.telescope("help_tags"), desc = "Help Tags" },
-			{ "<leader>sw", Util.telescope("grep_string", { word_match = "-w" }), desc = "Word (root dir)" },
-			{ "<leader>sW", Util.telescope("grep_string", { cwd = false, word_match = "-w" }), desc = "Word (cwd)" },
-			{ "<leader>sw", Util.telescope("grep_string"), mode = "v", desc = "Selection (root dir)" },
-			{ "<leader>sW", Util.telescope("grep_string", { cwd = false }), mode = "v", desc = "Selection (cwd)" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+			{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help Tags" },
+			{ "<leader>fm", "<cmd>Telescope builtin<cr>", desc = "Telescope Meta" },
+			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old Files" },
+			{ "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Current Buf Fuzzy Find" },
+			{ "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "Grep String" },
 			-- extensions
 			{
 				"<leader>fd",
@@ -124,44 +117,14 @@ return {
 				end,
 				desc = "File Browser (cwd)",
 			},
-			{
-				"<leader>fr",
-				function()
-					require("telescope").extensions.frecency.frecency()
-				end,
-				desc = "Frecency",
-			},
 		},
 		dependencies = {
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 			"nvim-telescope/telescope-bibtex.nvim",
-			"nvim-telescope/telescope-frecency.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
 		},
 		config = function()
 			local telescope = require("telescope")
-			local actions = require("telescope.actions")
-			local actions_layout = require("telescope.actions.layout")
-			local home = vim.env.HOME
-
-			local function flash(prompt_bufnr)
-				require("flash").jump({
-					pattern = "^",
-					label = { after = { 0, 0 } },
-					search = {
-						mode = "search",
-						exclude = {
-							function(win)
-								return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "TelescopeResults"
-							end,
-						},
-					},
-					action = function(match)
-						local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
-						picker:set_selection(match.pos[1] - 1)
-					end,
-				})
-			end
 
 			telescope.setup({
 				defaults = {
@@ -169,20 +132,6 @@ return {
 					layout_config = { prompt_position = "top" },
 					prompt_prefix = "   ",
 					selection_caret = " ",
-					mappings = {
-						i = {
-							["<C-s>"] = flash,
-							["<C-f>"] = actions.preview_scrolling_down,
-							["<C-b>"] = actions.preview_scrolling_up,
-							["<M-a>"] = actions.toggle_all,
-							["<M-o>"] = actions_layout.toggle_preview,
-						},
-						n = {
-							s = flash,
-							["<M-a>"] = actions.toggle_all,
-							["<M-o>"] = actions_layout.toggle_preview,
-						},
-					},
 					file_ignore_patterns = { "%.jpeg$", "%.jpg$", "%.png$", ".DS_Store" },
 				},
 				pickers = {
@@ -198,20 +147,9 @@ return {
 					live_grep = { path_display = { "shorten" } },
 				},
 				extensions = {
-					bibtex = {
-						format = "plain",
-						-- global_files = { "~/TeX/Jiabibtex.bib" },
-					},
+					bibtex = { format = "plain" },
 					file_browser = { theme = "ivy" },
-					frecency = {
-						show_scores = true,
-						workspaces = {
-							["conf"] = home .. "/.config",
-							["dev"] = home .. "/Developer",
-							["doc"] = home .. "/Documents",
-							["tex"] = home .. "/TeX",
-						},
-					},
+					frecency = { show_scores = true },
 				},
 			})
 

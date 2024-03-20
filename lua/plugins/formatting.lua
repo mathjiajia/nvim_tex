@@ -1,6 +1,7 @@
 return {
 	{
 		"stevearc/conform.nvim",
+		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		dependencies = { "mason.nvim" },
 		cmd = "ConformInfo",
 		keys = {
@@ -13,23 +14,6 @@ return {
 				desc = "Format Injected Langs",
 			},
 		},
-		init = function()
-			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-			require("util").format.register({
-				name = "conform.nvim",
-				priority = 100,
-				primary = true,
-				format = function(buf)
-					require("conform").format({ bufnr = buf })
-				end,
-				sources = function(buf)
-					local ret = require("conform").list_formatters(buf)
-					return vim.tbl_map(function(v)
-						return v.name
-					end, ret)
-				end,
-			})
-		end,
 		opts = {
 			formatters_by_ft = {
 				bib = { "bibtex-tidy" },
@@ -37,6 +21,10 @@ return {
 				["markdown.mdx"] = { "prettierd", "injected" },
 				lua = { "stylua" },
 				tex = { "latexindent" },
+			},
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_fallback = true,
 			},
 		},
 	},
