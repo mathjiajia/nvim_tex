@@ -1,5 +1,3 @@
-local Util = require("util")
-
 return {
 
 	-- treesitter
@@ -23,16 +21,9 @@ return {
 			{
 				"<leader>fe",
 				function()
-					require("neo-tree.command").execute({ toggle = true, dir = Util.root() })
+					require("neo-tree.command").execute({ toggle = true })
 				end,
-				desc = "Explorer NeoTree (root dir)",
-			},
-			{
-				"<leader>fE",
-				function()
-					require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
-				end,
-				desc = "Explorer NeoTree (cwd)",
+				desc = "Explorer NeoTree",
 			},
 			{
 				"<leader>ge",
@@ -93,7 +84,6 @@ return {
 		"nvim-telescope/telescope.nvim",
 		cmd = "Telescope",
 		keys = {
-			{ "<leader><space>", Util.telescope("files", { cwd = "%:p:h" }), desc = "Find Files (current)" },
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
 			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
 			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
@@ -156,7 +146,6 @@ return {
 			local extns = {
 				"fzf",
 				"file_browser",
-				"frecency",
 				"bibtex",
 				"aerial",
 				"noice",
