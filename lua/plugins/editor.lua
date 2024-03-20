@@ -288,12 +288,33 @@ return {
 			filter_kind = false,
 			show_guides = true,
 		},
-		keys = { {
-			"<leader>cs",
-			function()
-				require("aerial").toggle()
-			end,
-			desc = "Aerial (Symbols)",
-		} },
+		keys = {
+			{
+				"<leader>cs",
+				function()
+					require("aerial").toggle()
+				end,
+				desc = "Aerial (Symbols)",
+			},
+		},
+	},
+
+	{
+		"numToStr/FTerm.nvim",
+		keys = {
+			{ "<M-g>" },
+		},
+		config = function()
+			local fterm = require("FTerm")
+
+			local lazygit = fterm:new({
+				cmd = "lazygit",
+				dimensions = { height = 0.9, width = 0.9 },
+			})
+
+			vim.keymap.set("n", "<M-g>", function()
+				lazygit:toggle()
+			end)
+		end,
 	},
 }

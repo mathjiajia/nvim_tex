@@ -15,18 +15,18 @@ return {
 		config = true,
 	},
 
-	{
-		"HakonHarnes/img-clip.nvim",
-		ft = { "markdown", "tex" },
-		config = true,
-		keys = {
-			{
-				"<leader>p",
-				function()
-					require("img-clip").pasteImage()
-				end,
-				desc = "Paste clipboard image",
-			},
-		},
-	},
+	-- {
+	-- 	"HakonHarnes/img-clip.nvim",
+	-- 	ft = { "markdown", "tex" },
+	-- 	config = true,
+	-- 	keys = {
+	-- 		{
+	-- 			"<leader>p",
+	-- 			function()
+	-- 				require("img-clip").pasteImage()
+	-- 			end,
+	-- 			desc = "Paste clipboard image",
+	-- 		},
+	-- 	},
+	-- },
 }
