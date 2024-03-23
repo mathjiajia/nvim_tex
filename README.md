@@ -6,6 +6,24 @@ This setup is mainly used for taking notes and writing documents in LaTeX.
 For the useful snippets (for mathematics, especially algebraic geometry)
 see [mysnippets]
 
+## Installation
+
+### macOS
+
+1. Install `Homebrew`:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Windows
+
+1. Install WSL2
+
+```bash
+wsl --install
+```
+
 ## Structure
 
 ```txt

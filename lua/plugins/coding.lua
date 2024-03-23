@@ -4,6 +4,7 @@ return {
 	{
 		"L3MON4D3/LuaSnip",
 		lazy = true,
+		submodules = false,
 		dependencies = {
 			"mathjiajia/mysnippets",
 			config = true,
