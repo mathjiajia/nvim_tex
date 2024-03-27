@@ -6,8 +6,8 @@ return {
 		lazy = true,
 		submodules = false,
 		dependencies = {
-			"mathjiajia/mysnippets",
-			config = true,
+			"mathjiajia/mySnippets",
+			opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
 		},
 		config = function()
 			local ls = require("luasnip")
@@ -149,15 +149,8 @@ return {
 
 	-- comments
 	{
-		"numToStr/Comment.nvim",
+		"echasnovski/mini.comment",
+		keys = { "gc" },
 		config = true,
-		keys = {
-			{ "gcc", mode = "n", desc = "Comment toggle current line" },
-			{ "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
-			{ "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
-			{ "gbc", mode = "n", desc = "Comment toggle current block" },
-			{ "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
-			{ "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
-		},
 	},
 }

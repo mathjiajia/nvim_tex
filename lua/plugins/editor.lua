@@ -5,7 +5,10 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		branch = "main",
 		build = ":TSUpdate",
-		opts = { auto_install = true },
+		opts = {
+			ensure_install = { "lua", "latex" },
+			auto_install = true,
+		},
 	},
 
 	-- file explorer

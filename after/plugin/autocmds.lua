@@ -20,14 +20,9 @@ autocmd("TextYankPost", {
 	desc = "Highlight the yanked text",
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+autocmd("LspAttach", {
+	group = augroup("UserLspConfig", {}),
 	callback = function(ev)
-		-- Enable completion triggered by <c-x><c-o>
-		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-
-		-- Buffer local mappings.
-		-- See `:help vim.lsp.*` for documentation on any of the below functions
 		local opts = { buffer = ev.buf }
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -47,13 +42,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- 	vim.lsp.buf.format({ async = true })
 		-- end, opts)
 
-		local group = vim.api.nvim_create_augroup("lsp_document_highlight", {})
-		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+		local group = augroup("lsp_document_highlight", {})
+		autocmd({ "CursorHold", "CursorHoldI" }, {
 			group = group,
 			buffer = ev.buf,
 			callback = vim.lsp.buf.document_highlight,
 		})
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+		autocmd({ "CursorMoved", "CursorMovedI" }, {
 			group = group,
 			buffer = ev.buf,
 			callback = vim.lsp.buf.clear_references,

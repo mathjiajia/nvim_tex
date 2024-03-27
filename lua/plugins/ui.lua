@@ -9,12 +9,6 @@ return {
 		end,
 	},
 
-	-- better vim.notify
-	{
-		"rcarriga/nvim-notify",
-		cofig = true,
-	},
-
 	-- better vim.ui
 	{
 		"stevearc/dressing.nvim",
@@ -34,16 +28,10 @@ return {
 	},
 
 	-- winbar
-	{
-		"Bekaboo/dropbar.nvim",
-		config = true,
-	},
+	{ "Bekaboo/dropbar.nvim", config = true },
 
 	-- statusline
-	{
-		"brianaung/yasl.nvim",
-		config = true,
-	},
+	{ "brianaung/yasl.nvim", config = true },
 
 	-- indent guides for Neovim
 	{
@@ -84,6 +72,7 @@ return {
 	-- noicer ui
 	{
 		"folke/noice.nvim",
+		dependencies = { "rcarriga/nvim-notify", cofig = true },
 		event = "VeryLazy",
 		opts = {
 			lsp = {

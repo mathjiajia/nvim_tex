@@ -46,7 +46,7 @@ return {
 						},
 					},
 				},
-				matlab_ls = {},
+				-- matlab_ls = {},
 				texlab = {
 					settings = {
 						texlab = {
@@ -123,7 +123,7 @@ return {
 			end)
 			local tools = {
 				"commitlint",
-				-- "latexindent",
+				"latexindent",
 				"markdownlint-cli2",
 				"prettierd",
 				"stylua",
