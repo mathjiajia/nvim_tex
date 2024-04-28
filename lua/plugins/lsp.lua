@@ -4,10 +4,10 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "folke/neodev.nvim", config = true, ft = { "lua", "vim" } },
 			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
+			{ "folke/neodev.nvim", config = true, ft = { "lua", "vim" } },
 		},
 		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		config = function()
@@ -32,73 +32,87 @@ return {
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			local servers = {
-				lua_ls = {
-					settings = {
-						Lua = {
-							workspace = { checkThirdParty = false },
-							hint = { enable = true },
-							completion = { callSnippet = "Replace" },
-							telemetry = { enable = false },
-						},
-					},
-				},
-				-- matlab_ls = {},
-				texlab = {
-					settings = {
-						texlab = {
-							build = {
-								-- forwardSearchAfter = true,
-								args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
-								onSave = true,
-							},
-							forwardSearch = {
-								executable = "sioyek",
-								args = {
-									"--reuse-window",
-									"--execute-command",
-									"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
-									"--inverse-search",
-									-- "texlab inverse-search --input %%%1 --line %%%2",
-									vim.fn.stdpath("data")
-										.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file %%%1 -line %%%2 -server ]]
-										.. vim.v.servername,
-									"--forward-search-file",
-									"%f",
-									"--forward-search-line",
-									"%l",
-									"%p",
-								},
-								-- executable = "zathura",
-								-- args = {
-								-- 	"--synctex-editor-command",
-								-- "texlab inverse-search --input %%%1 --line %%%2",
-								-- 	vim.fn.stdpath("data")
-								-- 		.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file '%%%{input}' -line %%%{line} -server ]]
-								-- 		.. vim.v.servername,
-								-- 	"--synctex-forward",
-								-- 	"%l:1:%f",
-								-- 	"%p",
-								-- },
-								-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
-								-- args = { "%l", "%p", "%f" },
-							},
-							chktex = { onOpenAndSave = false },
-							diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
-							latexFormatter = "none",
-							bibtexFormatter = "latexindent",
-						},
-					},
-				},
-			}
-
 			require("mason-lspconfig").setup({
-				ensure_installed = vim.tbl_keys(servers),
+				ensure_installed = {
+					"lua_ls",
+					"texlab",
+				},
 				handlers = {
-					function(server)
-						local opts = servers[server]
-						opts.capabilities = capabilities
-						require("lspconfig")[server].setup(opts)
+					function(server_name) -- default handler (optional)
+						require("lspconfig")[server_name].setup({
+							capabilities = capabilities,
+						})
+					end,
+
+					["lua_ls"] = function()
+						require("lspconfig").lua_ls.setup({
+							capabilities = capabilities,
+							settings = {
+								Lua = {
+									workspace = { checkThirdParty = false },
+									hint = { enable = true },
+									completion = { callSnippet = "Replace" },
+									telemetry = { enable = false },
+								},
+							},
+						})
+					end,
+
+					["texlab"] = function()
+						local pdf_executable = "sioyek"
+						local forward_search_args = {
+							"--reuse-window",
+							"--execute-command",
+							"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
+							"--inverse-search",
+							-- "texlab inverse-search --input %%%1 --line %%%2",
+							vim.fn.stdpath("data")
+								.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file %%%1 -line %%%2 -server ]]
+								.. vim.v.servername,
+							"--forward-search-file",
+							"%f",
+							"--forward-search-line",
+							"%l",
+							"%p",
+						}
+
+						-- local pdf_executable = "zathura"
+						-- local forward_search_args = {
+						-- 	"--synctex-editor-command",
+						-- 	"texlab inverse-search --input %%%1 --line %%%2",
+						-- 	vim.fn.stdpath("data")
+						-- 		.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file '%%%{input}' -line %%%{line} -server ]]
+						-- 		.. vim.v.servername,
+						-- 	"--synctex-forward",
+						-- 	"%l:1:%f",
+						-- 	"%p",
+						-- }
+
+						-- local pdf_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+						-- local forward_search_args = { "%l", "%p", "%f" }
+
+						require("lspconfig").texlab.setup({
+							capabilities = capabilities,
+							filetypes = { "tex", "bib" },
+							settings = {
+								texlab = {
+									build = {
+										forwardSearchAfter = false,
+										executable = "latexmk",
+										args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
+										onSave = true,
+									},
+									forwardSearch = {
+										executable = pdf_executable,
+										args = forward_search_args,
+									},
+									chktex = { onOpenAndSave = false },
+									diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
+									latexFormatter = "none",
+									bibtexFormatter = "latexindent",
+								},
+							},
+						})
 					end,
 				},
 			})
@@ -109,37 +123,21 @@ return {
 	{
 		"williamboman/mason.nvim",
 		cmd = "Mason",
-		config = function()
-			require("mason").setup()
-			local mr = require("mason-registry")
-			mr:on("package:install:success", function()
-				vim.defer_fn(function()
-					require("lazy.core.handler.event").trigger({
-						event = "FileType",
-						buf = vim.api.nvim_get_current_buf(),
-					})
-				end, 100)
-			end)
-			local tools = {
-				"commitlint",
-				"latexindent",
-				"markdownlint-cli2",
-				"prettierd",
-				"stylua",
-			}
-			local function ensure_installed()
-				for _, tool in ipairs(tools) do
-					local p = mr.get_package(tool)
-					if not p:is_installed() then
-						p:install()
-					end
-				end
-			end
-			if mr.refresh then
-				mr.refresh(ensure_installed)
-			else
-				ensure_installed()
-			end
-		end,
+		dependencies = {
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			opts = {
+				ensure_installed = {
+					-- linter
+					"commitlint",
+					"markdownlint-cli2",
+					-- formatter
+					"bibtex-tidy",
+					"latexindent",
+					"prettierd",
+					"stylua",
+				},
+			},
+		},
+		opts = { ui = { border = "rounded", height = 0.8 } },
 	},
 }

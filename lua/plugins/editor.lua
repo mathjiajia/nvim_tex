@@ -15,28 +15,11 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		cmd = "Neotree",
+	-- stylua: ignore
 		keys = {
-			{
-				"<leader>fe",
-				function()
-					require("neo-tree.command").execute({ toggle = true })
-				end,
-				desc = "Explorer NeoTree",
-			},
-			{
-				"<leader>ge",
-				function()
-					require("neo-tree.command").execute({ source = "git_status", toggle = true })
-				end,
-				desc = "Git explorer",
-			},
-			{
-				"<leader>be",
-				function()
-					require("neo-tree.command").execute({ source = "buffers", toggle = true })
-				end,
-				desc = "Buffer explorer",
-			},
+			{ "<leader>fe", function() require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() }) end, desc = "Explorer NeoTree (cwd)" },
+			{ "<leader>ge", function() require("neo-tree.command").execute({ source = "git_status", toggle = true }) end, desc = "Git explorer" },
+			{ "<leader>be", function() require("neo-tree.command").execute({ source = "buffers", toggle = true }) end, desc = "Buffer explorer" },
 		},
 		init = function()
 			if vim.fn.argc() == 1 then
@@ -75,30 +58,26 @@ return {
 	{
 		"nvim-telescope/telescope.nvim",
 		cmd = "Telescope",
+			-- stylua: ignore
 		keys = {
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
-			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
-			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
-			{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help Tags" },
-			{ "<leader>fm", "<cmd>Telescope builtin<cr>", desc = "Telescope Meta" },
-			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old Files" },
-			{ "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Current Buf Fuzzy Find" },
-			{ "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "Grep String" },
+			{ "<leader><space>", function () require('telescope.builtin').find_files({ cwd = "%:p:h" }) end, desc = "Find Files (current)" },
+			-- find
+			{ "<leader>fb", function () require('telescope.builtin').buffers() end, desc = "Buffers" },
+			{ "<leader>fc", function () require('telescope.builtin').find_files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+			{ "<leader>ff", function () require('telescope.builtin').find_files() end, desc = "Find Files (cwd)" },
+			{ "<leader>fg", function () require('telescope.builtin').git_files() end, desc = "Find Git Files" },
+			{ "<leader>fm", function () require('telescope.builtin').builtin() end, desc = "Telescope Meta" },
+			{ "<leader>fo", function () require('telescope.builtin').oldfiles() end, desc = "Old Files" },
+			-- search
+			{ "<leader>sb", function () require('telescope.builtin').current_buffer_fuzzy_find() end, desc = "Current Buf Fuzzy" },
+			{ "<leader>sg", function () require('telescope.builtin').live_grep() end, desc = "Live Grep" },
+			{ "<leader>sh", function () require('telescope.builtin').help_tags() end, desc = "Help Tags" },
+			{ "<leader>sw", function () require('telescope.builtin').grep_string({ word_match = "-w" }) end, desc = "Search Word" },
+			{ "<leader>sw", function () require('telescope.builtin').grep_string() end, mode = "v", desc = "Search Selection" },
 			-- extensions
-			{
-				"<leader>fd",
-				function()
-					require("telescope").extensions.file_browser.file_browser({ path = "%:p:h" })
-				end,
-				desc = "File Browser (current)",
-			},
-			{
-				"<leader>fD",
-				function()
-					require("telescope").extensions.file_browser.file_browser()
-				end,
-				desc = "File Browser (cwd)",
-			},
+			{ "<leader>fd", function() require("telescope").extensions.file_browser.file_browser({ path = "%:p:h" }) end, desc = "File Browser (current)" },
+			{ "<leader>fD", function() require("telescope").extensions.file_browser.file_browser() end, desc = "File Browser (cwd)" },
+			{ "<leader>fr", function() require("telescope").extensions.frecency.frecency() end, desc = "Frecency" },
 		},
 		dependencies = {
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -131,7 +110,6 @@ return {
 				extensions = {
 					bibtex = { format = "plain" },
 					file_browser = { theme = "ivy" },
-					frecency = { show_scores = true },
 				},
 			})
 
@@ -155,47 +133,13 @@ return {
 		"folke/flash.nvim",
 		event = "VeryLazy",
 		config = true,
+		-- stylua: ignore
 		keys = {
-			{
-				"s",
-				mode = { "n", "x", "o" },
-				function()
-					require("flash").jump()
-				end,
-				desc = "Flash",
-			},
-			{
-				"S",
-				mode = { "n", "o", "x" },
-				function()
-					require("flash").treesitter()
-				end,
-				desc = "Flash Treesitter",
-			},
-			{
-				"r",
-				mode = "o",
-				function()
-					require("flash").remote()
-				end,
-				desc = "Remote Flash",
-			},
-			{
-				"R",
-				mode = { "o", "x" },
-				function()
-					require("flash").treesitter_search()
-				end,
-				desc = "Treesitter Search",
-			},
-			{
-				"<c-s>",
-				mode = { "c" },
-				function()
-					require("flash").toggle()
-				end,
-				desc = "Toggle Flash Search",
-			},
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
 		},
 	},
 
@@ -204,43 +148,51 @@ return {
 		"lewis6991/gitsigns.nvim",
 		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		opts = {
-			preview_config = { border = "none" },
+			preview_config = { border = "rounded" },
 			on_attach = function(bufnr)
-				local gs = require("gitsigns")
+				local gitsigns = require("gitsigns")
 
-				local function map(mode, lhs, rhs, desc)
-					vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+				local function map(mode, l, r, opts)
+					opts = opts or {}
+					opts.buffer = bufnr
+					vim.keymap.set(mode, l, r, opts)
 				end
 
 				-- Navigation
-				map("n", "]h", gs.next_hunk, "Next Hunk")
-				map("n", "[h", gs.prev_hunk, "Prev Hunk")
+				map("n", "]c", function()
+					if vim.wo.diff then
+						vim.cmd.normal({ "]c", bang = true })
+					else
+						gitsigns.nav_hunk("next")
+					end
+				end)
+
+				map("n", "[c", function()
+					if vim.wo.diff then
+						vim.cmd.normal({ "[c", bang = true })
+					else
+						gitsigns.nav_hunk("prev")
+					end
+				end)
 
 				-- Actions
-				map("n", "<leader>hs", gs.stage_hunk, "Stage Hunk")
-				map("v", "<leader>hs", function()
-					gs.stage_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") })
-				end, "Stage Hunk")
-				map("n", "<leader>hS", gs.stage_buffer, "Stage Buffer")
-				map("n", "<leader>hr", gs.reset_hunk, "Reset Hunk")
-				map("v", "<leader>hr", function()
-					gs.reset_hunk({ vim.api.nvim_win_get_cursor(0)[1], vim.fn.line("v") })
-				end, "Reset Hunk")
-				map("n", "<leader>hR", gs.reset_buffer, "Reset Buffer")
-				map("n", "<leader>hu", gs.undo_stage_hunk, "Undo Stage Hunk")
-				map("n", "<leader>hp", gs.preview_hunk, "Preview Hunk")
-				map("n", "<leader>hb", function()
-					gs.blame_line({ full = true })
-				end, "Blame Line")
-				map("n", "<leader>hd", gs.diffthis, "Diff This")
-				map("n", "<leader>hD", function()
-					gs.diffthis("~")
-				end, "Diff This (working copy)")
-				map("n", "<leader>tb", gs.toggle_current_line_blame, "Toggle Blame")
-				map("n", "<leader>td", gs.toggle_deleted, "Toggle Deleted")
+				-- stylua: ignore start
+				map("n", "<leader>hs", gitsigns.stage_hunk)
+				map("n", "<leader>hr", gitsigns.reset_hunk)
+				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
+				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
+				map("n", "<leader>hS", gitsigns.stage_buffer)
+				map("n", "<leader>hu", gitsigns.undo_stage_hunk)
+				map("n", "<leader>hR", gitsigns.reset_buffer)
+				map("n", "<leader>hp", gitsigns.preview_hunk)
+				map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end)
+				map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
+				map("n", "<leader>hd", gitsigns.diffthis)
+				map("n", "<leader>hD", function() gitsigns.diffthis("~") end)
+				map("n", "<leader>td", gitsigns.toggle_deleted)
 
 				-- Text object
-				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Hunk Object")
+				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
 			end,
 		},
 	},
@@ -253,48 +205,22 @@ return {
 			backends = { "lsp", "treesitter", "markdown", "man" },
 			layout = { resize_to_content = false },
 			attach_mode = "global",
-			icons = {
+			icons = vim.tbl_extend("force", require("lspkind").presets.codicons, {
 				Array = "󰅨 ",
 				Boolean = " ",
-				Class = " ",
 				Constant = " ",
-				Constructor = " ",
-				Enum = " ",
-				EnumMember = " ",
-				Event = " ",
-				Field = " ",
-				File = " ",
-				Folder = " ",
-				Function = "󰡱 ",
-				Interface = " ",
 				Key = " ",
-				Method = " ",
-				Module = " ",
 				Number = "󰎠 ",
 				Null = "󰟢 ",
 				Object = " ",
-				Operator = " ",
-				Property = " ",
-				Reference = " ",
 				Struct = " ",
 				String = "󰅳 ",
-				TypeParameter = " ",
-				Unit = " ",
-				Value = " ",
-				Variable = " ",
-			},
+			}),
 			filter_kind = false,
 			show_guides = true,
 		},
-		keys = {
-			{
-				"<leader>cs",
-				function()
-					require("aerial").toggle()
-				end,
-				desc = "Aerial (Symbols)",
-			},
-		},
+		-- stylua: ignore
+		keys = { { "<leader>cs", function() require("aerial").toggle() end, desc = "Aerial (Symbols)" } },
 	},
 
 	{
