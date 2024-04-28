@@ -6,7 +6,7 @@ return {
 		branch = "main",
 		build = ":TSUpdate",
 		opts = {
-			ensure_install = { "lua", "latex" },
+			ensure_install = { "comment", "diff", "lua", "latex" },
 			auto_install = true,
 		},
 	},

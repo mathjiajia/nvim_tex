@@ -136,6 +136,7 @@ return {
 		event = "VimEnter",
 		opts = {
 			config = {
+				week_header = { enable = true },
 				disable_move = true,
 				shortcut = {
 					{ desc = "󰚰 Update", group = "Identifier", action = "Lazy update", key = "u" },
@@ -144,12 +145,6 @@ return {
 				},
 				project = { limit = 4 },
 				mru = { limit = 6, cwd_only = true },
-			},
-			preview = {
-				command = "cat",
-				file_path = (vim.fn.stdpath("config") .. "/neovim.cat"),
-				file_height = 10,
-				file_width = 70,
 			},
 		},
 	},

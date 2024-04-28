@@ -12,9 +12,6 @@ return {
 		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		config = function()
 			-- diagnostic keymaps
-			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Float Diagnostics" })
-			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostics" })
-			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostics" })
 			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Loclist Diagnostics" })
 
 			-- diagnostics config
@@ -62,6 +59,7 @@ return {
 									"--execute-command",
 									"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
 									"--inverse-search",
+									-- "texlab inverse-search --input %%%1 --line %%%2",
 									vim.fn.stdpath("data")
 										.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file %%%1 -line %%%2 -server ]]
 										.. vim.v.servername,
@@ -74,6 +72,7 @@ return {
 								-- executable = "zathura",
 								-- args = {
 								-- 	"--synctex-editor-command",
+								-- "texlab inverse-search --input %%%1 --line %%%2",
 								-- 	vim.fn.stdpath("data")
 								-- 		.. [[/lazy/nvim-texlabconfig/nvim-texlabconfig -file '%%%{input}' -line %%%{line} -server ]]
 								-- 		.. vim.v.servername,

@@ -146,11 +146,4 @@ return {
 			{ "ys", desc = "Add Surrounding" },
 		},
 	},
-
-	-- comments
-	{
-		"echasnovski/mini.comment",
-		keys = { "gc" },
-		config = true,
-	},
 }

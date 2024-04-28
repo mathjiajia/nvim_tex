@@ -35,9 +35,6 @@ autocmd("LspAttach", {
 			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 		end, opts)
 		vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts)
-		vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
-		vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts)
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
 		-- vim.keymap.set("n", "<space>f", function()
 		-- 	vim.lsp.buf.format({ async = true })
 		-- end, opts)
@@ -81,6 +78,55 @@ autocmd("BufReadPost", {
 		end
 	end,
 	desc = "Last Position",
+})
+
+-- treesitter
+autocmd("FileType", {
+	group = augroup("TreesitterHighlight", {}),
+	pattern = {
+		"bash",
+		"diff",
+		"gitconfig",
+		"gitcommit",
+		"gitignore",
+		"markdown",
+		"py",
+		"tex",
+	},
+	callback = function(ev)
+		vim.treesitter.start()
+
+		vim.opt_local.foldmethod = "expr"
+		vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.b[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+	end,
+	desc = "Enable Treesitter",
+})
+
+-- No buflist for special files
+autocmd("FileType", {
+	group = augroup("NoBufList", {}),
+	pattern = { "checkhealth", "help", "qf", "spectre_panel" },
+	callback = function(ev)
+		vim.b[ev.buf].buflisted = false
+		vim.keymap.set("n", "q", function()
+			vim.api.nvim_win_close(0, false)
+		end, { buffer = ev.buf, silent = true })
+	end,
+	desc = "Special Files",
+})
+
+-- Enable conceal and spell for markup langs
+autocmd("FileType", {
+	group = augroup("ConcealSpell", {}),
+	pattern = { "markdown", "tex" },
+	callback = function(ev)
+		vim.opt_local.conceallevel = 2
+		vim.opt_local.spell = true
+
+		vim.keymap.set("i", "<C-s>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { buffer = ev.buf, desc = "Crect Last Spelling" })
+	end,
+	desc = "Special Files",
 })
 
 -- Opens non-text files in the default program instead of in Neovim
