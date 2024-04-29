@@ -3,7 +3,7 @@
 My personal Neovim configuration files on macOS (apple silicon).
 
 This setup is mainly used for taking notes and writing documents in LaTeX.
-For the useful snippets (for mathematics, especially algebraic geometry)
+For the useful snippets (of mathematics, especially algebraic geometry)
 see [mysnippets]
 
 ## Installation
@@ -14,6 +14,39 @@ see [mysnippets]
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+2. Install `kitty` and a `Nerd Font`:
+
+```bash
+brew install --cask kitty
+brew tap homebrew/cask-fonts
+brew install font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
+```
+
+3. Install `Neovim` (Head):
+
+```bash
+brew install neovim --HEAD
+```
+
+4. Install some dependencies:
+
+```bash
+brew install fd lazygit node ripgrep
+```
+
+5. Clone this repository:
+
+```bash
+git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
+```
+
+5. Install `MacTeX` (we don't need the GUI version).
+   We postpone this step since `MacTeX` file is too large:
+
+```bash
+brew install --cask mactex-no-gui
 ```
 
 ### Windows
@@ -27,58 +60,30 @@ wsl --install
 ## Structure
 
 ```txt
-├── LICENSE
 ├── README.md
 ├── after
-│   ├── ftplugin
-│   │   ├── checkhealth.lua
-│   │   ├── gitcommit.lua
-│   │   ├── help.lua
-│   │   ├── man.lua
-│   │   ├── markdown.lua
-│   │   ├── qf.lua
-│   │   ├── spectre_panel.lua
-│   │   └── tex.lua
-│   ├── plugin
-│   │   ├── autocmds.lua
-│   │   ├── commands.lua
-│   │   └── keymaps.lua
-│   └── queries
-│       └── latex
-│           └── textobjects.scm
-├── colors
-├── filetype.lua
+│   └── ftplugin
+│       ├── lua.lua
+│       └── tex.lua
 ├── init.lua
 ├── lazy-lock.json
-├── lua
-│   ├── config
-│   │   ├── lazyinit.lua
-│   │   └── options.lua
-│   ├── plugins
-│   │   ├── coding.lua
-│   │   ├── editor.lua
-│   │   ├── formatting.lua
-│   │   ├── lang.lua
-│   │   ├── lsp.lua
-│   │   ├── ui.lua
-│   └── util
-├── neovim.cat
-├── spell
-│   ├── en.utf-8.add
-│   └── en.utf-8.add.spl
-└── stylua.toml
+└── lua
+    ├── config
+    │   ├── autocmds.lua
+    │   ├── keymaps.lua
+    │   └── options.lua
+    └── plugins
+        ├── coding.lua
+        ├── editor.lua
+        ├── formatting.lua
+        ├── lang.lua
+        ├── lsp.lua
+        └── ui.lua
 ```
 
 - `init.lua` -- entrance of the configuration
 - `lua/config` -- configuration files
 - `lua/plugins` -- submodules for different plugins
 - `after/ftplugin` -- individual file type settings
-- `after/plugin` -- some plugins no need to load early
 
 [mysnippets]: https://github.com/mathjiajia/mySnippets
-
-## Acknowledgements
-
-Thanks to
-[folke](https://github.com/folke) and his [LazyVim](https://github.com/LazyVim) project
-where I copied a lot of code.
