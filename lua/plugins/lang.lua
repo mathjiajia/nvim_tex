@@ -7,14 +7,6 @@ return {
 		config = true,
 	},
 
-	-- inverse serach for LaTeX
-	{
-		"f3fora/nvim-texlabconfig",
-		ft = "tex",
-		build = "go build",
-		config = true,
-	},
-
 	-- {
 	-- 	"HakonHarnes/img-clip.nvim",
 	-- 	ft = { "markdown", "tex" },

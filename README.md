@@ -12,37 +12,38 @@ see [mysnippets]
 
 1. Install `Homebrew`:
 
-```bash
+```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-2. Install `kitty` and a `Nerd Font`:
+1. Install `kitty` and a `Nerd Font`:
 
-```bash
+```sh
 brew install --cask kitty
 brew tap homebrew/cask-fonts
 brew install font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 
-3. Install `Neovim` (Head):
+1. Install `Neovim` (Head):
 
-```bash
+```sh
 brew install neovim --HEAD
 ```
 
-4. Install some dependencies:
+1. Install some dependencies:
 
-```bash
-brew install fd lazygit node ripgrep
+```sh
+brew install fd lazygit node ripgrep tree-sitter
+brew install --cask sioyek skim
 ```
 
-5. Clone this repository:
+1. Clone this repository:
 
-```bash
+```sh
 git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
 ```
 
-5. Install `MacTeX` (we don't need the GUI version).
+1. Install `MacTeX` (we don't need the GUI version).
    We postpone this step since `MacTeX` file is too large:
 
 ```bash
@@ -51,10 +52,23 @@ brew install --cask mactex-no-gui
 
 ### Windows
 
-1. Install WSL2
+1. Install `WSL2`:
 
-```bash
+```sh
 wsl --install
+```
+
+1. Install `Neovim`:
+
+```sh
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt update
+```
+
+1. Install some dependencies:
+
+```sh
+sudo apt install zathura ripgrep fd-find golang-go
 ```
 
 ## Structure
