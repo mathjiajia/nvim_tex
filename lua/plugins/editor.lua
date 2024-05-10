@@ -6,7 +6,18 @@ return {
 		branch = "main",
 		build = ":TSUpdate",
 		opts = {
-			ensure_install = { "comment", "diff", "lua", "latex" },
+			ensure_install = {
+				"bash",
+				"bibtex",
+				"comment",
+				"diff",
+				"lua",
+				"latex",
+				"markdown",
+				"markdown_inline",
+				"regex",
+				"vim",
+			},
 			auto_install = true,
 		},
 	},
@@ -15,7 +26,7 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		cmd = "Neotree",
-	-- stylua: ignore
+		-- stylua: ignore
 		keys = {
 			{ "<leader>fe", function() require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() }) end, desc = "Explorer NeoTree (cwd)" },
 			{ "<leader>ge", function() require("neo-tree.command").execute({ source = "git_status", toggle = true }) end, desc = "Git explorer" },
@@ -51,14 +62,19 @@ return {
 	{
 		"windwp/nvim-spectre",
 		cmd = { "Spectre" },
-		opts = { open_cmd = "noswapfile vnew" },
+		opts = {
+			open_cmd = "noswapfile vnew",
+			default = {
+				replace = { cmd = "sd" },
+			},
+		},
 	},
 
 	-- fuzzy finder
 	{
 		"nvim-telescope/telescope.nvim",
 		cmd = "Telescope",
-			-- stylua: ignore
+		-- stylua: ignore
 		keys = {
 			{ "<leader><space>", function () require('telescope.builtin').find_files({ cwd = "%:p:h" }) end, desc = "Find Files (current)" },
 			-- find
@@ -146,7 +162,6 @@ return {
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
-		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		opts = {
 			preview_config = { border = "rounded" },
 			on_attach = function(bufnr)

@@ -72,7 +72,7 @@ return {
 	-- noicer ui
 	{
 		"folke/noice.nvim",
-		dependencies = { "rcarriga/nvim-notify", cofig = true },
+		dependencies = { "rcarriga/nvim-notify", config = true },
 		event = "VeryLazy",
 		opts = {
 			lsp = {
@@ -81,7 +81,6 @@ return {
 					["vim.lsp.util.stylize_markdown"] = true,
 					["cmp.entry.get_documentation"] = true,
 				},
-				hover = { enabled = false },
 			},
 			routes = {
 				{
@@ -139,7 +138,6 @@ return {
 	{
 		"HiPhish/rainbow-delimiters.nvim",
 		submodules = false,
-		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		init = function()
 			vim.g.rainbow_delimiters = { query = { latex = "rainbow-delimiters" } }
 		end,

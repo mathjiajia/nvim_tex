@@ -9,7 +9,6 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			{ "folke/neodev.nvim", config = true, ft = { "lua", "vim" } },
 		},
-		event = { "BufReadPost", "BufNewFile", "BufWritePre" },
 		config = function()
 			-- diagnostic keymaps
 			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Loclist Diagnostics" })
@@ -116,9 +115,6 @@ return {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			opts = {
 				ensure_installed = {
-					-- linter
-					"commitlint",
-					"markdownlint-cli2",
 					-- formatter
 					"bibtex-tidy",
 					"latexindent",

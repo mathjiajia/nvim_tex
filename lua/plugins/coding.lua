@@ -17,16 +17,8 @@ return {
 				update_events = "TextChanged,TextChangedI",
 				delete_check_events = "TextChanged",
 				ext_opts = {
-					[types.insertNode] = {
-						active = {
-							virt_text = { { "●", "Boolean" } },
-						},
-					},
-					[types.choiceNode] = {
-						active = {
-							virt_text = { { "○", "Special" } },
-						},
-					},
+					[types.insertNode] = { active = { virt_text = { { "●", "Boolean" } } } },
+					[types.choiceNode] = { active = { virt_text = { { "○", "Special" } } } },
 				},
 				enable_autosnippets = true,
 				store_selection_keys = "<Tab>",
@@ -105,13 +97,14 @@ return {
 						},
 					}),
 				},
-				sources = {
+				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip", option = { show_autosnippets = true } },
+					{ name = "path" },
+				}, {
 					{ name = "buffer" },
-					{ name = "path", keyword_length = 2 },
-					{ name = "rg", keyword_length = 2 },
-				},
+					{ name = "rg", keyword_length = 3 },
+				}),
 			})
 
 			cmp.setup.cmdline({ "/", "?" }, {
