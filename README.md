@@ -93,11 +93,23 @@ sudo npm install --global tree-sitter-cli
 git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
 ```
 
+1. Install `lazygit`:
+
+```sh
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit /usr/local/bin
+```
+
 1. Install `texlive`:
 
 ```sh
 sudo apt install texlive-full
 ```
+
+If it stops with `Pregenerating ConTeXt MarkIV format. This may take some time...`,
+then press `Enter`.
 
 ## Structure
 
