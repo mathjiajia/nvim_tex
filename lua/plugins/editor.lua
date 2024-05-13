@@ -241,8 +241,10 @@ return {
 		config = function()
 			local fterm = require("FTerm")
 
+			---@diagnostic disable-next-line: missing-fields
 			local lazygit = fterm:new({
 				cmd = "lazygit",
+				---@diagnostic disable-next-line: missing-fields
 				dimensions = { height = 0.9, width = 0.9 },
 			})
 
