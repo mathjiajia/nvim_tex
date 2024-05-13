@@ -17,6 +17,7 @@ return {
 				"markdown_inline",
 				"regex",
 				"vim",
+				"vimdoc",
 			},
 			auto_install = true,
 		},

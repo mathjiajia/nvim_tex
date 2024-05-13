@@ -55,33 +55,37 @@ return {
 					end,
 
 					["texlab"] = function()
-						local pdf_executable = "sioyek"
-						local forward_search_args = {
-							"--reuse-window",
-							"--execute-command",
-							"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
-							"--inverse-search",
-							vim.fn.stdpath("data")
-								.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
-							"--forward-search-file",
-							"%f",
-							"--forward-search-line",
-							"%l",
-							"%p",
-						}
+						local pdf_executable
+						local forward_search_args
 
-						-- local pdf_executable = "zathura"
-						-- local forward_search_args = {
-						-- 	"--synctex-editor-command",
-						-- 	vim.fn.stdpath("data")
-						-- 		.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
-						-- 	"--synctex-forward",
-						-- 	"%l:1:%f",
-						-- 	"%p",
-						-- }
-
-						-- local pdf_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
-						-- local forward_search_args = { "%l", "%p", "%f" }
+						if vim.uv.os_uname().sysname == "Darwin" then
+							pdf_executable = "sioyek"
+							forward_search_args = {
+								"--reuse-window",
+								"--execute-command",
+								"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
+								"--inverse-search",
+								vim.fn.stdpath("data")
+									.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
+								"--forward-search-file",
+								"%f",
+								"--forward-search-line",
+								"%l",
+								"%p",
+							}
+							-- pdf_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+							-- forward_search_args = { "%l", "%p", "%f" }
+						elseif vim.uv.os_uname().sysname == "Linux" then
+							pdf_executable = "zathura"
+							forward_search_args = {
+								"--synctex-editor-command",
+								vim.fn.stdpath("data")
+									.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
+								"--synctex-forward",
+								"%l:1:%f",
+								"%p",
+							}
+						end
 
 						require("lspconfig").texlab.setup({
 							capabilities = capabilities,

@@ -63,12 +63,21 @@ wsl --install
 ```sh
 sudo add-apt-repository ppa:neovim-ppa/unstable
 sudo apt update
+sudo apt install neovim
 ```
 
 1. Install some dependencies:
 
 ```sh
-sudo apt install zathura ripgrep fd-find golang-go
+sudo apt install zathura ripgrep cargo fswatch unzip
+cargo install tree-sitter-cli
+echo 'export PATH=~/.cargo/bin' >> ~/.bashrc
+```
+
+1. Clone this repository:
+
+```sh
+git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
 ```
 
 ## Structure
