@@ -24,6 +24,12 @@ brew tap homebrew/cask-fonts
 brew install font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 
+1. Clone `kitty` config:
+
+```sh
+git clone --depth 1 https://github.com/mathjiajia/config.kitty.git ~/.config/kitty
+```
+
 1. Install `Neovim` (Head):
 
 ```sh
@@ -37,7 +43,7 @@ brew install fd lazygit node ripgrep gnu-sed tree-sitter
 brew install --cask sioyek skim
 ```
 
-1. Clone this repository:
+1. Clone `nvim` config:
 
 ```sh
 git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
@@ -69,15 +75,28 @@ sudo apt install neovim
 1. Install some dependencies:
 
 ```sh
-sudo apt install zathura ripgrep cargo fswatch unzip
-cargo install tree-sitter-cli
-echo 'export PATH=~/.cargo/bin' >> ~/.bashrc
+sudo apt install zathura ripgrep node fswatch unzip
 ```
 
-1. Clone this repository:
+1. Update `node.js` to install `tree-sitter`:
+
+```sh
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+sudo npm install --global tree-sitter-cli
+```
+
+1. Clone `nvim` config:
 
 ```sh
 git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
+```
+
+1. Install `texlive`:
+
+```sh
+sudo apt install texlive-full
 ```
 
 ## Structure

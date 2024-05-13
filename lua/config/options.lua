@@ -1,6 +1,7 @@
 local opt = vim.opt
 
 -- 1 important
+opt.clipboard = "unnamedplus"
 
 -- 2 moving around, searching and patterns
 opt.whichwrap:append("[,]")
