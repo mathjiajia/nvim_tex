@@ -75,7 +75,7 @@ sudo apt install neovim
 1. Install some dependencies:
 
 ```sh
-sudo apt install zathura ripgrep node fswatch unzip
+sudo apt install zathura ripgrep fd-find node fswatch unzip
 ```
 
 1. Update `node.js` to install `tree-sitter`:
