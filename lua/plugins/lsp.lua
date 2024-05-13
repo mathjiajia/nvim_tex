@@ -115,7 +115,6 @@ return {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			opts = {
 				ensure_installed = {
-					-- formatter
 					"bibtex-tidy",
 					"latexindent",
 					"prettierd",

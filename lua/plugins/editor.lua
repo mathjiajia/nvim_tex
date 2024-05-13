@@ -62,12 +62,7 @@ return {
 	{
 		"windwp/nvim-spectre",
 		cmd = { "Spectre" },
-		opts = {
-			open_cmd = "noswapfile vnew",
-			default = {
-				replace = { cmd = "sd" },
-			},
-		},
+		opts = { open_cmd = "noswapfile vnew" },
 	},
 
 	-- fuzzy finder

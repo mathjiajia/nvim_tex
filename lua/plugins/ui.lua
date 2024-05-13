@@ -126,14 +126,6 @@ return {
 		},
 	},
 
-	-- Zen mode
-	{
-		"folke/zen-mode.nvim",
-		cmd = "ZenMode",
-		dependencies = { "folke/twilight.nvim", config = true },
-		opts = { plugins = { gitsigns = true } },
-	},
-
 	-- rainbow delimiters
 	{
 		"HiPhish/rainbow-delimiters.nvim",

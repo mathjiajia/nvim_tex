@@ -33,7 +33,7 @@ brew install neovim --HEAD
 1. Install some dependencies:
 
 ```sh
-brew install fd lazygit node ripgrep tree-sitter
+brew install fd lazygit node ripgrep gnu-sed tree-sitter
 brew install --cask sioyek skim
 ```
 
