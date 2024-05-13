@@ -1,11 +1,62 @@
 return {
 
 	{
-		"ribru17/bamboo.nvim",
-		lazy = false,
+		"catppuccin/nvim",
+		name = "catppuccin",
 		priority = 1000,
 		config = function()
-			require("bamboo").load()
+			require("catppuccin").setup({
+				-- flavour = "latte", -- latte, frappe, macchiato, mocha
+				-- transparent_background = true, -- disables setting the background color.
+				term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
+				dim_inactive = {
+					enabled = true, -- dims the background color of inactive window
+					shade = "dark",
+					percentage = 0.15, -- percentage of the shade to apply to the inactive window
+				},
+				styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+					comments = { "italic" }, -- Change the style of comments
+					conditionals = { "italic" },
+					loops = {},
+					functions = {},
+					keywords = {},
+					strings = {},
+					variables = {},
+					numbers = {},
+					booleans = {},
+					properties = {},
+					types = {},
+					operators = {},
+					-- miscs = {}, -- Uncomment to turn off hard-coded styles
+				},
+				integrations = {
+					alpha = false,
+					dap = false,
+					dap_ui = false,
+					neogit = false,
+					nvimtree = false,
+					ufo = false,
+					rainbow_delimiters = true,
+					treesitter_context = false,
+					barbecue = {
+						dim_dirname = false,
+						bold_basename = false,
+						dim_context = false,
+						alt_background = false,
+					},
+					illuminate = {
+						enabled = false,
+						lsp = false,
+					},
+					dropbar = {
+						enabled = true,
+						color_mode = false,
+					},
+				},
+			})
+
+			-- setup must be called before loading
+			vim.cmd.colorscheme("catppuccin")
 		end,
 	},
 
