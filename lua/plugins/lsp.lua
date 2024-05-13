@@ -32,7 +32,7 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls" },
+				ensure_installed = { "lua_ls", "texlab" },
 				handlers = {
 					function(server_name)
 						require("lspconfig")[server_name].setup({
@@ -53,55 +53,59 @@ return {
 							},
 						})
 					end,
-				},
-			})
 
-			local pdf_executable = "sioyek"
-			local forward_search_args = {
-				"--reuse-window",
-				"--execute-command",
-				"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
-				"--inverse-search",
-				"texlab inverse-search --input %%1 --line %%2",
-				"--forward-search-file",
-				"%f",
-				"--forward-search-line",
-				"%l",
-				"%p",
-			}
+					["texlab"] = function()
+						local pdf_executable = "sioyek"
+						local forward_search_args = {
+							"--reuse-window",
+							"--execute-command",
+							"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
+							"--inverse-search",
+							vim.fn.stdpath("data")
+								.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
+							"--forward-search-file",
+							"%f",
+							"--forward-search-line",
+							"%l",
+							"%p",
+						}
 
-			-- local pdf_executable = "zathura"
-			-- local forward_search_args = {
-			-- 	"--synctex-editor-command",
-			-- 	"texlab inverse-search --input %%1 --line %%2",
-			-- 	"--synctex-forward",
-			-- 	"%l:1:%f",
-			-- 	"%p",
-			-- }
+						-- local pdf_executable = "zathura"
+						-- local forward_search_args = {
+						-- 	"--synctex-editor-command",
+						-- 	vim.fn.stdpath("data")
+						-- 		.. "/mason/packages/texlab/texlab inverse-search --input %%1 --line %%2",
+						-- 	"--synctex-forward",
+						-- 	"%l:1:%f",
+						-- 	"%p",
+						-- }
 
-			-- local pdf_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
-			-- local forward_search_args = { "%l", "%p", "%f" }
+						-- local pdf_executable = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+						-- local forward_search_args = { "%l", "%p", "%f" }
 
-			require("lspconfig").texlab.setup({
-				capabilities = capabilities,
-				filetypes = { "tex", "bib" },
-				settings = {
-					texlab = {
-						build = {
-							forwardSearchAfter = false,
-							executable = "latexmk",
-							args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
-							onSave = true,
-						},
-						forwardSearch = {
-							executable = pdf_executable,
-							args = forward_search_args,
-						},
-						chktex = { onOpenAndSave = false },
-						diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
-						latexFormatter = "none",
-						bibtexFormatter = "latexindent",
-					},
+						require("lspconfig").texlab.setup({
+							capabilities = capabilities,
+							filetypes = { "tex", "bib" },
+							settings = {
+								texlab = {
+									build = {
+										forwardSearchAfter = false,
+										executable = "latexmk",
+										args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
+										onSave = true,
+									},
+									forwardSearch = {
+										executable = pdf_executable,
+										args = forward_search_args,
+									},
+									chktex = { onOpenAndSave = false },
+									diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
+									latexFormatter = "none",
+									bibtexFormatter = "latexindent",
+								},
+							},
+						})
+					end,
 				},
 			})
 		end,
