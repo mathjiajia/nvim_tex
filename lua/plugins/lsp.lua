@@ -57,6 +57,7 @@ return {
 					["texlab"] = function()
 						local pdf_executable
 						local forward_search_args
+						local texlab_path = vim.fn.stdpath("data") .. "/mason/bin/texlab"
 
 						if vim.uv.os_uname().sysname == "Darwin" then
 							pdf_executable = "sioyek"
@@ -65,7 +66,7 @@ return {
 								"--execute-command",
 								"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
 								"--inverse-search",
-								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search --input %%1 --line %%2",
+								texlab_path .. " inverse-search -i %%1 -l %%2",
 								"--forward-search-file",
 								"%f",
 								"--forward-search-line",
@@ -78,7 +79,7 @@ return {
 							pdf_executable = "zathura"
 							forward_search_args = {
 								"--synctex-editor-command",
-								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search --input %%1 --line %%2",
+								texlab_path .. " inverse-search -i %{input} -l %{line}",
 								"--synctex-forward",
 								"%l:1:%f",
 								"%p",
