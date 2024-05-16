@@ -92,9 +92,9 @@ return {
 			{ "<leader>fD", function() require("telescope").extensions.file_browser.file_browser() end, desc = "File Browser (cwd)" },
 		},
 		dependencies = {
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 			"nvim-telescope/telescope-bibtex.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		},
 		config = function()
 			local telescope = require("telescope")
@@ -125,13 +125,7 @@ return {
 				},
 			})
 
-			local extns = {
-				"fzf",
-				"file_browser",
-				"bibtex",
-				"aerial",
-				"noice",
-			}
+			local extns = { "fzf", "file_browser", "bibtex", "noice" }
 			for _, extn in ipairs(extns) do
 				telescope.load_extension(extn)
 			end
@@ -143,7 +137,7 @@ return {
 	-- location.
 	{
 		"folke/flash.nvim",
-		event = "VeryLazy",
+		event = { "VeryLazy" },
 		config = true,
 		-- stylua: ignore
 		keys = {
@@ -206,50 +200,5 @@ return {
 				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
 			end,
 		},
-	},
-
-	-- symbols outline
-	{
-		"stevearc/aerial.nvim",
-		cmd = "AerialToggle",
-		opts = {
-			backends = { "lsp", "treesitter", "markdown", "man" },
-			layout = { resize_to_content = false },
-			attach_mode = "global",
-			icons = vim.tbl_extend("force", require("lspkind").presets.codicons, {
-				Array = "󰅨 ",
-				Boolean = " ",
-				Constant = " ",
-				Key = " ",
-				Number = "󰎠 ",
-				Null = "󰟢 ",
-				Object = " ",
-				Struct = " ",
-				String = "󰅳 ",
-			}),
-			filter_kind = false,
-			show_guides = true,
-		},
-		-- stylua: ignore
-		keys = { { "<leader>cs", function() require("aerial").toggle() end, desc = "Aerial (Symbols)" } },
-	},
-
-	{
-		"numToStr/FTerm.nvim",
-		keys = { "<M-g>" },
-		config = function()
-			local fterm = require("FTerm")
-
-			---@diagnostic disable-next-line: missing-fields
-			local lazygit = fterm:new({
-				cmd = "lazygit",
-				---@diagnostic disable-next-line: missing-fields
-				dimensions = { height = 0.9, width = 0.9 },
-			})
-
-			vim.keymap.set("n", "<M-g>", function()
-				lazygit:toggle()
-			end)
-		end,
 	},
 }

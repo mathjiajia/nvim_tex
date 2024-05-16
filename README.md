@@ -19,9 +19,7 @@ see [mysnippets]
 1. Install `kitty` and a `Nerd Font`:
 
 ```sh
-brew install --cask kitty
-brew tap homebrew/cask-fonts
-brew install font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
+brew install --cask kitty font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 
 1. Clone `kitty` config:

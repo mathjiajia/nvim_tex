@@ -131,4 +131,28 @@ return {
 		},
 		opts = { ui = { border = "rounded", height = 0.8 } },
 	},
+
+	-- lsp enhancement
+	{
+		"nvimdev/lspsaga.nvim",
+		event = { "LspAttach" },
+		-- stylua: ignore
+		keys = { { "<M-g>", function() require("lspsaga.floaterm"):open_float_terminal({ "lazygit" }) end, mode = { "n", "t" }, desc = "LazyGit" } },
+		config = function()
+			require("lspsaga").setup({
+				symbol_in_winbar = { enable = false },
+				lightbulb = { enable = false },
+				outline = { auto_preview = false },
+				floaterm = { height = 1, width = 1 },
+			})
+
+			vim.keymap.set("n", "gh", function()
+				require("lspsaga.finder"):new({})
+			end, { desc = "Lsp Finder" })
+
+			vim.keymap.set("n", "<M-o>", function()
+				require("lspsaga.symbol"):outline()
+			end, { desc = "Lspsaga Outline" })
+		end,
+	},
 }

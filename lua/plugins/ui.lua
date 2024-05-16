@@ -1,5 +1,15 @@
 return {
 
+	-- colorschemes
+	-- {
+	-- 	"ribru17/bamboo.nvim",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("bamboo").setup({ transparent = false })
+	-- 		require("bamboo").load()
+	-- 	end,
+	-- },
+
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
@@ -7,15 +17,15 @@ return {
 		config = function()
 			require("catppuccin").setup({
 				-- flavour = "latte", -- latte, frappe, macchiato, mocha
-				-- transparent_background = true, -- disables setting the background color.
-				term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
+				-- transparent_background = true,
+				term_colors = true,
 				dim_inactive = {
-					enabled = true, -- dims the background color of inactive window
+					enabled = true,
 					shade = "dark",
-					percentage = 0.15, -- percentage of the shade to apply to the inactive window
+					percentage = 0.15,
 				},
-				styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-					comments = { "italic" }, -- Change the style of comments
+				styles = {
+					comments = { "italic" },
 					conditionals = { "italic" },
 					loops = {},
 					functions = {},
@@ -27,31 +37,18 @@ return {
 					properties = {},
 					types = {},
 					operators = {},
-					-- miscs = {}, -- Uncomment to turn off hard-coded styles
 				},
 				integrations = {
 					alpha = false,
 					dap = false,
 					dap_ui = false,
+					diffview = true,
+					markdown = false,
 					neogit = false,
 					nvimtree = false,
 					ufo = false,
-					rainbow_delimiters = true,
 					treesitter_context = false,
-					barbecue = {
-						dim_dirname = false,
-						bold_basename = false,
-						dim_context = false,
-						alt_background = false,
-					},
-					illuminate = {
-						enabled = false,
-						lsp = false,
-					},
-					dropbar = {
-						enabled = true,
-						color_mode = false,
-					},
+					illuminate = { enabled = false },
 				},
 			})
 
@@ -182,8 +179,8 @@ return {
 	-- noicer ui
 	{
 		"folke/noice.nvim",
+		event = { "VeryLazy" },
 		dependencies = { "rcarriga/nvim-notify", config = true },
-		event = "VeryLazy",
 		opts = {
 			lsp = {
 				override = {
