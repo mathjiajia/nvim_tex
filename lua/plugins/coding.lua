@@ -7,7 +7,7 @@ return {
 		submodules = false,
 		dependencies = {
 			"mathjiajia/mySnippets",
-			opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
+			-- opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
 		},
 		config = function()
 			local ls = require("luasnip")
@@ -23,6 +23,8 @@ return {
 				enable_autosnippets = true,
 				store_selection_keys = "<Tab>",
 			})
+
+			require("luasnip.loaders.from_lua").lazy_load()
 
 			vim.keymap.set("i", "<C-k>", function()
 				if ls.expandable() then
