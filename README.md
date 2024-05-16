@@ -19,8 +19,8 @@ see [mysnippets]
 1. Install some dependencies and some `Nerd Fonts`:
 
 ```sh
-brew install fd lazygit node ripgrep gnu-sed tree-sitter
-brew install --cask kitty sioyek skim font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
+brew install fd node ripgrep gnu-sed tree-sitter
+brew install --cask kitty sioyek font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 
 1. Clone `kitty` config:
@@ -85,14 +85,9 @@ sudo npm install --global tree-sitter-cli
 git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
 ```
 
-1. Install `lazygit`:
+1. Download some nerd fonts and use it in `Windows Terminal`:
 
-```sh
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit /usr/local/bin
-```
+1. Set `latexmkrc`:
 
 1. Install `texlive`:
 
@@ -113,23 +108,25 @@ then press `Enter`.
 │       └── tex.lua
 ├── init.lua
 ├── lazy-lock.json
-└── lua
-    ├── config
-    │   ├── autocmds.lua
-    │   ├── keymaps.lua
-    │   └── options.lua
-    └── plugins
-        ├── coding.lua
-        ├── editor.lua
-        ├── formatting.lua
-        ├── lang.lua
-        ├── lsp.lua
-        └── ui.lua
+├── lua
+│   ├── config
+│   │   ├── autocmds.lua
+│   │   ├── keymaps.lua
+│   │   └── options.lua
+│   └── plugins
+│       ├── coding.lua
+│       ├── editor.lua
+│       ├── formatting.lua
+│       ├── lang.lua
+│       ├── lsp.lua
+│       └── ui.lua
+└── luasnippets
 ```
 
 - `init.lua` -- entrance of the configuration
 - `lua/config` -- configuration files
 - `lua/plugins` -- submodules for different plugins
 - `after/ftplugin` -- individual file type settings
+- `luasnippets` -- many useful snippets, especially for for `LaTeX`
 
 [mysnippets]: https://github.com/mathjiajia/mySnippets

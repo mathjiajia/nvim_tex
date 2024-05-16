@@ -122,7 +122,7 @@ return {
 		"nvimdev/lspsaga.nvim",
 		event = { "LspAttach" },
 		-- stylua: ignore
-		keys = { { "<M-g>", function() require("lspsaga.floaterm"):open_float_terminal({ "lazygit" }) end, mode = { "n", "t" }, desc = "LazyGit" } },
+		-- keys = { { "<M-g>", function() require("lspsaga.floaterm"):open_float_terminal({ "lazygit" }) end, mode = { "n", "t" }, desc = "LazyGit" } },
 		config = function()
 			require("lspsaga").setup({
 				symbol_in_winbar = { enable = false },
