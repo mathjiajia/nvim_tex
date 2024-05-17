@@ -5,7 +5,6 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 			{ "folke/neodev.nvim", config = true, ft = { "lua", "vim" } },
 		},
@@ -31,66 +30,54 @@ return {
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "texlab" },
-				handlers = {
-					function(server_name)
-						require("lspconfig")[server_name].setup({
-							capabilities = capabilities,
-						})
-					end,
-
-					["lua_ls"] = function()
-						require("lspconfig").lua_ls.setup({
-							capabilities = capabilities,
-							settings = {
-								Lua = {
-									workspace = { checkThirdParty = false },
-									hint = { enable = true },
-									completion = { callSnippet = "Replace" },
-									telemetry = { enable = false },
-								},
-							},
-						})
-					end,
-
-					["texlab"] = function()
-						require("lspconfig").texlab.setup({
-							capabilities = capabilities,
-							filetypes = { "tex", "bib" },
-							settings = {
-								texlab = {
-									build = {
-										forwardSearchAfter = false,
-										executable = "latexmk",
-										args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
-										onSave = true,
-									},
-									forwardSearch = {
-										executable = "sioyek",
-										args = {
-											"--reuse-window",
-											"--execute-command",
-											"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
-											"--inverse-search",
-											vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
-											"--forward-search-file",
-											"%f",
-											"--forward-search-line",
-											"%l",
-											"%p",
-										},
-									},
-									chktex = { onOpenAndSave = false },
-									diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
-									latexFormatter = "none",
-									bibtexFormatter = "latexindent",
-								},
-							},
-						})
-					end,
+			local settings = {
+				lua_ls = {
+					Lua = {
+						workspace = { checkThirdParty = false },
+						hint = { enable = true },
+						completion = { callSnippet = "Replace" },
+						telemetry = { enable = false },
+					},
 				},
-			})
+				texlab = {
+					texlab = {
+						build = {
+							forwardSearchAfter = false,
+							executable = "latexmk",
+							args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
+							onSave = true,
+						},
+						forwardSearch = {
+							executable = "sioyek",
+							args = {
+								"--reuse-window",
+								"--execute-command",
+								"turn_on_synctex",
+								"--inverse-search",
+								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
+								"--forward-search-file",
+								"%f",
+								"--forward-search-line",
+								"%l",
+								"%p",
+							},
+							-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
+							-- args = { "-r", "%l", "%p", "%f" },
+						},
+						chktex = { onOpenAndSave = false },
+						diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
+						latexFormatter = "none",
+						bibtexFormatter = "latexindent",
+					},
+				},
+			}
+
+			for _, server in pairs(vim.tbl_keys(settings)) do
+				require("lspconfig")[server].setup({
+					capabilities = capabilities,
+					settings = settings[server],
+				})
+			end
 		end,
 	},
 
@@ -102,6 +89,10 @@ return {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			opts = {
 				ensure_installed = {
+					-- lsp
+					"lua-language-server",
+					"texlab",
+					-- formatter
 					"bibtex-tidy",
 					"latexindent",
 					"prettierd",
