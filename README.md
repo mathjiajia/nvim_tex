@@ -16,10 +16,10 @@ see [mysnippets]
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-1. Install some dependencies and some `Nerd Fonts`:
+1. Install `Neovim`, some dependencies and some `Nerd Fonts`:
 
 ```sh
-brew install fd node ripgrep gnu-sed tree-sitter
+brew install neovim fd node ripgrep gnu-sed tree-sitter
 brew install --cask kitty sioyek font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 
@@ -27,12 +27,6 @@ brew install --cask kitty sioyek font-codicon font-jetbrains-mono-nerd-font font
 
 ```sh
 git clone --depth 1 https://github.com/mathjiajia/config.kitty.git ~/.config/kitty
-```
-
-1. Install `Neovim` (Head):
-
-```sh
-brew install neovim --HEAD
 ```
 
 1. Clone `nvim` config:

@@ -55,22 +55,6 @@ return {
 					end,
 
 					["texlab"] = function()
-						local texlab_path = vim.fn.stdpath("data") .. "/mason/bin/texlab"
-
-						local pdf_executable = "sioyek"
-						local forward_search_args = {
-							"--reuse-window",
-							"--execute-command",
-							"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
-							"--inverse-search",
-							texlab_path .. " inverse-search -i %%1 -l %%2",
-							"--forward-search-file",
-							"%f",
-							"--forward-search-line",
-							"%l",
-							"%p",
-						}
-
 						require("lspconfig").texlab.setup({
 							capabilities = capabilities,
 							filetypes = { "tex", "bib" },
@@ -83,8 +67,19 @@ return {
 										onSave = true,
 									},
 									forwardSearch = {
-										executable = pdf_executable,
-										args = forward_search_args,
+										executable = "sioyek",
+										args = {
+											"--reuse-window",
+											"--execute-command",
+											"toggle_synctex", -- "turn_on_synctex", -- Open Sioyek in synctex mode.
+											"--inverse-search",
+											vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
+											"--forward-search-file",
+											"%f",
+											"--forward-search-line",
+											"%l",
+											"%p",
+										},
 									},
 									chktex = { onOpenAndSave = false },
 									diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
