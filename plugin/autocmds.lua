@@ -88,10 +88,12 @@ autocmd("FileType", {
 	group = augroup("TreesitterHighlight", {}),
 	pattern = {
 		"bash",
+		"bib",
 		"diff",
 		"gitconfig",
 		"gitcommit",
 		"gitignore",
+		"lua",
 		"markdown",
 		"py",
 		"tex",
