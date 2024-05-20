@@ -50,18 +50,20 @@ brew install --cask mactex-no-gui
 wsl --install
 ```
 
-1. Install `Neovim`:
+1. Install `Neovim`
+   (here we use pre-built archives since `nvim-0.10` is not available on `apt`):
 
 ```sh
-sudo add-apt-repository ppa:neovim-ppa/unstable
-sudo apt update
-sudo apt install neovim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux64.tar.gz
+echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.bashrc
 ```
 
 1. Install some dependencies:
 
 ```sh
-sudo apt install zathura ripgrep fd-find node fswatch unzip
+sudo apt install ripgrep fd-find node fswatch unzip
 ```
 
 1. Update `node.js` to install `tree-sitter`:
