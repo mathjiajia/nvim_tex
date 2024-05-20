@@ -52,7 +52,7 @@ return {
 							args = {
 								"--reuse-window",
 								"--execute-command",
-								"turn_on_synctex",
+								"toggle_synctex",
 								"--inverse-search",
 								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
 								"--forward-search-file",
