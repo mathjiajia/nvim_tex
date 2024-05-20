@@ -60,10 +60,14 @@ sudo tar -C /opt -xzf nvim-linux64.tar.gz
 echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.bashrc
 ```
 
+If the network is not stable, then download this [file](https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)
+directly.
+
 1. Install some dependencies:
 
 ```sh
-sudo apt install ripgrep fd-find node fswatch unzip
+sudo apt update && sudo apt upgrade
+sudo apt install fd-find fswatch npm ripgrep unzip
 ```
 
 1. Update `node.js` to install `tree-sitter`:
@@ -73,6 +77,16 @@ sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
 sudo npm install --global tree-sitter-cli
+```
+
+1. Install `sioyek` PDF reader:
+
+```sh
+curl -LO https://github.com/ahrm/sioyek/releases/download/v2.0.0/sioyek-release-linux-portable.zip
+unzip sioyek-release-linux.zip
+sudo mkdir -p opt/sioyek
+sudo mv Sioyek-x86_64.AppImage opt/sioyek/sioyek
+echo 'export PATH="$PATH:/opt/sioyek"' >> ~/.bashrc
 ```
 
 1. Clone `nvim` config:
