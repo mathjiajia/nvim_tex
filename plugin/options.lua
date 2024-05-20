@@ -1,7 +1,19 @@
 local opt = vim.opt
 
+if vim.fn.has("wsl") == 1 then
+	opt.clipboard = "unnamedplus"
+	vim.g.clipboard = {
+		name = "WslClipboard",
+		copy = { ["+"] = "clip.exe", ["*"] = "clip.exe" },
+		paste = {
+			["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))",
+			["*"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))",
+		},
+		cache_enabled = 0,
+	}
+end
+
 -- 1 important
-opt.clipboard = "unnamedplus"
 
 -- 2 moving around, searching and patterns
 opt.whichwrap:append("[,]")
