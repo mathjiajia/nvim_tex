@@ -83,7 +83,7 @@ sudo npm install --global tree-sitter-cli
 
 ```sh
 curl -LO https://github.com/ahrm/sioyek/releases/download/v2.0.0/sioyek-release-linux-portable.zip
-unzip sioyek-release-linux.zip
+unzip sioyek-release-linux-portable.zip
 sudo mkdir -p opt/sioyek
 sudo mv Sioyek-x86_64.AppImage opt/sioyek/sioyek
 echo 'export PATH="$PATH:/opt/sioyek"' >> ~/.bashrc
