@@ -1,10 +1,65 @@
-# config.nvim
+# config.tex
 
-My personal Neovim configuration files on macOS (apple silicon).
+A simple Neovim configuration for linux or macOS.
 
 This setup is mainly used for taking notes and writing documents in LaTeX.
 For the useful snippets (of mathematics, especially algebraic geometry)
 see [mysnippets]
+
+## Neovim
+
+See also [Learn Vim](https://github.com/iggredible/Learn-Vim/blob/master/ch00_read_this_first.md).
+
+### Modes
+
+There are different modes in vim/nvim,
+
+#### Normal mode
+
+#### Insert mode
+
+There are many ways to get into insert mode from the normal mode.
+Here are some of them:
+
+```text
+i    Insert text before the cursor
+I    Insert text before the first non-blank character of the line
+a    Append text after the cursor
+A    Append text at the end of line
+o    Starts a new line below the cursor and insert text
+O    Starts a new line above the cursor and insert text
+s    Delete the character under the cursor and insert text
+S    Delete the current line and insert text, synonym for "cc"
+gi   Insert text in same position where the last insert mode was stopped
+gI   Insert text at the start of line (column 1)
+```
+
+#### Visual mode
+
+Vim has three different visual modes.
+They are:
+
+```text
+v         Character-wise visual mode
+V         Line-wise visual mode
+Ctrl-V    Block-wise visual mode
+```
+
+#### Command-line mode
+
+There are 4 different commands you can use to enter the command-line mode:
+
+- Search patterns (`/`, `?`)
+- Command-line commands (`:`)
+- External commands (`!`)
+
+You can enter the command-line mode from the normal mode or the visual mode.
+
+To leave the command-line mode, you can use `<Esc>`, `Ctrl-C`, or `Ctrl-[`.
+
+##### Help file
+
+Use `:h help` to open the built-in help doc.
 
 ## Installation
 
@@ -97,8 +152,6 @@ git clone --depth 1 https://github.com/mathjiajia/nvim_tex.git ~/.config/nvim
 
 1. Download some nerd fonts and use it in `Windows Terminal`:
 
-1. Set `latexmkrc`:
-
 1. Install `texlive`:
 
 ```sh
@@ -107,6 +160,23 @@ sudo apt install texlive-full
 
 If it stops with `Pregenerating ConTeXt MarkIV format. This may take some time...`,
 then press `Enter`.
+
+## latexmk
+
+It configuration file locates `~/.config/latexmk/latexmkrc`.
+
+```sh
+# pdflatex
+# $pdf_mode = 1;
+
+# lualatex
+# $pdf_mode = 4;
+
+# xelatex
+$pdf_mode = 5;
+
+$postscript_mode = $dvi_mode = 0;
+```
 
 ## Structure
 

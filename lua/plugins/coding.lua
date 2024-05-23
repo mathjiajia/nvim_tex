@@ -135,13 +135,5 @@ return {
 	},
 
 	-- surround
-	{
-		"kylechui/nvim-surround",
-		config = true,
-		keys = {
-			{ "cs", desc = "Change Surrounding" },
-			{ "ds", desc = "Delete Surrounding" },
-			{ "ys", desc = "Add Surrounding" },
-		},
-	},
+	{ "kylechui/nvim-surround", config = true },
 }

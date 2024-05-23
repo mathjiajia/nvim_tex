@@ -6,7 +6,7 @@ return {
 		dependencies = {
 			"mason.nvim",
 			"hrsh7th/cmp-nvim-lsp",
-			{ "folke/neodev.nvim", config = true, ft = { "lua", "vim" } },
+			{ "folke/neodev.nvim", config = true },
 		},
 		config = function()
 			-- diagnostic keymaps

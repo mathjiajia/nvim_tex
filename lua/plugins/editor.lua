@@ -114,7 +114,6 @@ return {
 	-- location.
 	{
 		"folke/flash.nvim",
-		event = { "VeryLazy" },
 		config = true,
 		-- stylua: ignore
 		keys = {
