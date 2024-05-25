@@ -69,6 +69,7 @@ Use `:h help` to open the built-in help doc.
 
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo 'export PATH="$PATH:/opt/homebrew/bin"' >> ~/.zshrc
 ```
 
 1. Install `Neovim`, some dependencies and some `Nerd Fonts`:

@@ -23,6 +23,9 @@ autocmd("TextYankPost", {
 autocmd("LspAttach", {
 	group = augroup("UserLspConfig", {}),
 	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		local methods = vim.lsp.protocol.Methods
+
 		local opts = { buffer = ev.buf }
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -42,19 +45,23 @@ autocmd("LspAttach", {
 		-- 	vim.lsp.buf.format({ async = true })
 		-- end, opts)
 
-		local group = augroup("lsp_document_highlight", {})
-		autocmd({ "CursorHold", "CursorHoldI" }, {
-			group = group,
-			buffer = ev.buf,
-			callback = vim.lsp.buf.document_highlight,
-		})
-		autocmd({ "CursorMoved", "CursorMovedI" }, {
-			group = group,
-			buffer = ev.buf,
-			callback = vim.lsp.buf.clear_references,
-		})
+		if client and client.supports_method(methods.textDocument_documentHighlight) then
+			local group = augroup("lsp_document_highlight", {})
+			autocmd({ "CursorHold", "CursorHoldI" }, {
+				group = group,
+				buffer = ev.buf,
+				callback = vim.lsp.buf.document_highlight,
+			})
+			autocmd({ "CursorMoved", "CursorMovedI" }, {
+				group = group,
+				buffer = ev.buf,
+				callback = vim.lsp.buf.clear_references,
+			})
+		end
 
-		-- vim.lsp.inlay_hint.enable(ev.buf, true)
+		if client and client.supports_method(methods.textDocument_inlayHint) then
+			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+		end
 	end,
 })
 
