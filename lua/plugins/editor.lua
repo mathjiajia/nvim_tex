@@ -125,6 +125,32 @@ return {
 		},
 	},
 
+	-- which-key helps you remember key bindings by showing a popup
+	-- with the active keybindings of the command you started typing.
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		config = function()
+			local wk = require("which-key")
+			wk.setup()
+			wk.register({
+				mode = { "n", "v" },
+				["g"] = { name = "+goto" },
+				["ys"] = { name = "+surround" },
+				["z"] = { name = "+fold" },
+				["]"] = { name = "+next" },
+				["["] = { name = "+prev" },
+				["<leader>b"] = { name = "+buffer" },
+				["<leader>c"] = { name = "+code" },
+				["<leader>f"] = { name = "+file/find" },
+				["<leader>g"] = { name = "+git" },
+				["<leader>h"] = { name = "+hunks" },
+				["<leader>q"] = { name = "+quit/session" },
+				["<leader>s"] = { name = "+search" },
+			})
+		end,
+	},
+
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
@@ -158,19 +184,19 @@ return {
 
 				-- Actions
 				-- stylua: ignore start
-				map("n", "<leader>hs", gitsigns.stage_hunk)
-				map("n", "<leader>hr", gitsigns.reset_hunk)
-				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
-				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
-				map("n", "<leader>hS", gitsigns.stage_buffer)
-				map("n", "<leader>hu", gitsigns.undo_stage_hunk)
-				map("n", "<leader>hR", gitsigns.reset_buffer)
-				map("n", "<leader>hp", gitsigns.preview_hunk)
-				map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end)
-				map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
-				map("n", "<leader>hd", gitsigns.diffthis)
-				map("n", "<leader>hD", function() gitsigns.diffthis("~") end)
-				map("n", "<leader>td", gitsigns.toggle_deleted)
+				map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage Hunk" })
+				map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
+				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Stage Hunk" })
+				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Reset Hunk" })
+				map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
+				map("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "Undo Stage Hunk" })
+				map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset Buffer" })
+				map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
+				map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end, { desc = "Blame Line" })
+				map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Current Line Blame" })
+				map("n", "<leader>hd", gitsigns.diffthis, { desc = "Diff This" })
+				map("n", "<leader>hD", function() gitsigns.diffthis("~") end, { desc = "Diff This (File)" })
+				map("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Toggle Deleted" })
 
 				-- Text object
 				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
