@@ -4,7 +4,7 @@ return {
 	{
 		"L3MON4D3/LuaSnip",
 		lazy = true,
-		submodules = false,
+		build = "make install_jsregexp",
 		dependencies = {
 			"mathjiajia/mySnippets",
 			-- opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
