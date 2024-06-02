@@ -105,7 +105,8 @@ return {
 					{ name = "path" },
 				}, {
 					{ name = "buffer" },
-					{ name = "rg", keyword_length = 3 },
+				}, {
+					{ name = "rg", keyword_length = 2 },
 				}),
 			})
 

@@ -1,11 +1,10 @@
 return {
 
 	-- filesype plugin for `LaTeX`
-	{
-		"mathjiajia/latex.nvim",
-		ft = "tex",
-		config = true,
-	},
+	{ "mathjiajia/latex.nvim", ft = "tex", config = true },
+
+	-- Faster LuaLS setup for Neovim
+	{ "folke/lazydev.nvim", ft = "lua", config = true },
 
 	-- {
 	-- 	"HakonHarnes/img-clip.nvim",

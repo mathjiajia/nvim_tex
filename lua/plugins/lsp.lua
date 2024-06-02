@@ -3,11 +3,7 @@ return {
 	-- lspconfig
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = {
-			"mason.nvim",
-			"hrsh7th/cmp-nvim-lsp",
-			{ "folke/neodev.nvim", config = true },
-		},
+		dependencies = { "mason.nvim" },
 		config = function()
 			-- diagnostic keymaps
 			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Loclist Diagnostics" })
