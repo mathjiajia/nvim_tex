@@ -62,8 +62,6 @@ return {
 						},
 						chktex = { onOpenAndSave = false },
 						diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
-						latexFormatter = "none",
-						bibtexFormatter = "latexindent",
 					},
 				},
 			}

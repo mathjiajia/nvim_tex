@@ -133,33 +133,6 @@ return {
 		},
 	},
 
-	-- which-key helps you remember key bindings by showing a popup
-	-- with the active keybindings of the command you started typing.
-	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		config = function()
-			local wk = require("which-key")
-			wk.setup()
-			wk.register({
-				mode = { "n", "v" },
-				["g"] = { name = "+goto" },
-				["ys"] = { name = "+surround" },
-				["z"] = { name = "+fold" },
-				["]"] = { name = "+next" },
-				["["] = { name = "+prev" },
-				["<leader>b"] = { name = "+buffer" },
-				["<leader>c"] = { name = "+code" },
-				["<leader>f"] = { name = "+file/find" },
-				["<leader>g"] = { name = "+lsp" },
-				["<leader>h"] = { name = "+hunks" },
-				["<leader>q"] = { name = "+quit/session" },
-				["<leader>s"] = { name = "+search" },
-				["<leader>t"] = { name = "+toggle" },
-			})
-		end,
-	},
-
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
