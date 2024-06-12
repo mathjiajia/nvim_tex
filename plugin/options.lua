@@ -1,18 +1,5 @@
 local opt = vim.opt
 
-if vim.fn.has("wsl") == 1 then
-	opt.clipboard = "unnamedplus"
-	vim.g.clipboard = {
-		name = "WslClipboard",
-		copy = { ["+"] = "clip.exe", ["*"] = "clip.exe" },
-		paste = {
-			["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))",
-			["*"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace('`r', ''))",
-		},
-		cache_enabled = 0,
-	}
-end
-
 -- 1 important
 
 -- 2 moving around, searching and patterns
@@ -69,6 +56,7 @@ opt.softtabstop = 4
 
 -- 14 folding
 opt.foldlevel = 99
+opt.foldtext = " "
 
 -- 15 diff mode
 opt.diffopt:append({ linematch = 60 })
@@ -95,3 +83,7 @@ opt.updatetime = 200
 -- 24 various
 opt.virtualedit = "block"
 opt.signcolumn = "yes"
+
+-- Remove "How-to disable mouse" from right-click menu
+pcall(vim.cmd.aunmenu, [[PopUp.How-to\ disable\ mouse]])
+pcall(vim.cmd.aunmenu, [[PopUp.-1-]])

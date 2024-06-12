@@ -17,7 +17,7 @@ autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank()
 	end,
-	desc = "Highlight the yanked text",
+	desc = "Highlight the Yanked Text",
 })
 
 autocmd("LspAttach", {
@@ -26,31 +26,26 @@ autocmd("LspAttach", {
 		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 		local methods = vim.lsp.protocol.Methods
 
-		local opts = { buffer = ev.buf }
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-		vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
-		vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
-		vim.keymap.set("n", "<space>wl", function()
-			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-		end, opts)
-		vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts)
-		vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
-		vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts)
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-		-- vim.keymap.set("n", "<space>f", function()
-		-- 	vim.lsp.buf.format({ async = true })
-		-- end, opts)
+		local keymaps = {
+			{ "gD", vim.lsp.buf.declaration, method = methods.textDocument_declaration },
+			{ "gd", vim.lsp.buf.definition, method = methods.textDocument_definition },
+			{ "gi", vim.lsp.buf.implementation, method = methods.textDocument_implementation },
+			{ "<C-k>", vim.lsp.buf.signature_help, method = methods.textDocument_signatureHelp },
+			{ "gt", vim.lsp.buf.type_definition, method = methods.textDocument_typeDefinition },
+		}
+
+		for _, keys in ipairs(keymaps) do
+			if client.supports_method(keys.method) then
+				vim.keymap.set(keys.mode or "n", keys[1], keys[2], { buffer = ev.buf, desc = keys.method })
+			end
+		end
 
 		if client.supports_method(methods.textDocument_documentHighlight) then
 			autocmd({ "CursorHold", "CursorHoldI" }, {
 				buffer = ev.buf,
 				callback = vim.lsp.buf.document_highlight,
 			})
-			autocmd({ "CursorMoved", "CursorMovedI" }, {
+			autocmd("CursorMoved", {
 				buffer = ev.buf,
 				callback = vim.lsp.buf.clear_references,
 			})
@@ -62,7 +57,7 @@ autocmd("LspAttach", {
 	end,
 })
 
--- put the cursor at the last edited position
+-- go to last loc when opening a buffer
 autocmd("BufReadPost", {
 	group = augroup("LastPlace", {}),
 	callback = function(event)
@@ -105,7 +100,7 @@ autocmd("FileType", {
 -- No buflist for special files
 autocmd("FileType", {
 	group = augroup("NoBufList", {}),
-	pattern = { "checkhealth", "help", "qf", "spectre_panel" },
+	pattern = { "checkhealth", "help", "qf", "grug-far" },
 	callback = function(ev)
 		vim.b[ev.buf].buflisted = false
 		vim.keymap.set("n", "q", function()
@@ -123,7 +118,7 @@ autocmd("FileType", {
 		vim.opt_local.conceallevel = 2
 		vim.opt_local.spell = true
 
-		vim.keymap.set("i", "<C-s>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { buffer = ev.buf, desc = "Crect Last Spelling" })
+		vim.keymap.set("i", "<C-h>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { buffer = ev.buf, desc = "Crect Last Spelling" })
 	end,
 	desc = "Special Files",
 })
@@ -132,11 +127,11 @@ autocmd("FileType", {
 autocmd("BufReadPost", {
 	group = augroup("openFile", {}),
 	pattern = { "*.jpeg", "*.jpg", "*.pdf", "*.png" },
-	callback = function()
+	callback = function(ev)
 		vim.fn.jobstart("open '" .. vim.fn.expand("%") .. "'", { detach = true })
-		vim.api.nvim_buf_delete(0, {})
+		vim.api.nvim_buf_delete(ev.buf, {})
 	end,
-	desc = "openFile",
+	desc = "Open File",
 })
 
 -- automatically regenerate spell file after editing dictionary

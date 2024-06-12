@@ -75,7 +75,7 @@ echo 'export PATH="$PATH:/opt/homebrew/bin"' >> ~/.zshrc
 1. Install `Neovim`, some dependencies and some `Nerd Fonts`:
 
 ```sh
-brew install neovim fd node ripgrep gnu-sed tree-sitter
+brew install neovim fd node ripgrep tree-sitter
 brew install --cask kitty sioyek font-codicon font-jetbrains-mono-nerd-font font-symbols-only-nerd-font
 ```
 

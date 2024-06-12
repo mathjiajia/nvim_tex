@@ -19,13 +19,16 @@ return {
 					if package.loaded["neo-tree"] then
 						return
 					else
-						local stats = vim.uv.fs_stat(vim.fn.argv(0))
+						local stats = vim.uv.fs_stat(vim.fn.argv(0) --[[@as string]])
 						if stats and stats.type == "directory" then
 							require("neo-tree")
 						end
 					end
 				end,
 			})
+		end,
+		deactivate = function()
+			require("neo-tree.command").execute({ action = "close" })
 		end,
 		opts = {
 			open_files_do_not_replace_types = { "aerial", "qf", "terminal" },
@@ -41,15 +44,21 @@ return {
 					expander_expanded = "",
 					expander_highlight = "NeoTreeExpander",
 				},
+				git_status = {
+					symbols = {
+						unstaged = "󰄱",
+						staged = "󰱒",
+					},
+				},
 			},
 		},
 	},
 
 	-- search/replace in multiple files
 	{
-		"windwp/nvim-spectre",
-		cmd = { "Spectre" },
-		opts = { open_cmd = "noswapfile vnew" },
+		"MagicDuck/grug-far.nvim",
+		cmd = { "GrugFar" },
+		config = true,
 	},
 
 	-- fuzzy finder

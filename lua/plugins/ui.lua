@@ -206,7 +206,14 @@ return {
 				shortcut = {
 					{ desc = "󰚰 Update", group = "Identifier", action = "Lazy update", key = "u" },
 					{ desc = "󰀶 Files", group = "Directory", action = "Telescope find_files", key = "f" },
-					{ desc = " Quit", group = "String", action = "quitall", key = "q" },
+					{
+						desc = " Quit",
+						group = "String",
+						action = function()
+							vim.api.nvim_input("<Cmd>qa<CR>")
+						end,
+						key = "q",
+					},
 				},
 				mru = { cwd_only = true },
 			},

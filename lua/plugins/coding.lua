@@ -7,7 +7,7 @@ return {
 		build = "make install_jsregexp",
 		dependencies = {
 			"mathjiajia/mySnippets",
-			-- opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
+			opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
 		},
 		config = function()
 			local ls = require("luasnip")
@@ -24,7 +24,7 @@ return {
 				store_selection_keys = "<Tab>",
 			})
 
-			require("luasnip.loaders.from_lua").lazy_load()
+			-- require("luasnip.loaders.from_lua").lazy_load()
 
 			vim.keymap.set("i", "<C-k>", function()
 				if ls.expandable() then
@@ -129,12 +129,16 @@ return {
 	},
 
 	-- auto pairs
-	{
-		"altermo/ultimate-autopair.nvim",
-		event = { "InsertEnter", "CmdlineEnter" },
-		config = true,
-	},
+	{ "altermo/ultimate-autopair.nvim", event = { "InsertEnter", "CmdlineEnter" }, config = true },
 
 	-- surround
-	{ "kylechui/nvim-surround", config = true },
+	{
+		"kylechui/nvim-surround",
+		config = true,
+		keys = {
+			{ "cs", desc = "Change Surrounding" },
+			{ "ds", desc = "Delete Surrounding" },
+			{ "ys", desc = "Add Surrounding" },
+		},
+	},
 }
