@@ -62,7 +62,13 @@ return {
 	-- winbar
 	{ "Bekaboo/dropbar.nvim", config = true },
 
-	-- statuscolumn/statusline/tabline
+	-- statuscolumn
+	{
+		"luukvbaal/statuscol.nvim",
+		config = true,
+	},
+
+	-- statusline/tabline
 	{
 		"rebelot/heirline.nvim",
 		dependencies = {
@@ -79,15 +85,6 @@ return {
 					lib.component.tabline_buffers(),
 					lib.component.fill({ hl = { bg = "tabline_bg" } }),
 					lib.component.tabline_tabpages(),
-				},
-				statuscolumn = { -- UI left column
-					init = function(self)
-						self.bufnr = vim.api.nvim_get_current_buf()
-					end,
-					lib.component.foldcolumn(),
-					lib.component.fill(),
-					lib.component.numbercolumn(),
-					lib.component.signcolumn(),
 				},
 				statusline = { -- UI statusbar
 					hl = { fg = "fg", bg = "bg" },

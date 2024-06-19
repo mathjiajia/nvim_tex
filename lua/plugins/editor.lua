@@ -131,6 +131,7 @@ return {
 	-- location.
 	{
 		"folke/flash.nvim",
+		event = { "VeryLazy" },
 		config = true,
 		-- stylua: ignore
 		keys = {
@@ -150,10 +151,10 @@ return {
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")
 
-				local function map(mode, l, r, opts)
+				local function map(mode, lhs, rhs, opts)
 					opts = opts or {}
 					opts.buffer = bufnr
-					vim.keymap.set(mode, l, r, opts)
+					vim.keymap.set(mode, lhs, rhs, opts)
 				end
 
 				-- Navigation
