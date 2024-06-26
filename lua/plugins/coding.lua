@@ -94,6 +94,7 @@ return {
 							cmdline = "Cmd",
 							nvim_lsp = "Lsp",
 							luasnip = "Snippet",
+							neorg = "Norg",
 							path = "Path",
 							rg = "RG",
 						},
@@ -105,6 +106,7 @@ return {
 					{ name = "path" },
 				}, {
 					{ name = "buffer" },
+					{ name = "neorg" },
 				}, {
 					{ name = "rg", keyword_length = 2 },
 				}),

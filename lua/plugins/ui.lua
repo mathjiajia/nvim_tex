@@ -228,10 +228,4 @@ return {
 
 	-- icons
 	{ "nvim-tree/nvim-web-devicons", lazy = true },
-
-	-- ui components
-	{ "MunifTanjim/nui.nvim", lazy = true },
-
-	-- library used by other plugins
-	{ "nvim-lua/plenary.nvim", lazy = true },
 }

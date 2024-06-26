@@ -3,11 +3,11 @@ return {
 	-- treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
-		branch = "main",
+		-- branch = "main",
 		build = ":TSUpdate",
 		config = function()
-			require("nvim-treesitter").setup({
-				ensure_install = {
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
 					"bash",
 					"bibtex",
 					"comment",
@@ -18,12 +18,14 @@ return {
 					"luap",
 					"markdown",
 					"markdown_inline",
+					"norg",
 					"python",
 					"query",
 					"regex",
 					"vim",
 					"vimdoc",
 				},
+				highlight = { enable = true },
 				auto_install = true,
 			})
 
