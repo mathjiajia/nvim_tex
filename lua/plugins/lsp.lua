@@ -39,16 +39,18 @@ return {
 					texlab = {
 						build = {
 							forwardSearchAfter = false,
-							executable = "latexmk",
 							args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
 							onSave = true,
+							auxDirectory = "./build",
+							logDirectory = "./build",
+							pdfDirectory = "./build",
 						},
 						forwardSearch = {
 							executable = "sioyek",
 							args = {
 								"--reuse-window",
 								"--execute-command",
-								"toggle_synctex",
+								"turn_on_synctex", -- "toggle_synctex",
 								"--inverse-search",
 								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
 								"--forward-search-file",
