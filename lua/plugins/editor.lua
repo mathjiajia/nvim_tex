@@ -73,7 +73,6 @@ return {
 			{ "<leader>fc", function () require('telescope.builtin').find_files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
 			{ "<leader>ff", function () require('telescope.builtin').find_files() end, desc = "Find Files (cwd)" },
 			{ "<leader>fg", function () require('telescope.builtin').git_files() end, desc = "Find Git Files" },
-			{ "<leader>fm", function () require('telescope.builtin').builtin() end, desc = "Telescope Meta" },
 			{ "<leader>fo", function () require('telescope.builtin').oldfiles() end, desc = "Old Files" },
 			-- search
 			{ "<leader>sb", function () require('telescope.builtin').current_buffer_fuzzy_find() end, desc = "Current Buf Fuzzy" },
