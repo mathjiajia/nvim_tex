@@ -3,6 +3,8 @@ return {
 	-- filesype plugin for `LaTeX`
 	{ "mathjiajia/latex.nvim", ft = "tex", config = true },
 
+	{ "OXY2DEV/markview.nvim", ft = "markdown" },
+
 	-- Faster LuaLS setup for Neovim
 	{ "folke/lazydev.nvim", ft = "lua", config = true },
 

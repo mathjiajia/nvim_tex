@@ -81,21 +81,21 @@ return {
 	{
 		"williamboman/mason.nvim",
 		cmd = "Mason",
-		dependencies = {
-			"WhoIsSethDaniel/mason-tool-installer.nvim",
-			opts = {
-				ensure_installed = {
-					-- lsp
-					"lua-language-server",
-					"texlab",
-					-- formatter
-					"bibtex-tidy",
-					"latexindent",
-					"prettierd",
-					"stylua",
-				},
-			},
-		},
+		-- dependencies = {
+		-- 	"WhoIsSethDaniel/mason-tool-installer.nvim",
+		-- 	opts = {
+		-- 		ensure_installed = {
+		-- 			-- lsp
+		-- 			"lua-language-server",
+		-- 			"texlab",
+		-- 			-- formatter
+		-- 			"bibtex-tidy",
+		-- 			-- "latexindent",
+		-- 			"prettierd",
+		-- 			"stylua",
+		-- 		},
+		-- 	},
+		-- },
 		opts = { ui = { border = "rounded", height = 0.8 } },
 	},
 
@@ -128,6 +128,7 @@ return {
 		"stevearc/conform.nvim",
 		dependencies = { "mason.nvim" },
 		config = function()
+			require("conform").formatters.latexindent = { args = { "-g", "/dev/null" } }
 			require("conform").setup({
 				formatters_by_ft = {
 					bib = { "bibtex-tidy" },
