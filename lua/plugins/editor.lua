@@ -2,54 +2,14 @@ return {
 
 	-- file explorer
 	{
-		"nvim-neo-tree/neo-tree.nvim",
-		cmd = "Neotree",
+		"stevearc/oil.nvim",
+		cmd = "Oil",
 		-- stylua: ignore
-		keys = {
-			{ "<leader>fe", function() require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() }) end, desc = "Explorer NeoTree (cwd)" },
-			{ "<leader>ge", function() require("neo-tree.command").execute({ source = "git_status", toggle = true }) end, desc = "Git explorer" },
-			{ "<leader>be", function() require("neo-tree.command").execute({ source = "buffers", toggle = true }) end, desc = "Buffer explorer" },
-		},
-		init = function()
-			vim.api.nvim_create_autocmd("BufEnter", {
-				group = vim.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
-				desc = "Start Neo-tree with directory",
-				once = true,
-				callback = function()
-					if package.loaded["neo-tree"] then
-						return
-					else
-						local stats = vim.uv.fs_stat(vim.fn.argv(0) --[[@as string]])
-						if stats and stats.type == "directory" then
-							require("neo-tree")
-						end
-					end
-				end,
-			})
-		end,
-		deactivate = function()
-			require("neo-tree.command").execute({ action = "close" })
-		end,
+		keys = { { "<leader>o", function() require("oil").toggle_float() end, desc = "Toggle Oil" } },
 		opts = {
-			open_files_do_not_replace_types = { "aerial", "qf", "terminal" },
-			filesystem = {
-				bind_to_cwd = false,
-				follow_current_file = { enabled = true },
-				use_libuv_file_watcher = true,
-			},
-			default_component_configs = {
-				indent = {
-					with_expanders = true,
-					expander_collapsed = "",
-					expander_expanded = "",
-					expander_highlight = "NeoTreeExpander",
-				},
-				git_status = {
-					symbols = {
-						unstaged = "󰄱",
-						staged = "󰱒",
-					},
-				},
+			float = {
+				max_width = vim.fn.round(vim.o.columns * 0.5),
+				max_height = vim.fn.round(vim.o.lines * 0.5),
 			},
 		},
 	},
@@ -75,66 +35,25 @@ return {
 
 	-- fuzzy finder
 	{
-		"nvim-telescope/telescope.nvim",
-		cmd = "Telescope",
+		"ibhagwan/fzf-lua",
+		cmd = "FzfLua",
 		-- stylua: ignore
 		keys = {
-			{ "<leader><space>", function () require('telescope.builtin').find_files({ cwd = "%:p:h" }) end, desc = "Find Files (current)" },
+			{ "<leader><space>", function () require("fzf-lua").files({ cwd = "%:p:h" }) end, desc = "Find Files (current)" },
 			-- find
-			{ "<leader>fb", function () require('telescope.builtin').buffers() end, desc = "Buffers" },
-			{ "<leader>fc", function () require('telescope.builtin').find_files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-			{ "<leader>ff", function () require('telescope.builtin').find_files() end, desc = "Find Files (cwd)" },
-			{ "<leader>fg", function () require('telescope.builtin').git_files() end, desc = "Find Git Files" },
-			{ "<leader>fo", function () require('telescope.builtin').oldfiles() end, desc = "Old Files" },
+			{ "<leader>fb", function () require("fzf-lua").buffers() end, desc = "Buffers" },
+			{ "<leader>fc", function () require("fzf-lua").files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+			{ "<leader>ff", function () require("fzf-lua").files() end, desc = "Find Files (cwd)" },
+			{ "<leader>fg", function () require("fzf-lua").git_files() end, desc = "Find Git Files" },
+			{ "<leader>fo", function () require("fzf-lua").oldfiles() end, desc = "Old Files" },
 			-- search
-			{ "<leader>sb", function () require('telescope.builtin').current_buffer_fuzzy_find() end, desc = "Current Buf Fuzzy" },
-			{ "<leader>sg", function () require('telescope.builtin').live_grep() end, desc = "Live Grep" },
-			{ "<leader>sh", function () require('telescope.builtin').help_tags() end, desc = "Help Tags" },
-			{ "<leader>sw", function () require('telescope.builtin').grep_string({ word_match = "-w" }) end, desc = "Search Word" },
-			{ "<leader>sw", function () require('telescope.builtin').grep_string() end, mode = "v", desc = "Search Selection" },
-			-- extensions
-			{ "<leader>fd", function() require("telescope").extensions.file_browser.file_browser({ path = "%:p:h" }) end, desc = "File Browser (current)" },
-			{ "<leader>fD", function() require("telescope").extensions.file_browser.file_browser() end, desc = "File Browser (cwd)" },
+			{ "<leader>sb", function () require("fzf-lua").blines() end, desc = "Search Current Buffer Lines" },
+			{ "<leader>sg", function () require("fzf-lua").live_grep() end, desc = "Live Grep" },
+			{ "<leader>sh", function () require("fzf-lua").helptags() end, desc = "Help Tags" },
+			{ "<leader>sw", function () require("fzf-lua").grep_cword({ word_match = "-w" }) end, desc = "Search Word Under Cursor" },
+			{ "<leader>sw", function () require("fzf-lua").grep_visual() end, mode = "v", desc = "Search Visual Selection" },
 		},
-		dependencies = {
-			"nvim-telescope/telescope-bibtex.nvim",
-			"nvim-telescope/telescope-file-browser.nvim",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-		},
-		config = function()
-			local telescope = require("telescope")
-
-			telescope.setup({
-				defaults = {
-					sorting_strategy = "ascending",
-					layout_config = { prompt_position = "top" },
-					prompt_prefix = "   ",
-					selection_caret = " ",
-					file_ignore_patterns = { "%.jpeg$", "%.jpg$", "%.png$", ".DS_Store" },
-				},
-				pickers = {
-					buffers = {
-						theme = "dropdown",
-						sort_lastused = true,
-						previewer = false,
-					},
-					current_buffer_fuzzy_find = { previewer = false },
-					find_files = { theme = "ivy", follow = true },
-					git_files = { theme = "ivy" },
-					grep_string = { path_display = { "shorten" } },
-					live_grep = { path_display = { "shorten" } },
-				},
-				extensions = {
-					bibtex = { format = "plain" },
-					file_browser = { theme = "ivy" },
-				},
-			})
-
-			local extns = { "fzf", "file_browser", "bibtex", "noice" }
-			for _, extn in ipairs(extns) do
-				telescope.load_extension(extn)
-			end
-		end,
+		opts = { defaults = { file_icons = "mini" } },
 	},
 
 	-- Flash enhances the built-in search functionality by showing labels
