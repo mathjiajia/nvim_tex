@@ -45,6 +45,7 @@ return {
 			{ "<leader>fc", function () require("fzf-lua").files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
 			{ "<leader>ff", function () require("fzf-lua").files() end, desc = "Find Files (cwd)" },
 			{ "<leader>fg", function () require("fzf-lua").git_files() end, desc = "Find Git Files" },
+			{ "<leader>fl", function () require("fzf-lua").lsp_finder() end, desc = "Lsp Finder" },
 			{ "<leader>fo", function () require("fzf-lua").oldfiles() end, desc = "Old Files" },
 			-- search
 			{ "<leader>sb", function () require("fzf-lua").blines() end, desc = "Search Current Buffer Lines" },
@@ -53,7 +54,12 @@ return {
 			{ "<leader>sw", function () require("fzf-lua").grep_cword({ word_match = "-w" }) end, desc = "Search Word Under Cursor" },
 			{ "<leader>sw", function () require("fzf-lua").grep_visual() end, mode = "v", desc = "Search Visual Selection" },
 		},
-		opts = { defaults = { file_icons = "mini" } },
+		opts = {
+			defaults = {
+				file_icons = "mini",
+				formatter = "path.dirname_first",
+			},
+		},
 	},
 
 	-- Flash enhances the built-in search functionality by showing labels
@@ -61,16 +67,17 @@ return {
 	-- location.
 	{
 		"folke/flash.nvim",
-		event = { "VeryLazy" },
-		config = true,
-		-- stylua: ignore
-		keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-			{ "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-		},
+		config = function()
+			require("flash").setup()
+
+			-- stylua: ignore start
+			vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
+			vim.keymap.set({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
+			vim.keymap.set("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
+			vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
+			vim.keymap.set("c", "<c-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
+			-- stylua: ignore end
+		end,
 	},
 
 	-- git signs
