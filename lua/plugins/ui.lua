@@ -13,7 +13,7 @@ return {
 		"ribru17/bamboo.nvim",
 		priority = 1000,
 		config = function()
-			require("bamboo").setup()
+			require("bamboo").setup({ transparent = true })
 			require("bamboo").load()
 		end,
 	},
@@ -25,7 +25,12 @@ return {
 	{ "luukvbaal/statuscol.nvim", config = true },
 
 	-- statusline/tabline
-	{ "echasnovski/mini.statusline", config = true },
+	{
+		"rebelot/heirline.nvim",
+		config = function()
+			require("configs.statusline")
+		end,
+	},
 
 	-- indent guides for Neovim
 	{
@@ -97,7 +102,6 @@ return {
 			-- stylua: ignore start
 			vim.keymap.set({ "i", "n", "s" }, "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, { silent = true, expr = true, desc = "Scroll Forward" })
 			vim.keymap.set({ "i", "n", "s" }, "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, { silent = true, expr = true, desc = "Scroll Backward" })
-			-- stylua: ignore end
 		end,
 	},
 
