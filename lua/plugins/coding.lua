@@ -54,7 +54,8 @@ return {
 
 	-- auto completion
 	{
-		"hrsh7th/nvim-cmp",
+		"yioneko/nvim-cmp",
+		branch = "perf",
 		event = { "CmdlineEnter", "InsertEnter" },
 		dependencies = {
 			"hrsh7th/cmp-buffer",

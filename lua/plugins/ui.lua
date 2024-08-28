@@ -1,22 +1,26 @@
 return {
 
 	-- colorschemes
-	-- {
-	-- 	"folke/tokyonight.nvim",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		require("tokyonight").setup({ style = "night" })
-	-- 		vim.cmd.colorscheme("tokyonight")
-	-- 	end,
-	-- },
 	{
-		"ribru17/bamboo.nvim",
+		"folke/tokyonight.nvim",
 		priority = 1000,
 		config = function()
-			require("bamboo").setup({ transparent = true })
-			require("bamboo").load()
+			require("tokyonight").setup({
+				style = "night",
+				transparent = true,
+				terminal_colors = false,
+			})
+			vim.cmd.colorscheme("tokyonight")
 		end,
 	},
+	-- {
+	-- 	"ribru17/bamboo.nvim",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("bamboo").setup({ transparent = true })
+	-- 		require("bamboo").load()
+	-- 	end,
+	-- },
 
 	-- winbar
 	{ "Bekaboo/dropbar.nvim", config = true },
@@ -24,12 +28,18 @@ return {
 	-- statuscolumn
 	{ "luukvbaal/statuscol.nvim", config = true },
 
-	-- statusline/tabline
+	-- statusline
 	{
-		"rebelot/heirline.nvim",
-		config = function()
-			require("configs.statusline")
-		end,
+		"sschleemilch/slimline.nvim",
+		opts = {
+			verbose_mode = true,
+			style = "fg",
+			hl = {
+				base = "StatusLine",
+				primary = "StatusLine",
+				secondary = "StatusLine",
+			},
+		},
 	},
 
 	-- indent guides for Neovim
