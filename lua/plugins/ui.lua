@@ -31,15 +31,7 @@ return {
 	-- statusline
 	{
 		"sschleemilch/slimline.nvim",
-		opts = {
-			verbose_mode = true,
-			style = "fg",
-			hl = {
-				base = "StatusLine",
-				primary = "StatusLine",
-				secondary = "StatusLine",
-			},
-		},
+		opts = { verbose_mode = true },
 	},
 
 	-- indent guides for Neovim
@@ -122,18 +114,11 @@ return {
 		opts = {
 			config = {
 				week_header = { enable = true },
-				disable_move = true,
+				-- stylua: ignore
 				shortcut = {
 					{ desc = "󰚰 Update", group = "Identifier", action = "Lazy update", key = "u" },
 					{ desc = "󰀶 Files", group = "Directory", action = "FzfLua files", key = "f" },
-					{
-						desc = " Quit",
-						group = "String",
-						action = function()
-							vim.api.nvim_input("<Cmd>qa<CR>")
-						end,
-						key = "q",
-					},
+					{ desc = " Quit", group = "String", action = function() vim.api.nvim_input("<Cmd>qa<CR>") end, key = "q" },
 				},
 				project = { action = "FzfLua files cwd=" },
 				mru = { cwd_only = true },
