@@ -34,7 +34,10 @@ return {
 	-- statusline
 	{
 		"sschleemilch/slimline.nvim",
-		opts = { verbose_mode = true },
+		opts = {
+			verbose_mode = true,
+			style = "fg",
+		},
 	},
 
 	-- indent guides for Neovim
