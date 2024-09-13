@@ -80,7 +80,7 @@ return {
 	-- cmdline tools and lsp servers
 	{
 		"williamboman/mason.nvim",
-		cmd = "Mason",
+		opts = { ui = { border = "rounded", height = 0.8 } },
 		-- dependencies = {
 		-- 	"WhoIsSethDaniel/mason-tool-installer.nvim",
 		-- 	opts = {
@@ -90,13 +90,12 @@ return {
 		-- 			"texlab",
 		-- 			-- formatter
 		-- 			"bibtex-tidy",
-		-- 			-- "latexindent",
+		-- 			"latexindent",
 		-- 			"prettierd",
 		-- 			"stylua",
 		-- 		},
 		-- 	},
 		-- },
-		opts = { ui = { border = "rounded", height = 0.8 } },
 	},
 
 	-- lsp enhancement
