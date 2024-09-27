@@ -3,7 +3,6 @@ return {
 	-- lspconfig
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "mason.nvim" },
 		config = function()
 			-- diagnostic keymaps
 			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Loclist Diagnostics" })
@@ -125,7 +124,6 @@ return {
 	-- formatting
 	{
 		"stevearc/conform.nvim",
-		dependencies = { "mason.nvim" },
 		config = function()
 			require("conform").formatters.latexindent = { args = { "-g", "/dev/null" } }
 			require("conform").setup({
