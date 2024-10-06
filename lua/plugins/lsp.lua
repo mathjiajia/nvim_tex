@@ -22,7 +22,6 @@ return {
 			})
 
 			-- lspconfig
-
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			local settings = {
@@ -37,11 +36,9 @@ return {
 				texlab = {
 					texlab = {
 						build = {
-							forwardSearchAfter = false,
 							args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
+							forwardSearchAfter = false,
 							onSave = true,
-							auxDirectory = "./build",
-							logDirectory = "./build",
 							pdfDirectory = "./build",
 						},
 						forwardSearch = {
@@ -49,7 +46,7 @@ return {
 							args = {
 								"--reuse-window",
 								"--execute-command",
-								"turn_on_synctex", -- "toggle_synctex",
+								"turn_on_synctex",
 								"--inverse-search",
 								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
 								"--forward-search-file",
@@ -61,7 +58,6 @@ return {
 							-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
 							-- args = { "-r", "%l", "%p", "%f" },
 						},
-						chktex = { onOpenAndSave = false },
 						diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
 					},
 				},
@@ -125,7 +121,6 @@ return {
 	{
 		"stevearc/conform.nvim",
 		config = function()
-			require("conform").formatters.latexindent = { args = { "-g", "/dev/null" } }
 			require("conform").setup({
 				formatters_by_ft = {
 					bib = { "bibtex-tidy" },
@@ -134,9 +129,23 @@ return {
 					lua = { "stylua" },
 					tex = { "latexindent" },
 				},
+				formatters = {
+					latexindent = {
+						prepend_args = { "-c", "./.aux", "-m" },
+					},
+					["bibtex-tidy"] = {
+						prepend_args = {
+							"--curly",
+							"--tab",
+							"--trailing-commas",
+							"--sort-fields=author,year,month,day,title,shorttitle",
+							"--remove-braces",
+						},
+					},
+				},
 				format_on_save = {
-					timeout_ms = 3000,
 					lsp_format = "fallback",
+					timeout_ms = 500,
 				},
 			})
 

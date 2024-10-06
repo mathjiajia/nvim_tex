@@ -55,8 +55,10 @@ opt.shiftwidth = 4
 opt.softtabstop = 4
 
 -- 14 folding
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldlevel = 99
-opt.foldtext = " "
+opt.foldtext = ""
 
 -- 15 diff mode
 opt.diffopt:append({ linematch = 60 })

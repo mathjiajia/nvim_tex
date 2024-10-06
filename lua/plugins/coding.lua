@@ -5,10 +5,7 @@ return {
 		"L3MON4D3/LuaSnip",
 		lazy = true,
 		build = "make install_jsregexp",
-		dependencies = {
-			"mathjiajia/mySnippets",
-			opts = { path = vim.fn.stdpath("data") .. "/lazy/mySnippets/snippets" },
-		},
+		dependencies = { "mathjiajia/mySnippets", config = true },
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")
@@ -17,14 +14,12 @@ return {
 				update_events = "TextChanged,TextChangedI",
 				delete_check_events = "TextChanged",
 				ext_opts = {
-					[types.insertNode] = { active = { virt_text = { { "●", "Boolean" } } } },
-					[types.choiceNode] = { active = { virt_text = { { "○", "Special" } } } },
+					[types.insertNode] = { active = { virt_text = { { "", "Boolean" } } } },
+					[types.choiceNode] = { active = { virt_text = { { "󱥸", "Special" } } } },
 				},
 				enable_autosnippets = true,
 				store_selection_keys = "<Tab>",
 			})
-
-			-- require("luasnip.loaders.from_lua").lazy_load()
 
 			vim.keymap.set("i", "<C-k>", function()
 				if ls.expandable() then
@@ -107,6 +102,8 @@ return {
 					completion = { border = "rounded", col_offset = -1 },
 					documentation = { border = "rounded" },
 				},
+				---@diagnostic disable-next-line: missing-fields
+				matching = { disallow_prefix_unmatching = true },
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip", option = { show_autosnippets = true } },
@@ -121,9 +118,7 @@ return {
 
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = cmp.mapping.preset.cmdline(),
-				sources = {
-					{ name = "buffer" },
-				},
+				sources = { name = "buffer" },
 			})
 
 			cmp.setup.cmdline(":", {
@@ -148,6 +143,11 @@ return {
 			{ "cs", desc = "Change Surrounding" },
 			{ "ds", desc = "Delete Surrounding" },
 			{ "ys", desc = "Add Surrounding" },
+			{ "yS", desc = "Add Surrounding to Current Line" },
+			{ "S", mode = { "x" }, desc = "Add Surrounding" },
+			{ "gS", mode = { "x" }, desc = "Add Surrounding to Current Line" },
+			{ "<C-g>s", mode = { "i" }, desc = "Add Surrounding" },
+			{ "<C-g>S", mode = { "i" }, desc = "Add Surrounding to Current Line" },
 		},
 	},
 }
