@@ -1,10 +1,10 @@
 return {
 
 	-- filesype plugin for `LaTeX`
-	{ "mathjiajia/latex.nvim", ft = "tex", config = true },
+	{ "mathjiajia/latex.nvim" },
 
 	-- viewing Markdown files in Neovim
-	{ "OXY2DEV/markview.nvim", config = true },
+	{ "OXY2DEV/markview.nvim" },
 
 	-- Faster LuaLS setup for Neovim
 	-- { "folke/lazydev.nvim", ft = "lua", config = true },

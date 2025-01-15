@@ -22,8 +22,6 @@ return {
 			})
 
 			-- lspconfig
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 			local settings = {
 				lua_ls = {
 					Lua = {
@@ -48,7 +46,7 @@ return {
 								"--execute-command",
 								"turn_on_synctex",
 								"--inverse-search",
-								vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2",
+								"texlab inverse-search -i %%1 -l %%2",
 								"--forward-search-file",
 								"%f",
 								"--forward-search-line",
@@ -64,57 +62,30 @@ return {
 			}
 
 			for _, server in pairs(vim.tbl_keys(settings)) do
-				require("lspconfig")[server].setup({
-					capabilities = capabilities,
-					settings = settings[server],
-				})
+				require("lspconfig")[server].setup({ settings = settings[server] })
 			end
 		end,
 	},
 
-	-- cmdline tools and lsp servers
 	{
-		"williamboman/mason.nvim",
-		opts = { ui = { border = "rounded", height = 0.8 } },
-		-- dependencies = {
-		-- 	"WhoIsSethDaniel/mason-tool-installer.nvim",
-		-- 	opts = {
-		-- 		ensure_installed = {
-		-- 			-- lsp
-		-- 			"lua-language-server",
-		-- 			"texlab",
-		-- 			-- formatter
-		-- 			"bibtex-tidy",
-		-- 			"latexindent",
-		-- 			"prettierd",
-		-- 			"stylua",
-		-- 		},
-		-- 	},
-		-- },
+		"stevearc/aerial.nvim",
+		opts = {
+			backends = { "lsp", "treesitter", "markdown", "man" },
+			show_guides = true,
+			filter_kind = false,
+		},
+		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial (Symbols)" } },
 	},
 
-	-- lsp enhancement
 	{
-		"nvimdev/lspsaga.nvim",
-		event = { "LspAttach" },
-		-- stylua: ignore
-		keys = { { "<M-g>", function() require("lspsaga.floaterm"):open_float_terminal({ "lazygit" }) end, mode = { "n", "t" }, desc = "LazyGit" } },
-		config = function()
-			require("lspsaga").setup({
-				symbol_in_winbar = { enable = false },
-				lightbulb = { enable = false },
-				outline = { auto_preview = false },
-				floaterm = { height = 1, width = 1 },
-			})
-
-			vim.keymap.set("n", "gh", function()
-				require("lspsaga.finder"):new({})
-			end, { desc = "Lsp Finder" })
-
-			vim.keymap.set("n", "<M-o>", function()
-				require("lspsaga.symbol"):outline()
-			end, { desc = "Lspsaga Outline" })
-		end,
+		"williamboman/mason.nvim",
+		opts = {
+			ensure_installed = {
+				"bibtex-tidy",
+				"prettierd",
+				"texlab",
+			},
+		},
 	},
 
 	-- formatting
@@ -126,7 +97,6 @@ return {
 					bib = { "bibtex-tidy" },
 					markdown = { "prettierd" },
 					["markdown.mdx"] = { "prettierd" },
-					lua = { "stylua" },
 					tex = { "latexindent" },
 				},
 				formatters = {

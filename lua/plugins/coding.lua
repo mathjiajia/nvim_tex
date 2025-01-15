@@ -27,19 +27,7 @@ return {
 				end
 			end, { desc = "LuaSnip Expand" })
 
-			vim.keymap.set({ "i", "s" }, "<C-l>", function()
-				if ls.locally_jumpable(1) then
-					ls.jump(1)
-				end
-			end, { desc = "LuaSnip Forward Jump" })
-
-			vim.keymap.set({ "i", "s" }, "<C-j>", function()
-				if ls.locally_jumpable(-1) then
-					ls.jump(-1)
-				end
-			end, { desc = "LuaSnip Backward Jump" })
-
-			vim.keymap.set({ "i", "s" }, "<C-e>", function()
+			vim.keymap.set({ "i", "s" }, "<C-;>", function()
 				if ls.choice_active() then
 					ls.change_choice(1)
 				end
@@ -49,87 +37,88 @@ return {
 
 	-- auto completion
 	{
-		"yioneko/nvim-cmp",
-		branch = "perf",
-		event = { "CmdlineEnter", "InsertEnter" },
-		dependencies = {
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-path",
-			"lukas-reineke/cmp-rg",
-			"saadparwaiz1/cmp_luasnip",
+		"saghen/blink.cmp",
+		version = "*",
+		dependencies = { "mikavilpas/blink-ripgrep.nvim" },
+		event = { "InsertEnter", "CmdlineEnter" },
+		opts = {
+			keymap = {
+				preset = "default",
+				["<C-l>"] = { "snippet_forward", "fallback" },
+				["<C-j>"] = { "snippet_backward", "fallback" },
+				["<Tab>"] = { "fallback" },
+				["<S-Tab>"] = { "fallback" },
+			},
+			appearance = {
+				nerd_font_variant = "normal",
+				kind_icons = {
+					Copilot = "",
+
+					Text = "",
+					Method = "",
+					Function = "",
+					Constructor = "",
+
+					Field = "",
+					Variable = "",
+					Property = "",
+
+					Class = "",
+					Interface = "",
+					Struct = "",
+					Module = "",
+
+					Unit = "",
+					Value = "",
+					Enum = "",
+					Enummember = "",
+
+					Keyword = "",
+					Constant = "",
+
+					Snippet = "",
+					Color = "",
+					File = "",
+					Reference = "",
+					Folder = "",
+
+					Event = "",
+					Operator = "",
+					Typeparameter = "",
+				},
+			},
+			signature = { window = { border = "rounded" } },
+			completion = {
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 200,
+					window = { border = "rounded" },
+				},
+				menu = {
+					border = "rounded",
+					draw = {
+						columns = {
+							{ "label",      "label_description", gap = 1 },
+							{ "kind_icon",  "kind" },
+							{ "source_name" },
+						},
+						treesitter = { "lsp" },
+					},
+				},
+			},
+			snippets = { preset = "luasnip" },
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+				providers = {
+					snippets = { opts = { show_autosnippets = false } },
+					ripgrep = {
+						module = "blink-ripgrep",
+						name = "Ripgrep",
+						opts = { additional_rg_options = { "--glob=!*.pdf" } },
+					},
+				},
+			},
 		},
-		config = function()
-			local cmp = require("cmp")
-
-			cmp.setup({
-				mapping = cmp.mapping.preset.insert({
-					["<C-d>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-y>"] = cmp.mapping.confirm({ select = true }),
-				}),
-				snippet = {
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body)
-					end,
-				},
-				formatting = {
-					expandable_indicator = true,
-					fields = { "abbr", "menu", "kind" },
-					format = function(entry, item)
-						local maxwidth = 30
-						local icon = require("mini.icons").get("lsp", item.kind)
-
-						if vim.fn.strchars(item.abbr) > maxwidth then
-							item.abbr = vim.fn.strcharpart(item.abbr, 0, maxwidth) .. "…"
-						end
-						item.menu = ({
-							buffer = "[Buffer]",
-							cmdline = "[Cmd]",
-							nvim_lsp = "[LSP]",
-							luasnip = "[Snip]",
-							neorg = "[Norg]",
-							path = "[Path]",
-							rg = "[RG]",
-						})[entry.source.name]
-						item.kind = icon .. " " .. item.kind
-						return item
-					end,
-				},
-				window = {
-					completion = { border = "rounded", col_offset = -1 },
-					documentation = { border = "rounded" },
-				},
-				---@diagnostic disable-next-line: missing-fields
-				matching = { disallow_prefix_unmatching = true },
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip", option = { show_autosnippets = true } },
-					{ name = "path" },
-				}, {
-					{ name = "buffer" },
-					{ name = "neorg" },
-				}, {
-					{ name = "rg", keyword_length = 2 },
-				}),
-			})
-
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = { name = "buffer" },
-			})
-
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "path" },
-				}, {
-					{ name = "cmdline" },
-				}),
-			})
-		end,
 	},
 
 	-- auto pairs
@@ -140,14 +129,14 @@ return {
 		"kylechui/nvim-surround",
 		config = true,
 		keys = {
-			{ "cs", desc = "Change Surrounding" },
-			{ "ds", desc = "Delete Surrounding" },
-			{ "ys", desc = "Add Surrounding" },
-			{ "yS", desc = "Add Surrounding to Current Line" },
-			{ "S", mode = { "x" }, desc = "Add Surrounding" },
-			{ "gS", mode = { "x" }, desc = "Add Surrounding to Current Line" },
-			{ "<C-g>s", mode = { "i" }, desc = "Add Surrounding" },
-			{ "<C-g>S", mode = { "i" }, desc = "Add Surrounding to Current Line" },
+			{ "cs",     desc = "Change Surrounding" },
+			{ "ds",     desc = "Delete Surrounding" },
+			{ "ys",     desc = "Add Surrounding" },
+			{ "yS",     desc = "Add Surrounding to Current Line" },
+			{ "S",      mode = { "x" },                          desc = "Add Surrounding" },
+			{ "gS",     mode = { "x" },                          desc = "Add Surrounding to Current Line" },
+			{ "<C-g>s", mode = { "i" },                          desc = "Add Surrounding" },
+			{ "<C-g>S", mode = { "i" },                          desc = "Add Surrounding to Current Line" },
 		},
 	},
 }

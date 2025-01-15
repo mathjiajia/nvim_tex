@@ -10,6 +10,7 @@ return {
 					"bibtex",
 					"comment",
 					"diff",
+					"html",
 					"latex",
 					"lua",
 					"luadoc",

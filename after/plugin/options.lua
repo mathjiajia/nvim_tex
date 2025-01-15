@@ -50,9 +50,9 @@ opt.formatoptions = "tcroqnlj"
 opt.pumheight = 10
 
 -- 13 tabs and indenting
-opt.tabstop = 4
-opt.shiftwidth = 4
-opt.softtabstop = 4
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.softtabstop = 2
 
 -- 14 folding
 opt.foldmethod = "expr"
@@ -61,7 +61,7 @@ opt.foldlevel = 99
 opt.foldtext = ""
 
 -- 15 diff mode
-opt.diffopt:append({ linematch = 60 })
+opt.diffopt:append({ linematch = 90 })
 
 -- 16 mapping
 opt.timeoutlen = 500
@@ -87,5 +87,5 @@ opt.virtualedit = "block"
 opt.signcolumn = "yes"
 
 -- Remove "How-to disable mouse" from right-click menu
-pcall(vim.cmd.aunmenu, [[PopUp.How-to\ disable\ mouse]])
+pcall(vim.cmd.aunmenu, [[popup.how-to\ disable\ mouse]])
 pcall(vim.cmd.aunmenu, [[PopUp.-1-]])

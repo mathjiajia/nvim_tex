@@ -1,21 +1,5 @@
 return {
 
-	-- colorschemes
-	-- {
-	-- 	"folke/tokyonight.nvim",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		require("tokyonight").setup({
-	-- 			transparent = true,
-	-- 			terminal_colors = false,
-	-- 			styles = {
-	-- 				sidebars = "transparent",
-	-- 				floats = "transparent",
-	-- 			},
-	-- 		})
-	-- 		vim.cmd.colorscheme("tokyonight")
-	-- 	end,
-	-- },
 	{
 		"ribru17/bamboo.nvim",
 		priority = 1000,
@@ -26,58 +10,135 @@ return {
 	},
 
 	-- winbar
-	{ "Bekaboo/dropbar.nvim", config = true },
+	{
+		"Bekaboo/dropbar.nvim",
+		config = function()
+			require("dropbar").setup({
+				icons = {
+					kinds = {
+						file_icon = function(path)
+							local file_icon = "󰈔 "
+							local file_icon_hl = "DropBarIconKindFile"
 
-	-- statuscolumn
-	{ "luukvbaal/statuscol.nvim", config = true },
+							local mini_icon, mini_icon_hl = MiniIcons.get("file", vim.fs.basename(path))
+
+							if not mini_icon then
+								local buf = vim.iter(vim.api.nvim_list_bufs()):find(function(buf)
+									return vim.api.nvim_buf_get_name(buf) == path
+								end)
+								if buf then
+									local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+									mini_icon, mini_icon_hl = MiniIcons.get("filetype", filetype)
+								end
+							end
+
+							file_icon = mini_icon and mini_icon .. " " or file_icon
+							file_icon_hl = mini_icon_hl
+							return file_icon, file_icon_hl
+						end,
+					},
+				},
+			})
+		end,
+	},
 
 	-- statusline
 	{
-		"sschleemilch/slimline.nvim",
-		opts = {
-			verbose_mode = true,
-			style = "fg",
-		},
+		"rebelot/heirline.nvim",
+		config = function()
+			require("status")
+		end,
 	},
 
-	-- indent guides for Neovim
 	{
-		"lukas-reineke/indent-blankline.nvim",
-		config = function()
-			local highlight = {
-				"RainbowRed",
-				"RainbowYellow",
-				"RainbowBlue",
-				"RainbowOrange",
-				"RainbowGreen",
-				"RainbowViolet",
-				"RainbowCyan",
-			}
-			local hooks = require("ibl.hooks")
-			hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-				vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-				vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-				vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-				vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-				vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-				vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-				vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-			end)
-
-			vim.g.rainbow_delimiters = { highlight = highlight }
-			require("ibl").setup({
-				scope = { highlight = highlight },
-				exclude = { filetypes = { "conf", "dashboard", "markdown" } },
-			})
-
-			hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
-		end,
+		"folke/snacks.nvim",
+		lazy = false,
+		priority = 1000,
+		-- stylua: ignore
+		keys = {
+			{ "<leader><space>", function() Snacks.picker.files({ cwd = vim.fs.root(0, ".git") }) end,   desc = "Find Files (Root Dir)" },
+			{ "<leader>fb",      function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
+			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+			{ "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files (Root Dir)" },
+			{ "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Files (git-files)" },
+			{ "<leader>fp",      function() Snacks.picker.pick("pickers", { preset = "nopreview" }) end, desc = "Snacks Picker" },
+			{ "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
+			{ '<leader>s"',      function() Snacks.picker.registers() end,                               desc = "Registers" },
+			{ "<leader>sa",      function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
+			{ "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+			{ "<leader>sc",      function() Snacks.picker.command_history() end,                         desc = "Command History" },
+			{ "<leader>sC",      function() Snacks.picker.commands() end,                                desc = "Commands" },
+			{ "<leader>sd",      function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
+			{ "<leader>sg",      function() Snacks.picker.grep() end,                                    desc = "Diagnostics" },
+			{ "<leader>sh",      function() Snacks.picker.help() end,                                    desc = "Help Pages" },
+			{ "<leader>sj",      function() Snacks.picker.jumps() end,                                   desc = "Jumps" },
+			{ "<leader>sk",      function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
+			{ "<leader>sl",      function() Snacks.picker.loclist() end,                                 desc = "Location List" },
+			{ "<leader>sm",      function() Snacks.picker.marks() end,                                   desc = "Marks" },
+			{ "<leader>sR",      function() Snacks.picker.resume() end,                                  desc = "Resume" },
+			{ "<leader>sq",      function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
+			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,                             desc = "Lsp Symbols" },
+			{ "<leader>sw",      function() Snacks.picker.grep_word() end,                               desc = "Word (Root Dir)",       mode = { "n", "x" } },
+			{ "<leader>qp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
+			{ "<C-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal",       mode = { "n", "t" }, }
+		},
+		opts = {
+			dashboard = {
+				enabled = true,
+				sections = {
+					{ section = "header" },
+					{ section = "keys", gap = 1, padding = 1 },
+					{
+						pane = 2,
+						icon = " ",
+						title = "Recent Files",
+						section = "recent_files",
+						indent = 2,
+						padding = 1,
+					},
+					{
+						pane = 2,
+						icon = " ",
+						title = "Projects",
+						section = "projects",
+						indent = 2,
+						padding = 2,
+					},
+					{ section = "startup" },
+				},
+			},
+			indent = {
+				enabled = true,
+				scope = {
+					hl = {
+						"RainbowDelimiterRed",
+						"RainbowDelimiterYellow",
+						"RainbowDelimiterBlue",
+						"RainbowDelimiterOrange",
+						"RainbowDelimiterGreen",
+						"RainbowDelimiterViolet",
+						"RainbowDelimiterCyan",
+					},
+				},
+			},
+			input = { enabled = true },
+			notifier = { enabled = true },
+			picker = { ui_select = true },
+			scroll = { enabled = true },
+			scope = { enabled = true },
+			terminal = { win = { wo = { winbar = "" } } },
+			words = { enabled = true },
+			styles = {
+				lazygit = { width = 0, height = 0 },
+				notification = { wo = { wrap = true } },
+				terminal = { height = 12 },
+			},
+		},
 	},
 
 	-- noicer ui
 	{
 		"folke/noice.nvim",
-		dependencies = { "rcarriga/nvim-notify", config = true },
 		config = function()
 			require("noice").setup({
 				lsp = {
@@ -107,32 +168,18 @@ return {
 				},
 			})
 
-			-- stylua: ignore start
-			vim.keymap.set({ "i", "n", "s" }, "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, { silent = true, expr = true, desc = "Scroll Forward" })
-			vim.keymap.set({ "i", "n", "s" }, "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, { silent = true, expr = true, desc = "Scroll Backward" })
-		end,
-	},
+			vim.keymap.set({ "i", "n", "s" }, "<C-f>", function()
+				if not require("noice.lsp").scroll(4) then
+					return "<C-f>"
+				end
+			end, { silent = true, expr = true, desc = "Scroll Forward" })
 
-	-- start screen
-	{
-		"mathjiajia/dashboard-nvim",
-		branch = "mini-icons",
-		opts = {
-			disable_move = true,
-			shuffle_letter = true,
-			config = {
-				week_header = { enable = true },
-				-- stylua: ignore
-				shortcut = {
-					{ desc = "󰚰 Update", group = "Identifier", action = "Lazy update", key = "u" },
-					{ desc = " Files", group = "Directory", action = "FzfLua files", key = "f" },
-					{ desc = "󰤖 Servers", group = "Float", action = "Mason", key = "s" },
-					{ desc = " Quit", group = "String", action = function() vim.api.nvim_input("<Cmd>qa<CR>") end, key = "q" },
-				},
-				project = { action = "FzfLua files cwd=" },
-				mru = { cwd_only = true },
-			},
-		},
+			vim.keymap.set({ "i", "n", "s" }, "<C-b>", function()
+				if not require("noice.lsp").scroll(-4) then
+					return "<C-b>"
+				end
+			end, { silent = true, expr = true, desc = "Scroll Backward" })
+		end,
 	},
 
 	-- rainbow delimiters
@@ -147,13 +194,14 @@ return {
 	-- icons
 	{
 		"echasnovski/mini.icons",
-		lazy = true,
-		opts = {
-			lsp = {
-				["function"] = { glyph = "" },
-				object = { glyph = "" },
-				value = { glyph = "" },
-			},
-		},
+		config = function()
+			require("mini.icons").setup({
+				lsp = {
+					["function"] = { glyph = "" },
+					object = { glyph = "" },
+					value = { glyph = "" },
+				},
+			})
+		end,
 	},
 }
