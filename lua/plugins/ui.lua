@@ -57,11 +57,11 @@ return {
 		-- stylua: ignore
 		keys = {
 			{ "<leader><space>", function() Snacks.picker.files({ cwd = vim.fs.root(0, ".git") }) end,   desc = "Find Files (Root Dir)" },
-			{ "<leader>fb",      function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
+			{ "<leader>fb",      function() Snacks.picker.buffers({ layout = "select" }) end,            desc = "Buffers" },
 			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
 			{ "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files (Root Dir)" },
 			{ "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Files (git-files)" },
-			{ "<leader>fp",      function() Snacks.picker.pick("pickers", { preset = "nopreview" }) end, desc = "Snacks Picker" },
+			{ "<leader>fp",      function() Snacks.picker.pickers({ layout = "vscode" }) end,            desc = "Snacks Picker" },
 			{ "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
 			{ '<leader>s"',      function() Snacks.picker.registers() end,                               desc = "Registers" },
 			{ "<leader>sa",      function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
@@ -124,7 +124,7 @@ return {
 			input = { enabled = true },
 			notifier = { enabled = true },
 			picker = { ui_select = true },
-			scroll = { enabled = true },
+			scroll = { enabled = not vim.g.neovide },
 			scope = { enabled = true },
 			terminal = { win = { wo = { winbar = "" } } },
 			words = { enabled = true },

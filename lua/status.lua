@@ -68,7 +68,7 @@ local VimMode = {
 	end,
 	hl = function(self)
 		local mode = self.mode
-		return { fg = self.mode_colors[mode], bold = true }
+		return { fg = self.mode_colors[mode] }
 	end,
 }
 
@@ -125,13 +125,13 @@ local FileFlags = {
 local FileNameModifer = {
 	hl = function()
 		if vim.bo.modified then
-			return { fg = "cyan", bold = true, force = true }
+			return { fg = "cyan", force = true }
 		end
 	end,
 }
 
 FileNameBlock =
-		utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), FileFlags, { provider = "%<" })
+	utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), FileFlags, { provider = "%<" })
 
 local WorkDir = {
 	provider = function()
@@ -144,7 +144,7 @@ local WorkDir = {
 		local trail = cwd:sub(-1) == "/" and "" or "/"
 		return icon .. cwd .. trail
 	end,
-	hl = { fg = "blue", bold = true },
+	hl = { fg = "blue" },
 }
 
 local Git = {
@@ -158,7 +158,6 @@ local Git = {
 		provider = function(self)
 			return "  " .. self.status_dict.head
 		end,
-		hl = { bold = true },
 	},
 	{
 		provider = function(self)
@@ -231,10 +230,39 @@ local LSPActive = {
 		end
 		return " ◍ [" .. table.concat(names, ",") .. "]"
 	end,
-	hl = { fg = "green", bold = true },
+	hl = { fg = "green" },
 }
 
 local Ruler = { provider = "%7(%l/%3L%):%2c %P" }
+
+local ScrollBar = {
+	static = {
+		sbar = {
+			"\238\143\149",
+			"\238\143\148",
+			"\238\143\147",
+			"\238\143\146",
+			"\238\143\145",
+			"\238\143\144",
+			"\238\143\143",
+			"\238\143\142",
+			"\238\143\141",
+			"\238\143\140",
+			"\238\143\139",
+			"\238\143\138",
+			"\238\143\137",
+			"\238\143\136",
+			"\238\143\163",
+		},
+	},
+	provider = function(self)
+		local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+		local lines = vim.api.nvim_buf_line_count(0)
+		local i = math.floor((curr_line - 1) / lines * #self.sbar) + 1
+		return self.sbar[i]
+	end,
+	hl = { fg = "blue" },
+}
 
 local FileType = {
 	provider = function()
@@ -247,8 +275,8 @@ local Spell = {
 	condition = function()
 		return vim.wo.spell
 	end,
-	provider = "󰓆 Spell",
-	hl = { bold = true, fg = "orange" },
+	provider = " 󰓆 Spell ",
+	hl = { fg = "orange" },
 }
 
 local TerminalName = {
@@ -256,7 +284,7 @@ local TerminalName = {
 		local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
 		return " " .. tname
 	end,
-	hl = { fg = "blue", bold = true },
+	hl = { fg = "blue" },
 }
 
 local HelpFileName = {
@@ -286,7 +314,7 @@ local DefaultStatusline = {
 	Space,
 	Ruler,
 	Space,
-	FileType,
+	ScrollBar,
 	Space,
 	Spell,
 }
@@ -303,10 +331,11 @@ local InactiveStatusline = {
 local SpecialStatusline = {
 	condition = function()
 		return conditions.buffer_matches({
-			buftype = { "nofile", "prompt", "help", "quickfix" },
+			buftype = { "nofile", "prompt", "help", "quickfix", "snacks_input" },
 			filetype = { "^git.*", "fugitive" },
 		})
 	end,
+	Space,
 	FileType,
 	Space,
 	HelpFileName,
@@ -364,7 +393,7 @@ local TablineFileFlags = {
 	{
 		condition = function(self)
 			return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr })
-					or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
+				or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
 		end,
 		provider = function(self)
 			if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then
