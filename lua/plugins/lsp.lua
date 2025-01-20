@@ -79,13 +79,7 @@ return {
 
 	{
 		"williamboman/mason.nvim",
-		opts = {
-			ensure_installed = {
-				"bibtex-tidy",
-				"prettierd",
-				"texlab",
-			},
-		},
+		opts = { ui = { border = "rounded", } },
 	},
 
 	-- formatting

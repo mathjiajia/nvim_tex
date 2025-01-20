@@ -56,20 +56,26 @@ return {
 		priority = 1000,
 		-- stylua: ignore
 		keys = {
+			{ "<C-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal",       mode = { "n", "t" }, },
 			{ "<leader><space>", function() Snacks.picker.files({ cwd = vim.fs.root(0, ".git") }) end,   desc = "Find Files (Root Dir)" },
+			-- find
 			{ "<leader>fb",      function() Snacks.picker.buffers({ layout = "select" }) end,            desc = "Buffers" },
 			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
 			{ "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files (Root Dir)" },
 			{ "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Files (git-files)" },
-			{ "<leader>fp",      function() Snacks.picker.pickers({ layout = "vscode" }) end,            desc = "Snacks Picker" },
+			{ "<leader>fm",      function() Snacks.picker.pickers({ layout = "select" }) end,            desc = "Snacks Picker" },
+			{ "<leader>fp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
 			{ "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
+			-- Grep
+			{ "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+			{ "<leader>sg",      function() Snacks.picker.grep() end,                                    desc = "Diagnostics" },
+			{ "<leader>sw",      function() Snacks.picker.grep_word() end,                               desc = "Word (Root Dir)",       mode = { "n", "x" } },
+			-- search
 			{ '<leader>s"',      function() Snacks.picker.registers() end,                               desc = "Registers" },
 			{ "<leader>sa",      function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
-			{ "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
 			{ "<leader>sc",      function() Snacks.picker.command_history() end,                         desc = "Command History" },
 			{ "<leader>sC",      function() Snacks.picker.commands() end,                                desc = "Commands" },
 			{ "<leader>sd",      function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
-			{ "<leader>sg",      function() Snacks.picker.grep() end,                                    desc = "Diagnostics" },
 			{ "<leader>sh",      function() Snacks.picker.help() end,                                    desc = "Help Pages" },
 			{ "<leader>sj",      function() Snacks.picker.jumps() end,                                   desc = "Jumps" },
 			{ "<leader>sk",      function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
@@ -78,9 +84,6 @@ return {
 			{ "<leader>sR",      function() Snacks.picker.resume() end,                                  desc = "Resume" },
 			{ "<leader>sq",      function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
 			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,                             desc = "Lsp Symbols" },
-			{ "<leader>sw",      function() Snacks.picker.grep_word() end,                               desc = "Word (Root Dir)",       mode = { "n", "x" } },
-			{ "<leader>qp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
-			{ "<C-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal",       mode = { "n", "t" }, }
 		},
 		opts = {
 			dashboard = {
@@ -123,7 +126,7 @@ return {
 			},
 			input = { enabled = true },
 			notifier = { enabled = true },
-			picker = { ui_select = true },
+			picker = {},
 			scroll = { enabled = not vim.g.neovide },
 			scope = { enabled = true },
 			terminal = { win = { wo = { winbar = "" } } },
