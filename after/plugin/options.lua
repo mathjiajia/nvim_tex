@@ -61,7 +61,6 @@ opt.foldlevel = 99
 opt.foldtext = ""
 
 -- 15 diff mode
-opt.diffopt:append({ linematch = 90 })
 
 -- 16 mapping
 opt.timeoutlen = 500

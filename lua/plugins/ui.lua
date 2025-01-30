@@ -46,7 +46,7 @@ return {
 	{
 		"rebelot/heirline.nvim",
 		config = function()
-			require("status")
+			require("util.status")
 		end,
 	},
 
@@ -56,34 +56,38 @@ return {
 		priority = 1000,
 		-- stylua: ignore
 		keys = {
-			{ "<C-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal",       mode = { "n", "t" }, },
-			{ "<leader><space>", function() Snacks.picker.files({ cwd = vim.fs.root(0, ".git") }) end,   desc = "Find Files (Root Dir)" },
+			{ "<C-/>",           function() Snacks.terminal() end,                                              desc = "Toggle Terminal",         mode = { "n", "t" }, },
+			{ "<leader><space>", function() Snacks.picker.files({ cwd = require("util.root")() }) end,          desc = "Find Files (Root Dir)" },
 			-- find
-			{ "<leader>fb",      function() Snacks.picker.buffers({ layout = "select" }) end,            desc = "Buffers" },
-			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-			{ "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files (Root Dir)" },
-			{ "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Files (git-files)" },
-			{ "<leader>fm",      function() Snacks.picker.pickers({ layout = "select" }) end,            desc = "Snacks Picker" },
-			{ "<leader>fp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
-			{ "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
+			{ "<leader>fb",      function() Snacks.picker.buffers({ layout = "select" }) end,                   desc = "Buffers" },
+			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end,        desc = "Find Config File" },
+			{ "<leader>fe",      function() Snacks.explorer({ cwd = require("util.root")() }) end,              desc = "File Explorer (Root Dir)" },
+			{ "<leader>fE",      function() Snacks.explorer() end,                                              desc = "File Explorer" },
+			{ "<leader>ff",      function() Snacks.picker.files() end,                                          desc = "Find Files" },
+			{ "<leader>fg",      function() Snacks.picker.git_files() end,                                      desc = "Find Files (git-files)" },
+			{ "<leader>fm",      function() Snacks.picker.pickers({ layout = "select" }) end,                   desc = "Snacks Picker" },
+			{ "<leader>fp",      function() Snacks.picker.projects() end,                                       desc = "Projects" },
+			{ "<leader>fr",      function() Snacks.picker.recent() end,                                         desc = "Recent" },
 			-- Grep
-			{ "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
-			{ "<leader>sg",      function() Snacks.picker.grep() end,                                    desc = "Diagnostics" },
-			{ "<leader>sw",      function() Snacks.picker.grep_word() end,                               desc = "Word (Root Dir)",       mode = { "n", "x" } },
+			{ "<leader>sb",      function() Snacks.picker.lines() end,                                          desc = "Buffer Lines" },
+			{ "<leader>sg",      function() Snacks.picker.grep({ dirs = { require("util.root")() } }) end,      desc = "Grep (Root Dir)" },
+			{ "<leader>sG",      function() Snacks.picker.grep() end,                                           desc = "Grep (cwd)" },
+			{ "<leader>sw",      function() Snacks.picker.grep_word({ dirs = { require("util.root")() } }) end, desc = "Word (Root Dir)",         mode = { "n", "x" } },
+			{ "<leader>sW",      function() Snacks.picker.grep_word() end,                                      desc = "Word (cwd)",              mode = { "n", "x" } },
 			-- search
-			{ '<leader>s"',      function() Snacks.picker.registers() end,                               desc = "Registers" },
-			{ "<leader>sa",      function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
-			{ "<leader>sc",      function() Snacks.picker.command_history() end,                         desc = "Command History" },
-			{ "<leader>sC",      function() Snacks.picker.commands() end,                                desc = "Commands" },
-			{ "<leader>sd",      function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
-			{ "<leader>sh",      function() Snacks.picker.help() end,                                    desc = "Help Pages" },
-			{ "<leader>sj",      function() Snacks.picker.jumps() end,                                   desc = "Jumps" },
-			{ "<leader>sk",      function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
-			{ "<leader>sl",      function() Snacks.picker.loclist() end,                                 desc = "Location List" },
-			{ "<leader>sm",      function() Snacks.picker.marks() end,                                   desc = "Marks" },
-			{ "<leader>sR",      function() Snacks.picker.resume() end,                                  desc = "Resume" },
-			{ "<leader>sq",      function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
-			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,                             desc = "Lsp Symbols" },
+			{ '<leader>s"',      function() Snacks.picker.registers() end,                                      desc = "Registers" },
+			{ "<leader>sa",      function() Snacks.picker.autocmds() end,                                       desc = "Autocmds" },
+			{ "<leader>sc",      function() Snacks.picker.command_history() end,                                desc = "Command History" },
+			{ "<leader>sC",      function() Snacks.picker.commands() end,                                       desc = "Commands" },
+			{ "<leader>sd",      function() Snacks.picker.diagnostics() end,                                    desc = "Diagnostics" },
+			{ "<leader>sh",      function() Snacks.picker.help() end,                                           desc = "Help Pages" },
+			{ "<leader>sj",      function() Snacks.picker.jumps() end,                                          desc = "Jumps" },
+			{ "<leader>sk",      function() Snacks.picker.keymaps() end,                                        desc = "Keymaps" },
+			{ "<leader>sl",      function() Snacks.picker.loclist() end,                                        desc = "Location List" },
+			{ "<leader>sm",      function() Snacks.picker.marks() end,                                          desc = "Marks" },
+			{ "<leader>sR",      function() Snacks.picker.resume() end,                                         desc = "Resume" },
+			{ "<leader>sq",      function() Snacks.picker.qflist() end,                                         desc = "Quickfix List" },
+			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,                                    desc = "Lsp Symbols" },
 		},
 		opts = {
 			dashboard = {
@@ -110,6 +114,7 @@ return {
 					{ section = "startup" },
 				},
 			},
+			explorer = { replace_netrw = true },
 			indent = {
 				enabled = true,
 				scope = {
@@ -126,7 +131,38 @@ return {
 			},
 			input = { enabled = true },
 			notifier = { enabled = true },
-			picker = {},
+			picker = {
+				enabled = true,
+				ui_select = true,
+				win = {
+					input = {
+						keys = {
+							["<a-s>"] = { "flash", mode = { "n", "i" } },
+							["s"] = { "flash" },
+						},
+					},
+				},
+				actions = {
+					flash = function(picker)
+						require("flash").jump({
+							pattern = "^",
+							label = { after = { 0, 0 } },
+							search = {
+								mode = "search",
+								exclude = {
+									function(win)
+										return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "snacks_picker_list"
+									end,
+								},
+							},
+							action = function(match)
+								local idx = picker.list:row2idx(match.pos[1])
+								picker.list:_move(idx, true, true)
+							end,
+						})
+					end,
+				},
+			},
 			scroll = { enabled = not vim.g.neovide },
 			scope = { enabled = true },
 			terminal = { win = { wo = { winbar = "" } } },

@@ -15,7 +15,7 @@ autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 autocmd("TextYankPost", {
 	group = augroup("HighlightYank", {}),
 	callback = function()
-		vim.highlight.on_yank()
+		vim.hl.on_yank()
 	end,
 	desc = "Highlight the Yanked Text",
 })
@@ -35,27 +35,17 @@ autocmd("LspAttach", {
 		}
 
 		for _, keys in ipairs(keymaps) do
-			if client.supports_method(keys.method) then
+			if client:supports_method(keys.method, ev.buf) then
 				vim.keymap.set(keys.mode or "n", keys[1], keys[2], { buffer = ev.buf, desc = keys.method })
 			end
 		end
 
-		if client.supports_method(methods.textDocument_documentHighlight) then
-			autocmd({ "CursorHold", "CursorHoldI" }, {
-				buffer = ev.buf,
-				callback = vim.lsp.buf.document_highlight,
-			})
-			autocmd("CursorMoved", {
-				buffer = ev.buf,
-				callback = vim.lsp.buf.clear_references,
-			})
-		end
-
-		if client.supports_method(methods.textDocument_inlayHint) then
+		if client:supports_method(methods.textDocument_inlayHint, ev.buf) then
 			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+			vim.keymap.set("n", "<M-i>", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
+			end, { desc = "Inlay Hint Toggle", buffer = ev.buf })
 		end
-
-		-- vim.lsp.completion.enable(true, ev.data.client_id, 0, { autotrigger = true })
 	end,
 })
 

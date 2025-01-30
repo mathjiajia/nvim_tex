@@ -1,72 +1,8 @@
+vim.lsp.enable({ "luals", "texlab" })
+
+require("util.root").setup()
+
 return {
-
-	-- lspconfig
-	{
-		"neovim/nvim-lspconfig",
-		config = function()
-			-- diagnostic keymaps
-			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Loclist Diagnostics" })
-
-			-- diagnostics config
-			vim.diagnostic.config({
-				virtual_text = { spacing = 4, prefix = "●" },
-				severity_sort = true,
-				signs = {
-					text = {
-						[vim.diagnostic.severity.ERROR] = " ",
-						[vim.diagnostic.severity.WARN] = " ",
-						[vim.diagnostic.severity.INFO] = " ",
-						[vim.diagnostic.severity.HINT] = " ",
-					},
-				},
-			})
-
-			-- lspconfig
-			local settings = {
-				lua_ls = {
-					Lua = {
-						workspace = { checkThirdParty = false },
-						hint = { enable = true },
-						completion = { callSnippet = "Replace" },
-						telemetry = { enable = false },
-					},
-				},
-				texlab = {
-					texlab = {
-						build = {
-							args = { "-interaction=nonstopmode", "-synctex=1", "%f" },
-							forwardSearchAfter = false,
-							onSave = true,
-							pdfDirectory = "./build",
-						},
-						forwardSearch = {
-							executable = "sioyek",
-							args = {
-								"--reuse-window",
-								"--execute-command",
-								"turn_on_synctex",
-								"--inverse-search",
-								"texlab inverse-search -i %%1 -l %%2",
-								"--forward-search-file",
-								"%f",
-								"--forward-search-line",
-								"%l",
-								"%p",
-							},
-							-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
-							-- args = { "-r", "%l", "%p", "%f" },
-						},
-						diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
-					},
-				},
-			}
-
-			for _, server in pairs(vim.tbl_keys(settings)) do
-				require("lspconfig")[server].setup({ settings = settings[server] })
-			end
-		end,
-	},
-
 	{
 		"stevearc/aerial.nvim",
 		opts = {
@@ -77,26 +13,14 @@ return {
 		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial (Symbols)" } },
 	},
 
-	{
-		"williamboman/mason.nvim",
-		opts = { ui = { border = "rounded", } },
-	},
+	{ "williamboman/mason.nvim", opts = { ui = { border = "rounded" } } },
 
 	-- formatting
 	{
 		"stevearc/conform.nvim",
 		config = function()
 			require("conform").setup({
-				formatters_by_ft = {
-					bib = { "bibtex-tidy" },
-					markdown = { "prettierd" },
-					["markdown.mdx"] = { "prettierd" },
-					tex = { "latexindent" },
-				},
 				formatters = {
-					latexindent = {
-						prepend_args = { "-c", "./.aux", "-m" },
-					},
 					["bibtex-tidy"] = {
 						prepend_args = {
 							"--curly",
@@ -106,6 +30,12 @@ return {
 							"--remove-braces",
 						},
 					},
+				},
+				formatters_by_ft = {
+					bib = { "bibtex-tidy" },
+					markdown = { "prettierd" },
+					["markdown.mdx"] = { "prettierd" },
+					tex = { "tex-fmt" },
 				},
 				format_on_save = {
 					lsp_format = "fallback",
