@@ -130,17 +130,14 @@ local FileNameModifer = {
 	end,
 }
 
-FileNameBlock =
-	utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), FileFlags, { provider = "%<" })
+FileNameBlock = utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), FileFlags,
+	{ provider = "%<" })
 
 local WorkDir = {
 	provider = function()
 		local icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. "  "
 		local cwd = vim.fn.getcwd(0)
-		cwd = vim.fn.fnamemodify(cwd, ":~")
-		if not conditions.width_percent_below(#cwd, 0.25) then
-			cwd = vim.fn.pathshorten(cwd)
-		end
+		cwd = vim.fn.pathshorten(vim.fn.fnamemodify(cwd, ":~"))
 		local trail = cwd:sub(-1) == "/" and "" or "/"
 		return icon .. cwd .. trail
 	end,
@@ -393,7 +390,7 @@ local TablineFileFlags = {
 	{
 		condition = function(self)
 			return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr })
-				or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
+					or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
 		end,
 		provider = function(self)
 			if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then

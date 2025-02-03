@@ -1,7 +1,5 @@
 vim.lsp.enable({ "luals", "texlab" })
 
-require("util.root").setup()
-
 return {
 	{
 		"stevearc/aerial.nvim",

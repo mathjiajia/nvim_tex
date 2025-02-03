@@ -208,7 +208,7 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<leader>lf", buf_search, { buffer = bufnr, desc = "Forward search from current position" })
 	vim.keymap.set("n", "<leader>lc", buf_cancel_build, { buffer = bufnr, desc = "Cancel the current build" })
 	vim.keymap.set("n", "cse", buf_change_env, { buffer = bufnr, desc = "Change the current environment" })
-	vim.keymap.set("i", "]]", close_env, { buffer = bufnr, desc = "Close the current environment" })
+	vim.keymap.set("i", ";]", close_env, { buffer = bufnr, desc = "Close the current environment" })
 	vim.keymap.set("n", "tss", toggle_star, { buffer = bufnr, desc = "Toggle starred environment" })
 end
 

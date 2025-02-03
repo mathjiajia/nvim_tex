@@ -29,14 +29,13 @@ autocmd("LspAttach", {
 		local keymaps = {
 			{ "gD", vim.lsp.buf.declaration, method = methods.textDocument_declaration },
 			{ "gd", vim.lsp.buf.definition, method = methods.textDocument_definition },
-			{ "gi", vim.lsp.buf.implementation, method = methods.textDocument_implementation },
 			{ "<C-k>", vim.lsp.buf.signature_help, method = methods.textDocument_signatureHelp },
 			{ "gt", vim.lsp.buf.type_definition, method = methods.textDocument_typeDefinition },
 		}
 
 		for _, keys in ipairs(keymaps) do
 			if client:supports_method(keys.method, ev.buf) then
-				vim.keymap.set(keys.mode or "n", keys[1], keys[2], { buffer = ev.buf, desc = keys.method })
+				vim.keymap.set("n", keys[1], keys[2], { buffer = ev.buf, desc = keys.method })
 			end
 		end
 
@@ -44,7 +43,7 @@ autocmd("LspAttach", {
 			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
 			vim.keymap.set("n", "<M-i>", function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
-			end, { desc = "Inlay Hint Toggle", buffer = ev.buf })
+			end, { buffer = ev.buf, desc = "Inlay Hint Toggle" })
 		end
 	end,
 })

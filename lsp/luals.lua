@@ -9,6 +9,7 @@ return {
 		"stylua.toml",
 		"selene.toml",
 		"selene.yml",
+		".git",
 	},
 	single_file_support = true,
 	settings = {
@@ -18,9 +19,9 @@ return {
 				checkThirdParty = false,
 				library = { vim.env.VIMRUNTIME },
 			},
+			completion = { callSnippet = "Replace" },
+			hint = { enable = true },
+			telemetry = { enable = false },
 		},
-		completion = { callSnippet = "Replace" },
-		hint = { enable = true },
-		telemetry = { enable = false },
 	},
 }

@@ -21,17 +21,11 @@ return {
 				store_selection_keys = "<Tab>",
 			})
 
-			vim.keymap.set("i", "<C-k>", function()
-				if ls.expandable() then
-					ls.expand()
-				end
-			end, { desc = "LuaSnip Expand" })
-
-			vim.keymap.set({ "i", "s" }, "<C-;>", function()
-				if ls.choice_active() then
-					ls.change_choice(1)
-				end
-			end, { desc = "LuaSnip Next Choice" })
+			-- stylua: ignore start
+			vim.keymap.set("i", "<C-k>", function() if ls.expandable() then ls.expand() end end, { desc = "LuaSnip Expand" })
+			vim.keymap.set({ "i", "s" }, "<C-;>", function() if ls.choice_active() then ls.change_choice(1) end end,
+				{ desc = "LuaSnip Next Choice" })
+			-- stylua: ignore end
 		end,
 	},
 
@@ -49,44 +43,7 @@ return {
 				["<Tab>"] = { "fallback" },
 				["<S-Tab>"] = { "fallback" },
 			},
-			appearance = {
-				nerd_font_variant = "normal",
-				kind_icons = {
-					Copilot = "",
-
-					Text = "",
-					Method = "",
-					Function = "",
-					Constructor = "",
-
-					Field = "",
-					Variable = "",
-					Property = "",
-
-					Class = "",
-					Interface = "",
-					Struct = "",
-					Module = "",
-
-					Unit = "",
-					Value = "",
-					Enum = "",
-					Enummember = "",
-
-					Keyword = "",
-					Constant = "",
-
-					Snippet = "",
-					Color = "",
-					File = "",
-					Reference = "",
-					Folder = "",
-
-					Event = "",
-					Operator = "",
-					Typeparameter = "",
-				},
-			},
+			appearance = { nerd_font_variant = "normal" },
 			signature = { window = { border = "rounded" } },
 			completion = {
 				documentation = {
@@ -97,11 +54,11 @@ return {
 				menu = {
 					border = "rounded",
 					draw = {
-						columns = {
-							{ "label",      "label_description", gap = 1 },
-							{ "kind_icon",  "kind" },
-							{ "source_name" },
-						},
+						-- columns = {
+						-- 	{ "label",      "label_description", gap = 1 },
+						-- 	{ "kind_icon",  "kind" },
+						-- 	{ "source_name" },
+						-- },
 						treesitter = { "lsp" },
 					},
 				},
