@@ -5,6 +5,7 @@ return {
 		"stevearc/aerial.nvim",
 		opts = {
 			backends = { "lsp", "treesitter", "markdown", "man" },
+			nerd_font = true,
 			show_guides = true,
 			filter_kind = false,
 		},

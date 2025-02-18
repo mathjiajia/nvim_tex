@@ -33,16 +33,20 @@ local on_attach = function(client, bufnr)
 	end
 
 	local function buf_cancel_build()
-		client:exec_cmd({ title = "cancel", command = "texlab.cancelBuild" }, { bufnr = bufnr })
+		client:exec_cmd({ title = "cancel Build", command = "texlab.cancelBuild" }, { bufnr = bufnr })
 	end
 
 	local function dependency_graph()
-		client:request("workspace/executeCommand", { command = "texlab.showDependencyGraph" }, function(err, result)
-			if err then
-				return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+		client:exec_cmd(
+			{ title = "show Dependency Graph", command = "texlab.showDependencyGraph" },
+			{ bufnr = bufnr },
+			function(err, result)
+				if err then
+					return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+				end
+				vim.notify("The dependency graph has been generated:\n" .. result, vim.log.levels.INFO)
 			end
-			vim.notify("The dependency graph has been generated:\n" .. result, vim.log.levels.INFO)
-		end, 0)
+		)
 	end
 
 	local function command_factory(cmd)
@@ -66,33 +70,34 @@ local on_attach = function(client, bufnr)
 		end
 	end
 
-	local function buf_find_envs()
-		client:request("workspace/executeCommand", {
-			command = "texlab.findEnvironments",
-			arguments = { params },
-		}, function(err, result)
-			if err then
-				return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
-			end
-			local env_names = {}
-			local max_length = 1
-			for _, env in ipairs(result) do
-				table.insert(env_names, env.name.text)
-				max_length = math.max(max_length, string.len(env.name.text))
-			end
-			for i, name in ipairs(env_names) do
-				env_names[i] = string.rep(" ", i - 1) .. name
-			end
-			vim.lsp.util.open_floating_preview(env_names, "", {
-				height = #env_names,
-				width = math.max((max_length + #env_names - 1), (string.len("Environments"))),
-				focusable = false,
-				focus = false,
-				border = "single",
-				title = "Environments",
-			})
-		end, bufnr)
-	end
+	-- local function buf_find_envs()
+	-- 	client:exec_cmd({
+	-- 		title = "find Environments",
+	-- 		command = "texlab.findEnvironments",
+	-- 		arguments = { params },
+	-- 	}, { bufnr = bufnr }, function(err, result)
+	-- 		if err then
+	-- 			return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+	-- 		end
+	-- 		local env_names = {}
+	-- 		local max_length = 1
+	-- 		for _, env in ipairs(result) do
+	-- 			table.insert(env_names, env.name.text)
+	-- 			max_length = math.max(max_length, string.len(env.name.text))
+	-- 		end
+	-- 		for i, name in ipairs(env_names) do
+	-- 			env_names[i] = string.rep(" ", i - 1) .. name
+	-- 		end
+	-- 		vim.lsp.util.open_floating_preview(env_names, "", {
+	-- 			height = #env_names,
+	-- 			width = math.max((max_length + #env_names - 1), (string.len("Environments"))),
+	-- 			focusable = false,
+	-- 			focus = false,
+	-- 			border = "single",
+	-- 			title = "Environments",
+	-- 		})
+	-- 	end)
+	-- end
 
 	local function buf_change_env()
 		local new = vim.fn.input("Enter the new environment name: ")
@@ -115,10 +120,11 @@ local on_attach = function(client, bufnr)
 	end
 
 	local function close_env()
-		client:request("workspace/executeCommand", {
+		client:exec_cmd({
+			title = "find Environments",
 			command = "texlab.findEnvironments",
 			arguments = { params },
-		}, function(err, result)
+		}, { bufnr = bufnr }, function(err, result)
 			if err then
 				return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
 			end
@@ -128,14 +134,15 @@ local on_attach = function(client, bufnr)
 
 			local text = result[#result].name.text
 			vim.api.nvim_put({ "\\end{" .. text .. "}" }, "", false, true)
-		end, bufnr)
+		end)
 	end
 
 	local toggle_star = function()
-		client:request("workspace/executeCommand", {
+		client:exec_cmd({
+			title = "find Environments",
 			command = "texlab.findEnvironments",
 			arguments = { params },
-		}, function(err, result)
+		}, { bufnr = bufnr }, function(err, result)
 			if err then
 				return vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
 			end
@@ -157,7 +164,7 @@ local on_attach = function(client, bufnr)
 					},
 				},
 			}, { bufnr = bufnr })
-		end, bufnr)
+		end)
 	end
 
 	-- vim.api.nvim_buf_create_user_command(bufnr, "TexlabBuild", buf_build, { desc = "Build the current buffer" })
@@ -191,18 +198,18 @@ local on_attach = function(client, bufnr)
 		command_factory("Auxiliary"),
 		{ desc = "Clean the auxiliary files" }
 	)
-	vim.api.nvim_buf_create_user_command(
-		bufnr,
-		"TexlabFindEnvironments",
-		buf_find_envs,
-		{ desc = "Find the environments at current position" }
-	)
-	vim.api.nvim_buf_create_user_command(
-		bufnr,
-		"TexlabChangeEnvironment",
-		buf_change_env,
-		{ desc = "Change the environment at current position" }
-	)
+	-- vim.api.nvim_buf_create_user_command(
+	-- 	bufnr,
+	-- 	"TexlabFindEnvironments",
+	-- 	buf_find_envs,
+	-- 	{ desc = "Find the environments at current position" }
+	-- )
+	-- vim.api.nvim_buf_create_user_command(
+	-- 	bufnr,
+	-- 	"TexlabChangeEnvironment",
+	-- 	buf_change_env,
+	-- 	{ desc = "Change the environment at current position" }
+	-- )
 
 	vim.keymap.set("n", "<leader>ll", buf_build, { buffer = bufnr, desc = "Build the current buffer" })
 	vim.keymap.set("n", "<leader>lf", buf_search, { buffer = bufnr, desc = "Forward search from current position" })
@@ -247,7 +254,15 @@ return {
 				-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
 				-- args = { "-r", "%l", "%p", "%f" },
 			},
-			diagnostics = { ignoredPatterns = { "^Overfull", "^Underfull" } },
+			diagnostics = {
+				ignoredPatterns = {
+					"Overfull",
+					"Underfull",
+					"Package hyperref Warning",
+					"Float too large for page",
+					"contains only floats",
+				},
+			},
 		},
 	},
 	on_attach = on_attach,

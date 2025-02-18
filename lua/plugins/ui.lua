@@ -38,6 +38,16 @@ return {
 						end,
 					},
 				},
+				sources = {
+					path = {
+						modified = function(sym)
+							return sym:merge({
+								name = sym.name .. "[+]",
+								name_hl = "DiffAdded",
+							})
+						end,
+					},
+				},
 			})
 		end,
 	},
@@ -155,6 +165,24 @@ return {
 				},
 			},
 			explorer = { replace_netrw = true },
+			image = {
+				enabled = false,
+				convert = { notify = false },
+				math = {
+					latex = {
+						package = { "amsmath", "amssymb", "mathtools", "xy" },
+						tpl = [[
+						\documentclass[preview,border=0pt,varwidth]{standalone}
+						\usepackage{${packages}}
+						\begin{document}
+						${header}
+						{\color[HTML]{${color}}
+							${content}}
+						\end{document}
+						]],
+					},
+				},
+			},
 			indent = {
 				enabled = true,
 				scope = {

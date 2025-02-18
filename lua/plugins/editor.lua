@@ -1,5 +1,72 @@
 return {
 
+	-- llm
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			adapters = {
+				aliyun_deepseek = function()
+					return require("codecompanion.adapters").extend("deepseek", {
+						name = "aliyun_deepseek",
+						env = {
+							url = "https://dashscope.aliyuncs.com",
+							api_key = "cmd:security find-generic-password -s 'aliyun_api' -w",
+							chat_url = "/compatible-mode/v1/chat/completions",
+						},
+						schema = {
+							model = {
+								default = "deepseek-r1",
+								choices = { ["deepseek-r1"] = { opts = { can_reason = true } } },
+							},
+						},
+					})
+				end,
+				aliyun_qwen = function()
+					return require("codecompanion.adapters").extend("openai_compatible", {
+						name = "aliyun_qwen",
+						env = {
+							url = "https://dashscope.aliyuncs.com",
+							api_key = "cmd:security find-generic-password -s 'aliyun_api' -w",
+							chat_url = "/compatible-mode/v1/chat/completions",
+						},
+						schema = {
+							model = {
+								default = "qwen-max-latest",
+								choices = {
+									"qwen-max-latest",
+									["qwq-plus"] = { opts = { can_reason = true } },
+								},
+							},
+						},
+					})
+				end,
+			},
+			strategies = {
+				chat = { adapter = "aliyun_qwen" },
+				inline = { adapter = "ollama" },
+			},
+			prompt_library = {
+				["Revision"] = {
+					strategy = "chat",
+					description = "Academic Revision Assistant",
+					prompts = {
+						{
+							role = "user",
+							content = [[
+You are an AI writing assistant with expertise in academic writing and algebraic geometry using LaTeX.
+Your task is to revise provided academic text excerpts to enhance clarity, conciseness,
+and grammatical accuracy while preserving all mathematical precision and LaTeX formatting.
+Ensure that the revised text maintains the formal tone appropriate for a research paper.
+When you receive a text input, output an improved version that adheres to these guidelines.
+]],
+						},
+					},
+				},
+			},
+		},
+	},
+
 	-- search/replace in multiple files
 	{
 		"MagicDuck/grug-far.nvim",

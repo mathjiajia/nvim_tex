@@ -72,12 +72,6 @@ local VimMode = {
 	end,
 }
 
-local FileNameBlock = {
-	init = function(self)
-		self.filename = vim.api.nvim_buf_get_name(0)
-	end,
-}
-
 local FileIcon = {
 	init = function(self)
 		local filename = self.filename
@@ -303,7 +297,6 @@ local DefaultStatusline = {
 	VimMode,
 	Space,
 	WorkDir,
-	FileNameBlock,
 	Git,
 	Align,
 	Diagnostics,

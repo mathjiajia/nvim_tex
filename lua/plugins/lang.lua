@@ -1,11 +1,17 @@
 return {
 
 	-- filesype plugin for `LaTeX`
-	{ "mathjiajia/latex.nvim" },
+	{ "mathjiajia/nvim-latex-conceal" },
 
 	-- viewing Markdown files in Neovim
 	{
 		"OXY2DEV/markview.nvim",
-		opts = { preview = { icon_provider = "mini" } },
+		opts = {
+			preview = {
+				filetypes = { "markdown", "codecompanion" },
+				ignore_buftypes = {},
+				icon_provider = "mini",
+			},
+		},
 	},
 }
