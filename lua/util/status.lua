@@ -99,38 +99,11 @@ local FileName = {
 	hl = { fg = utils.get_highlight("Directory").fg },
 }
 
-local FileFlags = {
-	{
-		condition = function()
-			return vim.bo.modified
-		end,
-		provider = "[+]",
-		hl = { fg = "green" },
-	},
-	{
-		condition = function()
-			return not vim.bo.modifiable or vim.bo.readonly
-		end,
-		provider = "",
-		hl = { fg = "orange" },
-	},
-}
-
-local FileNameModifer = {
-	hl = function()
-		if vim.bo.modified then
-			return { fg = "cyan", force = true }
-		end
-	end,
-}
-
-FileNameBlock = utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), FileFlags,
-	{ provider = "%<" })
-
 local WorkDir = {
 	provider = function()
 		local icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. "  "
 		local cwd = vim.fn.getcwd(0)
+		cwd = vim.fn.fnamemodify(cwd, ":~")
 		cwd = vim.fn.pathshorten(vim.fn.fnamemodify(cwd, ":~"))
 		local trail = cwd:sub(-1) == "/" and "" or "/"
 		return icon .. cwd .. trail
@@ -383,7 +356,7 @@ local TablineFileFlags = {
 	{
 		condition = function(self)
 			return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr })
-					or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
+				or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
 		end,
 		provider = function(self)
 			if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then

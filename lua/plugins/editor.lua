@@ -4,6 +4,7 @@ return {
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		cmd = { "CodeCompanion", "CodeCompanionChatActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		opts = {
 			adapters = {
 				aliyun_deepseek = function()
