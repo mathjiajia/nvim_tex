@@ -5,13 +5,7 @@ return {
 
 	-- viewing Markdown files in Neovim
 	{
-		"OXY2DEV/markview.nvim",
-		opts = {
-			preview = {
-				filetypes = { "markdown", "codecompanion" },
-				ignore_buftypes = {},
-				icon_provider = "mini",
-			},
-		},
+		"MeanderingProgrammer/render-markdown.nvim",
+		opts = { file_types = { "markdown", "codecompanion" } },
 	},
 }

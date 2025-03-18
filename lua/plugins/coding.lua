@@ -1,3 +1,42 @@
+local kind_icons = {
+	Array = "",
+	Boolean = "",
+	Class = "",
+	Color = "",
+	Constant = "",
+	Constructor = "",
+	Enum = "",
+	EnumMember = "",
+	Event = "",
+	Field = "",
+	File = "",
+	Folder = "",
+	Function = "",
+	Interface = "",
+	Key = "",
+	Keyword = "",
+	Method = "",
+	Module = "",
+	Namespace = "",
+	Null = "",
+	Number = "",
+	Object = "",
+	Operator = "",
+	Package = "",
+	Property = "",
+	Reference = "",
+	Snippet = "",
+	String = "",
+	Struct = "",
+	Text = "",
+	TypeParameter = "",
+	Unit = "",
+	Value = "",
+	Variable = "",
+
+	Component = "󰅴",
+	Fragment = "󰅴",
+}
 return {
 
 	-- snippets
@@ -20,6 +59,8 @@ return {
 				enable_autosnippets = true,
 				store_selection_keys = "<Tab>",
 			})
+
+			require("luasnip.loaders.from_lua").lazy_load({})
 
 			-- stylua: ignore start
 			vim.keymap.set("i", "<C-k>", function() if ls.expandable() then ls.expand() end end, { desc = "LuaSnip Expand" })
@@ -56,7 +97,7 @@ return {
 					end),
 				},
 			},
-			appearance = { nerd_font_variant = "normal" },
+			appearance = { nerd_font_variant = "normal", kind_icons = kind_icons },
 			signature = { window = { border = "rounded" } },
 			completion = {
 				documentation = {
@@ -68,8 +109,8 @@ return {
 					border = "rounded",
 					draw = {
 						-- columns = {
-						-- 	{ "label",      "label_description", gap = 1 },
-						-- 	{ "kind_icon",  "kind" },
+						-- 	{ "label", "label_description", gap = 1 },
+						-- 	{ "kind_icon", "kind" },
 						-- 	{ "source_name" },
 						-- },
 						treesitter = { "lsp" },
@@ -89,6 +130,76 @@ return {
 				},
 			},
 		},
+	},
+
+	{
+		"oskarrrrrrr/symbols.nvim",
+		cmd = { "Symbols", "SymbolsToggle", "SymbolsOpen" },
+		keys = { { "<leader>cs", "<Cmd>SymbolsToggle<CR>", desc = "Symbols" } },
+		config = function()
+			local function tex_filter(symbol)
+				local kind = symbol.kind
+				if kind == "Constant" then
+					return false
+				end
+				return true
+			end
+
+			local function lua_filter(symbol)
+				local kind = symbol.kind
+				local pkind = symbol.parent.kind
+				if kind == "Constant" or kind == "Package" then
+					return false
+				end
+				if pkind == "Function" or pkind == "Method" then
+					return false
+				end
+				return true
+			end
+
+			local function python_filter(symbol)
+				local kind = symbol.kind
+				local pkind = symbol.parent.kind
+				if (pkind == "Function" or pkind == "Method") and kind ~= "Function" then
+					return false
+				end
+				return true
+			end
+
+			local function javascript_filter(symbol)
+				local pkind = symbol.parent.kind
+				if pkind == "Function" or pkind == "Method" or pkind == "Constructor" then
+					return false
+				end
+				return true
+			end
+
+			local r = require("symbols.recipes")
+
+			require("symbols").setup(r.AsciiSymbols, {
+				sidebar = {
+					symbol_filter = function(ft, symbol)
+						if ft == "tex" then
+							return tex_filter(symbol)
+						end
+						if ft == "lua" then
+							return lua_filter(symbol)
+						end
+						if ft == "python" then
+							return python_filter(symbol)
+						end
+						if ft == "javascript" then
+							return javascript_filter(symbol)
+						end
+						if ft == "typescript" then
+							return javascript_filter(symbol)
+						end
+						return true
+					end,
+				},
+				providers = { lsp = { kinds = { default = kind_icons } } },
+			})
+		end,
 	},
 
 	-- auto pairs

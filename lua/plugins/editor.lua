@@ -2,19 +2,27 @@ return {
 
 	-- llm
 	{
+		"ravitemer/mcphub.nvim",
+		cmd = "MCPHub", -- lazily start the hub when `MCPHub` is called
+		-- build = "npm install -g mcp-hub@latest", -- Installs required mcp-hub npm module
+		config = function()
+			require("mcphub").setup({
+				-- Required options
+				port = 3000, -- Port for MCP Hub server
+				config = vim.fn.expand("~/.config/mcp/mcpservers.json"), -- Absolute path to config file
+			})
+		end,
+	},
+	{
 		"olimorris/codecompanion.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
-		cmd = { "CodeCompanion", "CodeCompanionChatActions", "CodeCompanionChat", "CodeCompanionCmd" },
+		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		opts = {
 			adapters = {
-				aliyun_deepseek = function()
+				deepseek = function()
 					return require("codecompanion.adapters").extend("deepseek", {
-						name = "aliyun_deepseek",
-						env = {
-							url = "https://dashscope.aliyuncs.com",
-							api_key = "cmd:security find-generic-password -s 'aliyun_api' -w",
-							chat_url = "/compatible-mode/v1/chat/completions",
-						},
+						url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+						env = { api_key = "ALIYUN_API_KEY" },
 						schema = {
 							model = {
 								default = "deepseek-r1",
@@ -27,16 +35,15 @@ return {
 					return require("codecompanion.adapters").extend("openai_compatible", {
 						name = "aliyun_qwen",
 						env = {
-							url = "https://dashscope.aliyuncs.com",
-							api_key = "cmd:security find-generic-password -s 'aliyun_api' -w",
-							chat_url = "/compatible-mode/v1/chat/completions",
+							url = "https://dashscope.aliyuncs.com/compatible-mode",
+							api_key = "ALIYUN_API_KEY",
 						},
 						schema = {
 							model = {
-								default = "qwen-max-latest",
+								default = "qwen-max-0125",
 								choices = {
-									"qwen-max-latest",
-									["qwq-plus"] = { opts = { can_reason = true } },
+									"qwen-max-0125",
+									["qwq-plus-2025-03-05"] = { opts = { can_reason = true } },
 								},
 							},
 						},
@@ -44,13 +51,25 @@ return {
 				end,
 			},
 			strategies = {
-				chat = { adapter = "aliyun_qwen" },
+				chat = {
+					adapter = "aliyun_qwen",
+					tools = {
+						["mcp"] = {
+							callback = function()
+								return require("mcphub.extensions.codecompanion")
+							end,
+							description = "Call tools and resources from the MCP Servers",
+							opts = { requires_approval = true },
+						},
+					},
+				},
 				inline = { adapter = "ollama" },
 			},
 			prompt_library = {
 				["Revision"] = {
 					strategy = "chat",
 					description = "Academic Revision Assistant",
+					opts = { modes = { "v" } },
 					prompts = {
 						{
 							role = "user",

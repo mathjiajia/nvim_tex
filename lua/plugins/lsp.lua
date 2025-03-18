@@ -1,16 +1,6 @@
 vim.lsp.enable({ "luals", "texlab" })
 
 return {
-	{
-		"stevearc/aerial.nvim",
-		opts = {
-			backends = { "lsp", "treesitter", "markdown", "man" },
-			nerd_font = true,
-			show_guides = true,
-			filter_kind = false,
-		},
-		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial (Symbols)" } },
-	},
 
 	{ "williamboman/mason.nvim", opts = { ui = { border = "rounded" } } },
 
@@ -34,6 +24,7 @@ return {
 					bib = { "bibtex-tidy" },
 					markdown = { "prettierd" },
 					["markdown.mdx"] = { "prettierd" },
+					typescriptreact = { "prettierd" },
 					tex = { "tex-fmt" },
 				},
 				format_on_save = {
