@@ -6,6 +6,6 @@ return {
 	-- viewing Markdown files in Neovim
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		opts = { file_types = { "markdown", "codecompanion" } },
+		opts = { latex = { enabled = false } },
 	},
 }
