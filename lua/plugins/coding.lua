@@ -44,7 +44,8 @@ return {
 		"L3MON4D3/LuaSnip",
 		lazy = true,
 		build = "make install_jsregexp",
-		dependencies = { "mathjiajia/nvim-math-snippets" },
+		dependencies = { "mathjiajia/nvim-math-snippets", dev = true },
+		submodules = false,
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")
@@ -60,7 +61,7 @@ return {
 				store_selection_keys = "<Tab>",
 			})
 
-			require("luasnip.loaders.from_lua").lazy_load({})
+			require("luasnip.loaders.from_lua").lazy_load({ paths = "~/Projects/nvim-math-snippets/luasnippets" })
 
 			-- stylua: ignore start
 			vim.keymap.set("i", "<C-k>", function() if ls.expandable() then ls.expand() end end, { desc = "LuaSnip Expand" })
@@ -73,8 +74,24 @@ return {
 	-- auto completion
 	{
 		"saghen/blink.cmp",
-		version = "*",
-		dependencies = { "mikavilpas/blink-ripgrep.nvim" },
+		version = "1.*",
+		dependencies = {
+			"mikavilpas/blink-ripgrep.nvim",
+			"fang2hou/blink-copilot",
+			{
+				"copilotlsp-nvim/copilot-lsp",
+				init = function()
+					vim.keymap.set("n", "<Tab>", function()
+						local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
+							or (
+								require("copilot-lsp.nes").apply_pending_nes()
+								and require("copilot-lsp.nes").walk_cursor_end_edit()
+							)
+					end)
+				end,
+				lazy = false,
+			},
+		},
 		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
 			keymap = {
@@ -88,7 +105,7 @@ return {
 						end
 					end),
 				},
-				["<C-l>"] = {
+				["<C-;>"] = {
 					vim.schedule_wrap(function()
 						local ls = require("luasnip")
 						if ls.choice_active() then
@@ -97,35 +114,39 @@ return {
 					end),
 				},
 			},
-			appearance = { nerd_font_variant = "normal", kind_icons = kind_icons },
-			signature = { window = { border = "rounded" } },
+			appearance = { nerd_font_variant = "normal" },
 			completion = {
 				documentation = {
 					auto_show = true,
 					auto_show_delay_ms = 200,
-					window = { border = "rounded" },
 				},
 				menu = {
-					border = "rounded",
 					draw = {
-						-- columns = {
-						-- 	{ "label", "label_description", gap = 1 },
-						-- 	{ "kind_icon", "kind" },
-						-- 	{ "source_name" },
-						-- },
+						components = {
+							kind_icon = {
+								text = function(ctx)
+									local kind_icon, _, _ = MiniIcons.get("lsp", ctx.kind)
+									return kind_icon
+								end,
+							},
+						},
 						treesitter = { "lsp" },
 					},
 				},
 			},
 			snippets = { preset = "luasnip" },
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+				default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
 				providers = {
 					snippets = { opts = { show_autosnippets = false } },
 					ripgrep = {
 						module = "blink-ripgrep",
 						name = "Ripgrep",
-						opts = { additional_rg_options = { "--glob=!*.pdf" } },
+					},
+					copilot = {
+						async = true,
+						module = "blink-copilot",
+						name = "Copilot",
 					},
 				},
 			},
@@ -133,75 +154,60 @@ return {
 	},
 
 	{
-		"oskarrrrrrr/symbols.nvim",
-		cmd = { "Symbols", "SymbolsToggle", "SymbolsOpen" },
-		keys = { { "<leader>cs", "<Cmd>SymbolsToggle<CR>", desc = "Symbols" } },
-		config = function()
-			local function tex_filter(symbol)
-				local kind = symbol.kind
-				if kind == "Constant" then
-					return false
-				end
-				return true
-			end
-
-			local function lua_filter(symbol)
-				local kind = symbol.kind
-				local pkind = symbol.parent.kind
-				if kind == "Constant" or kind == "Package" then
-					return false
-				end
-				if pkind == "Function" or pkind == "Method" then
-					return false
-				end
-				return true
-			end
-
-			local function python_filter(symbol)
-				local kind = symbol.kind
-				local pkind = symbol.parent.kind
-				if (pkind == "Function" or pkind == "Method") and kind ~= "Function" then
-					return false
-				end
-				return true
-			end
-
-			local function javascript_filter(symbol)
-				local pkind = symbol.parent.kind
-				if pkind == "Function" or pkind == "Method" or pkind == "Constructor" then
-					return false
-				end
-				return true
-			end
-
-			local r = require("symbols.recipes")
-
-			require("symbols").setup(r.AsciiSymbols, {
-				sidebar = {
-					symbol_filter = function(ft, symbol)
-						if ft == "tex" then
-							return tex_filter(symbol)
-						end
-						if ft == "lua" then
-							return lua_filter(symbol)
-						end
-						if ft == "python" then
-							return python_filter(symbol)
-						end
-						if ft == "javascript" then
-							return javascript_filter(symbol)
-						end
-						if ft == "typescript" then
-							return javascript_filter(symbol)
-						end
-						return true
-					end,
-				},
-				providers = { lsp = { kinds = { default = kind_icons } } },
-			})
-		end,
+		"stevearc/aerial.nvim",
+		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial Symbols" } },
+		opts = {
+			backends = { "lsp", "treesitter", "markdown", "man" },
+			show_guides = true,
+			filter_kind = {
+				"Array",
+				"Boolean",
+				"Class",
+				-- "Constant",
+				"Constructor",
+				"Enum",
+				"EnumMember",
+				"Event",
+				"Field",
+				"File",
+				"Function",
+				"Interface",
+				"Key",
+				"Method",
+				"Module",
+				"Namespace",
+				"Null",
+				"Number",
+				"Object",
+				"Operator",
+				-- "Package",
+				"Property",
+				"String",
+				"Struct",
+				"TypeParameter",
+				"Variable",
+			},
+		},
 	},
 
+	-- {
+	-- 	"saghen/blink.pairs",
+	-- 	version = "*",
+	-- 	dependencies = "saghen/blink.download",
+	-- 	opts = {
+	-- 		highlights = {
+	-- 			groups = {
+	-- 				"RainbowDelimiterRed",
+	-- 				"RainbowDelimiterYellow",
+	-- 				"RainbowDelimiterBlue",
+	-- 				"RainbowDelimiterOrange",
+	-- 				"RainbowDelimiterGreen",
+	-- 				"RainbowDelimiterViolet",
+	-- 				"RainbowDelimiterCyan",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 	-- auto pairs
 	{ "altermo/ultimate-autopair.nvim", event = { "InsertEnter", "CmdlineEnter" }, config = true },
 

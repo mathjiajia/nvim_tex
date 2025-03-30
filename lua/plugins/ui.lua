@@ -4,52 +4,101 @@ return {
 		"ribru17/bamboo.nvim",
 		priority = 1000,
 		config = function()
-			require("bamboo").setup({ transparent = true })
+			require("bamboo").setup({ transparent = false })
 			require("bamboo").load()
 		end,
 	},
+	-- {
+	-- 	"webhooked/kanso.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("kanso").setup({
+	-- 			compile = true, -- enable compiling the colorscheme
+	-- 			undercurl = true, -- enable undercurls
+	-- 			commentStyle = { italic = true },
+	-- 			functionStyle = {},
+	-- 			keywordStyle = { italic = true },
+	-- 			statementStyle = {},
+	-- 			typeStyle = {},
+	-- 			dimInactive = true,
+	-- 			terminalColors = false,
+	-- 			overrides = function(colors)
+	-- 				return {
+	-- 					RainbowDelimiterRed = { fg = colors.theme.syn.number },
+	-- 					RainbowDelimiterYellow = { fg = colors.theme.diag.warning },
+	-- 					RainbowDelimiterBlue = { fg = colors.theme.diag.info },
+	-- 					RainbowDelimiterOrange = { fg = colors.theme.syn.constant },
+	-- 					RainbowDelimiterGreen = { fg = colors.theme.diag.ok },
+	-- 					RainbowDelimiterViolet = { fg = colors.theme.syn.special2 },
+	-- 					RainbowDelimiterCyan = { fg = colors.theme.diff.change },
+	-- 				}
+	-- 			end,
+	-- 		})
+	--
+	-- 		vim.cmd.colorscheme("kanso")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"thesimonho/kanagawa-paper.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("kanagawa-paper").setup({
+	-- 			dim_inactive = true,
+	-- 			terminal_colors = false,
+	-- 			cache = true,
+	-- 			styles = {
+	-- 				functions = { italic = true },
+	-- 				keyword = { italic = true, bold = true },
+	-- 				statement = { italic = true, bold = true },
+	-- 				type = { italic = true },
+	-- 			},
+	-- 		})
+	--
+	-- 		vim.cmd.colorscheme("kanagawa-paper")
+	-- 	end,
+	-- },
 
 	-- winbar
 	{
 		"Bekaboo/dropbar.nvim",
-		config = function()
-			require("dropbar").setup({
-				icons = {
-					kinds = {
-						file_icon = function(path)
-							local file_icon = "󰈔 "
-							local file_icon_hl = "DropBarIconKindFile"
+		opts = {
+			icons = {
+				kinds = {
+					file_icon = function(path)
+						local file_icon = "󰈔 "
+						local file_icon_hl = "DropBarIconKindFile"
 
-							local mini_icon, mini_icon_hl = MiniIcons.get("file", vim.fs.basename(path))
+						local mini_icon, mini_icon_hl = MiniIcons.get("file", vim.fs.basename(path))
 
-							if not mini_icon then
-								local buf = vim.iter(vim.api.nvim_list_bufs()):find(function(buf)
-									return vim.api.nvim_buf_get_name(buf) == path
-								end)
-								if buf then
-									local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-									mini_icon, mini_icon_hl = MiniIcons.get("filetype", filetype)
-								end
+						if not mini_icon then
+							local buf = vim.iter(vim.api.nvim_list_bufs()):find(function(buf)
+								return vim.api.nvim_buf_get_name(buf) == path
+							end)
+							if buf then
+								local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+								mini_icon, mini_icon_hl = MiniIcons.get("filetype", filetype)
 							end
+						end
 
-							file_icon = mini_icon and mini_icon .. " " or file_icon
-							file_icon_hl = mini_icon_hl
-							return file_icon, file_icon_hl
-						end,
-					},
+						file_icon = mini_icon and mini_icon .. " " or file_icon
+						file_icon_hl = mini_icon_hl
+						return file_icon, file_icon_hl
+					end,
 				},
-				sources = {
-					path = {
-						modified = function(sym)
-							return sym:merge({
-								name = sym.name .. "[+]",
-								name_hl = "DiffAdded",
-							})
-						end,
-					},
+			},
+			sources = {
+				path = {
+					modified = function(sym)
+						return sym:merge({
+							name = sym.name .. "[+]",
+							name_hl = "DiffAdded",
+						})
+					end,
 				},
-			})
-		end,
+			},
+		},
 	},
 
 	-- statusline
@@ -72,7 +121,6 @@ return {
 			{ "<leader>/",       function() Snacks.picker.grep() end,                                    desc = "Grep" },
 			{ "<leader>:",       function() Snacks.picker.command_history() end,                         desc = "Command History" },
 			{ "<leader>n",       function() Snacks.picker.notifications() end,                           desc = "Notification History" },
-			{ "<leader>e",       function() Snacks.explorer() end,                                       desc = "File Explorer" },
 			-- find
 			{ "<leader>fb",      function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
 			{ "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
@@ -136,8 +184,6 @@ return {
 			{ "<leader>un",      function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
 			{ "<c-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
 			{ "<c-_>",           function() Snacks.terminal() end,                                       desc = "which_key_ignore" },
-			{ "]]",              function() Snacks.words.jump(vim.v.count1) end,                         desc = "Next Reference",           mode = { "n", "t" } },
-			{ "[[",              function() Snacks.words.jump(-vim.v.count1) end,                        desc = "Prev Reference",           mode = { "n", "t" } },
 		},
 		opts = {
 			dashboard = {
@@ -164,27 +210,11 @@ return {
 					{ section = "startup" },
 				},
 			},
-			explorer = { replace_netrw = true },
 			image = {
-				enabled = false,
-				convert = { notify = false },
-				math = {
-					latex = {
-						package = { "amsmath", "amssymb", "mathtools", "xy" },
-						tpl = [[
-						\documentclass[preview,border=0pt,varwidth]{standalone}
-						\usepackage{${packages}}
-						\begin{document}
-						${header}
-						{\color[HTML]{${color}}
-							${content}}
-						\end{document}
-						]],
-					},
-				},
+				enabled = not vim.g.neovide,
+				math = { enabled = false },
 			},
 			indent = {
-				enabled = true,
 				scope = {
 					hl = {
 						"RainbowDelimiterRed",
@@ -200,12 +230,11 @@ return {
 			input = { enabled = true },
 			notifier = { enabled = true },
 			picker = {
-				enabled = true,
-				ui_select = true,
 				win = {
 					input = {
 						keys = {
-							["<a-s>"] = { "flash", mode = { "n", "i" } },
+							["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } },
+							["<M-s>"] = { "flash", mode = { "n", "i" } },
 							["s"] = { "flash" },
 						},
 					},
@@ -234,7 +263,6 @@ return {
 			scroll = { enabled = not vim.g.neovide },
 			scope = { enabled = true },
 			terminal = { win = { wo = { winbar = "" } } },
-			words = { enabled = true },
 			styles = {
 				lazygit = { width = 0, height = 0 },
 				notification = { wo = { wrap = true } },
@@ -243,60 +271,8 @@ return {
 		},
 	},
 
-	-- noicer ui
-	{
-		"folke/noice.nvim",
-		config = function()
-			require("noice").setup({
-				lsp = {
-					override = {
-						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-						["vim.lsp.util.stylize_markdown"] = true,
-						["cmp.entry.get_documentation"] = true,
-					},
-				},
-				routes = {
-					{
-						filter = {
-							event = "msg_show",
-							any = {
-								{ find = "%d+L, %d+B" },
-								{ find = "; after #%d+" },
-								{ find = "; before #%d+" },
-							},
-						},
-						view = "mini",
-					},
-				},
-				presets = {
-					bottom_search = true,
-					-- command_palette = true,
-					long_message_to_split = true,
-				},
-			})
-
-			vim.keymap.set({ "i", "n", "s" }, "<C-f>", function()
-				if not require("noice.lsp").scroll(4) then
-					return "<C-f>"
-				end
-			end, { silent = true, expr = true, desc = "Scroll Forward" })
-
-			vim.keymap.set({ "i", "n", "s" }, "<C-b>", function()
-				if not require("noice.lsp").scroll(-4) then
-					return "<C-b>"
-				end
-			end, { silent = true, expr = true, desc = "Scroll Backward" })
-		end,
-	},
-
 	-- rainbow delimiters
-	{
-		"HiPhish/rainbow-delimiters.nvim",
-		submodules = false,
-		init = function()
-			vim.g.rainbow_delimiters = { query = { latex = "rainbow-delimiters" } }
-		end,
-	},
+	{ "HiPhish/rainbow-delimiters.nvim", submodules = false },
 
 	-- icons
 	{
@@ -304,6 +280,7 @@ return {
 		config = function()
 			require("mini.icons").setup({
 				lsp = {
+					copilot = { glyph = "" },
 					["function"] = { glyph = "" },
 					object = { glyph = "" },
 					value = { glyph = "" },

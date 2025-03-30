@@ -1,24 +1,86 @@
 return {
 
-	-- llm
 	{
-		"ravitemer/mcphub.nvim",
-		cmd = "MCPHub", -- lazily start the hub when `MCPHub` is called
-		-- build = "npm install -g mcp-hub@latest", -- Installs required mcp-hub npm module
+		"stevearc/oil.nvim",
 		config = function()
-			require("mcphub").setup({
-				-- Required options
-				port = 3000, -- Port for MCP Hub server
-				config = vim.fn.expand("~/.config/mcp/mcpservers.json"), -- Absolute path to config file
+			-- Declare a global function to retrieve the current directory
+			function _G.get_oil_winbar()
+				local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+				local dir = require("oil").get_current_dir(bufnr)
+				if dir then
+					return vim.fn.fnamemodify(dir, ":~")
+				else
+					-- If there is no current directory (e.g. over ssh), just show the buffer name
+					return vim.api.nvim_buf_get_name(0)
+				end
+			end
+
+			local detail = false
+
+			require("oil").setup({
+				win_options = { winbar = "%!v:lua.get_oil_winbar()", },
+				keymaps = {
+					["gd"] = {
+						desc = "Toggle file detail view",
+						callback = function()
+							detail = not detail
+							if detail then
+								require("oil").set_columns({ "icon", "permissions", "size", "mtime" })
+							else
+								require("oil").set_columns({ "icon" })
+							end
+						end,
+					},
+				},
 			})
+			vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { desc = "Open parent directory" })
 		end,
 	},
+
+	-- llm
+	-- {
+	-- 	"yetone/avante.nvim",
+	-- 	event = "VeryLazy",
+	-- 	version = false,
+	-- 	opts = {
+	-- 		provider = "copilot",
+	-- 	},
+	-- 	build = "make",
+	-- 	dependencies = {
+	-- 		"nvim-treesitter/nvim-treesitter",
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"MunifTanjim/nui.nvim",
+	-- 	},
+	-- },
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
+		keys = {
+			{ "<leader>aa", "<Cmd>CodeCompanionActions<CR>", desc = "CodeCompanion Actions", mode = { "n", "v" } },
+			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>",    desc = "CodeCompanion Chat",    mode = { "n", "v" } },
+			{
+				"<leader>ae",
+				function()
+					local prompt = vim.fn.input("Inline Assistant: ")
+					if prompt ~= "" then
+						vim.cmd.CodeCompanion(prompt)
+					end
+				end,
+				mode = { "n", "v" },
+				desc = "CodeCompanion Inline Assistant",
+			},
+		},
+		-- init = function()
+		-- 	require("util.companion-notification").setup()
+		-- end,
 		opts = {
 			adapters = {
+				copilot = function()
+					return require("codecompanion.adapters").extend("copilot", {
+						schema = { model = { default = "o4-mini" } },
+					})
+				end,
 				deepseek = function()
 					return require("codecompanion.adapters").extend("deepseek", {
 						url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
@@ -50,20 +112,30 @@ return {
 					})
 				end,
 			},
+			display = {
+				chat = {
+					window = {
+						opts = {
+							conceallevel = 2,
+							colorcolumn = "",
+							number = false,
+							relativenumber = false,
+						},
+					},
+				},
+				diff = { provider = "mini_diff" },
+			},
 			strategies = {
 				chat = {
-					adapter = "aliyun_qwen",
 					tools = {
 						["mcp"] = {
 							callback = function()
 								return require("mcphub.extensions.codecompanion")
 							end,
 							description = "Call tools and resources from the MCP Servers",
-							opts = { requires_approval = true },
 						},
 					},
 				},
-				inline = { adapter = "ollama" },
 			},
 			prompt_library = {
 				["Revision"] = {
@@ -85,6 +157,17 @@ When you receive a text input, output an improved version that adheres to these 
 				},
 			},
 		},
+	},
+	{
+		"ravitemer/mcphub.nvim",
+		cmd = "MCPHub",
+		build = "bundled_build.lua",
+		config = function()
+			require("mcphub").setup({
+				port = 3000,
+				use_bundled_binary = true,
+			})
+		end,
 	},
 
 	-- search/replace in multiple files
@@ -109,6 +192,39 @@ When you receive a text input, output an improved version that adheres to these 
 		},
 	},
 
+	{
+		"tpope/vim-abolish",
+		cmd = "S",
+	},
+	{
+		"yorickpeterse/nvim-tree-pairs",
+		main = "tree-pairs",
+		config = true,
+		keys = {
+			{ "%", mode = { "n", "v", "o" } },
+		},
+	},
+
+	-- {
+	-- 	"FluxxField/smart-motion.nvim",
+	-- 	opts = {
+	-- 		highlight = {
+	-- 			hint = { fg = "#E06C75" },
+	-- 			first_char = { fg = "#98C379" },
+	-- 			second_char = { fg = "#61AFEF" },
+	-- 			dim = { fg = "#5C6370" },
+	-- 		},
+	-- 		presets = {
+	-- 			words = true,
+	-- 			-- lines = true,
+	-- 			search = true,
+	-- 			delete = true,
+	-- 			yank = true,
+	-- 			change = true,
+	-- 		},
+	-- 	},
+	-- },
+
 	-- flash navigation.
 	{
 		"folke/flash.nvim",
@@ -127,10 +243,10 @@ When you receive a text input, output an improved version that adheres to these 
 	},
 
 	-- git signs
+	{ "echasnovski/mini.diff", version = false, lazy = true },
 	{
 		"lewis6991/gitsigns.nvim",
 		opts = {
-			preview_config = { border = "rounded" },
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")
 
@@ -180,12 +296,11 @@ When you receive a text input, output an improved version that adheres to these 
 
 				-- Toggles
 				map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Current Line Blame" })
-				map("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Toggle Deleted" })
 				map("n", "<leader>tw", gitsigns.toggle_word_diff, { desc = "Toggle Word Diff" })
 				-- stylua: ignore end
 
 				-- Text object
-				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+				map({ "o", "x" }, "ih", gitsigns.select_hunk)
 			end,
 		},
 	},

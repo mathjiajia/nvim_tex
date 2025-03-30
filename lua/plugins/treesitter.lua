@@ -1,11 +1,11 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		-- branch = "main",
+		branch = "main",
 		build = ":TSUpdate",
 		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
+			require("nvim-treesitter").setup({
+				ensure_install = {
 					"bash",
 					"bibtex",
 					"comment",
@@ -23,7 +23,6 @@ return {
 					"vim",
 					"vimdoc",
 				},
-				highlight = { enable = true },
 			})
 		end,
 	},
