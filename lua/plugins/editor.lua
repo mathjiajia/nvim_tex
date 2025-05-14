@@ -1,6 +1,12 @@
 return {
 
 	{
+		"m4xshen/hardtime.nvim",
+		lazy = false,
+		dependencies = { "MunifTanjim/nui.nvim" },
+		config = true,
+	},
+	{
 		"stevearc/oil.nvim",
 		config = function()
 			-- Declare a global function to retrieve the current directory
@@ -18,7 +24,7 @@ return {
 			local detail = false
 
 			require("oil").setup({
-				win_options = { winbar = "%!v:lua.get_oil_winbar()", },
+				win_options = { winbar = "%!v:lua.get_oil_winbar()" },
 				keymaps = {
 					["gd"] = {
 						desc = "Toggle file detail view",
@@ -38,20 +44,6 @@ return {
 	},
 
 	-- llm
-	-- {
-	-- 	"yetone/avante.nvim",
-	-- 	event = "VeryLazy",
-	-- 	version = false,
-	-- 	opts = {
-	-- 		provider = "copilot",
-	-- 	},
-	-- 	build = "make",
-	-- 	dependencies = {
-	-- 		"nvim-treesitter/nvim-treesitter",
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"MunifTanjim/nui.nvim",
-	-- 	},
-	-- },
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -71,9 +63,6 @@ return {
 				desc = "CodeCompanion Inline Assistant",
 			},
 		},
-		-- init = function()
-		-- 	require("util.companion-notification").setup()
-		-- end,
 		opts = {
 			adapters = {
 				copilot = function()
@@ -192,10 +181,10 @@ When you receive a text input, output an improved version that adheres to these 
 		},
 	},
 
-	{
-		"tpope/vim-abolish",
-		cmd = "S",
-	},
+	-- {
+	-- 	"tpope/vim-abolish",
+	-- 	cmd = "S",
+	-- },
 	{
 		"yorickpeterse/nvim-tree-pairs",
 		main = "tree-pairs",
@@ -246,6 +235,7 @@ When you receive a text input, output an improved version that adheres to these 
 	{ "echasnovski/mini.diff", version = false, lazy = true },
 	{
 		"lewis6991/gitsigns.nvim",
+		commit = "2149fc2009d1117d58e86e56836f70c969f60a82",
 		opts = {
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")

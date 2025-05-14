@@ -1,5 +1,5 @@
 vim.loader.enable()
-require("vim._extui").enable({ pos = "box" })
+require("vim._extui").enable({})
 
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
@@ -26,7 +26,7 @@ if not vim.uv.fs_stat(lazypath) then
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
 			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-			{ out, "WarningMsg" },
+			{ out,                            "WarningMsg" },
 			{ "\nPress any key to exit..." },
 		}, true, {})
 		vim.fn.getchar()
@@ -82,6 +82,7 @@ opt.confirm = true
 opt.clipboard = "unnamedplus"
 
 -- 12 editing text
+opt.undolevels = 200
 opt.undofile = true
 opt.formatoptions = "tcroqnlj"
 opt.pumheight = 10
@@ -125,6 +126,48 @@ opt.winborder = "rounded"
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- lsp
+vim.lsp.handlers["client/registerCapability"] = (function(overridden)
+	return function(err, res, ctx)
+		local result = overridden(err, res, ctx)
+		local client = vim.lsp.get_client_by_id(ctx.client_id)
+		if not client then
+			return
+		end
+		for bufnr, _ in pairs(client.attached_buffers) do
+			vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "Signature Help" })
+
+			if client:supports_method("textDocument/foldingRange", bufnr) then
+				local win = vim.api.nvim_get_current_win()
+				vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+			end
+
+			if client:supports_method("textDocument/documentHighlight") then
+				local highlight_augroup = vim.api.nvim_create_augroup("lsp_document_highlight", {})
+				vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+					buffer = bufnr,
+					group = highlight_augroup,
+					callback = vim.lsp.buf.document_highlight,
+				})
+
+				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+					buffer = bufnr,
+					group = highlight_augroup,
+					callback = vim.lsp.buf.clear_references,
+				})
+			end
+
+			if client:supports_method("textDocument/inlayHint", bufnr) then
+				vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+				vim.keymap.set("n", "<M-i>", function()
+					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+				end, { buffer = bufnr, desc = "Inlay Hint Toggle" })
+			end
+		end
+		return result
+	end
+end)(vim.lsp.handlers["client/registerCapability"])
+
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -147,43 +190,6 @@ autocmd("TextYankPost", {
 	desc = "Highlight the Yanked Text",
 })
 
--- lsp
-autocmd("LspAttach", {
-	group = augroup("UserLspConfig", {}),
-	callback = function(args)
-		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-
-		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = args.buf, desc = "Signature Help" })
-
-		if client:supports_method("textDocument/foldingRange", args.buf) then
-			local win = vim.api.nvim_get_current_win()
-			vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
-		end
-
-		if client:supports_method("textDocument/documentHighlight") then
-			local highlight_augroup = vim.api.nvim_create_augroup("lsp_document_highlight", {})
-			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-				buffer = args.buf,
-				group = highlight_augroup,
-				callback = vim.lsp.buf.document_highlight,
-			})
-
-			vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-				buffer = args.buf,
-				group = highlight_augroup,
-				callback = vim.lsp.buf.clear_references,
-			})
-		end
-
-		if client:supports_method("textDocument/inlayHint", args.buf) then
-			vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-			vim.keymap.set("n", "<M-i>", function()
-				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }), { bufnr = args.buf })
-			end, { buffer = args.buf, desc = "Inlay Hint Toggle" })
-		end
-	end,
-})
-
 -- go to last loc when opening a buffer
 autocmd("BufReadPost", {
 	group = augroup("LastPlace", {}),
@@ -192,10 +198,10 @@ autocmd("BufReadPost", {
 		local exclude_ft = { "gitcommit" }
 		local buf = event.buf
 		if
-			vim.list_contains(exclude_bt, vim.bo[buf].buftype)
-			or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
-			or vim.api.nvim_win_get_cursor(0)[1] > 1
-			or vim.b[buf].last_pos
+				vim.list_contains(exclude_bt, vim.bo[buf].buftype)
+				or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
+				or vim.api.nvim_win_get_cursor(0)[1] > 1
+				or vim.b[buf].last_pos
 		then
 			return
 		end
@@ -215,8 +221,7 @@ autocmd("FileType", {
 		if not pcall(vim.treesitter.start, ev.buf) then
 			return
 		end
-
-		vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 	desc = "Enable Treesitter",
@@ -244,7 +249,7 @@ vim.diagnostic.config({
 		},
 	},
 	virtual_lines = { current_line = true },
-	-- virtual_text = { spacing = 2, prefix = "●" },
+	virtual_text = { current_line = false },
 })
 
 vim.keymap.set("n", "<leader>qq", vim.diagnostic.setqflist, { desc = "Set Quickfix" })
@@ -252,5 +257,5 @@ vim.keymap.set("n", "<leader>ql", vim.diagnostic.setloclist, { desc = "Set Locli
 
 require("lazy").setup("plugins", {
 	dev = { path = "~/Projects" },
-	rocks = { enabled = false },
+	ui = { border = "rounded" },
 })
