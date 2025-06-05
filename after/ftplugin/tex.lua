@@ -2,6 +2,10 @@ vim.opt_local.conceallevel = 2
 vim.opt_local.spell = true
 
 vim.keymap.set("i", "<C-l>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { buffer = 0, desc = "Crect Last Spelling" })
+vim.keymap.set("i", "'", "'", { buffer = true })
+vim.keymap.set("i", "`", "`", { buffer = true })
+-- MiniPairs.map_buf(0, "i", "`", { action = "closeopen", pair = "`'" })
+-- MiniPairs.map_buf(0, "i", "``", { action = "closeopen", pair = "``''" })
 
 vim.lsp.config("texlab", {
 	cmd = { "texlab" },
@@ -27,7 +31,7 @@ vim.lsp.config("texlab", {
 					"--execute-command",
 					"turn_on_synctex",
 					"--inverse-search",
-					"texlab inverse-search -i %%1 -l %%2", -- --line1
+					vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 -l %%2", -- --line1
 					"--forward-search-file",
 					"%f",
 					"--forward-search-line",

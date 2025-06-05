@@ -84,10 +84,10 @@ return {
 					vim.lsp.enable("copilot_ls")
 					vim.keymap.set("n", "<Tab>", function()
 						local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
-								or (
-									require("copilot-lsp.nes").apply_pending_nes()
-									and require("copilot-lsp.nes").walk_cursor_end_edit()
-								)
+							or (
+								require("copilot-lsp.nes").apply_pending_nes()
+								and require("copilot-lsp.nes").walk_cursor_end_edit()
+							)
 					end)
 				end,
 				lazy = false,
@@ -113,6 +113,19 @@ return {
 							ls.change_choice(1)
 						end
 					end),
+				},
+				["<Tab>"] = {
+					function(cmp)
+						if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+							cmp.hide()
+							return (
+								require("copilot-lsp.nes").apply_pending_nes()
+								and require("copilot-lsp.nes").walk_cursor_end_edit()
+							)
+						end
+					end,
+					"snippet_forward",
+					"fallback",
 				},
 			},
 			appearance = { nerd_font_variant = "normal" },
@@ -153,6 +166,24 @@ return {
 			},
 		},
 	},
+
+	-- {
+	-- 	"windwp/nvim-autopairs",
+	-- 	event = { "InsertEnter", "CmdlineEnter" },
+	-- 	config = function()
+	-- 		local Rule = require("nvim-autopairs.rule")
+	-- 		local npairs = require("nvim-autopairs")
+	-- 		local cond = require("nvim-autopairs.conds")
+	--
+	-- 		npairs.setup({ check_ts = true })
+	--
+	-- 		npairs.get_rules("'")[1]:with_pair(cond.not_filetypes({ "tex", "latex" }))
+	-- 		npairs.get_rules("`")[1]:with_pair(cond.not_filetypes({ "tex", "latex" }))
+	--
+	-- 		npairs.add_rule(Rule("`", "'", { "latex", "tex" }))
+	-- 		npairs.add_rule(Rule("``", "''", { "latex", "tex" }))
+	-- 	end,
+	-- },
 
 	{
 		"stevearc/aerial.nvim",
@@ -210,21 +241,21 @@ return {
 	-- 	},
 	-- },
 	-- auto pairs
-	{ "altermo/ultimate-autopair.nvim", event = { "InsertEnter", "CmdlineEnter" }, config = true },
+	-- { "altermo/ultimate-autopair.nvim", event = { "InsertEnter", "CmdlineEnter" }, config = true },
 
 	-- surround
 	{
 		"kylechui/nvim-surround",
 		config = true,
 		keys = {
-			{ "cs",     desc = "Change Surrounding" },
-			{ "ds",     desc = "Delete Surrounding" },
-			{ "ys",     desc = "Add Surrounding" },
-			{ "yS",     desc = "Add Surrounding to Current Line" },
-			{ "S",      mode = { "x" },                          desc = "Add Surrounding" },
-			{ "gS",     mode = { "x" },                          desc = "Add Surrounding to Current Line" },
-			{ "<C-g>s", mode = { "i" },                          desc = "Add Surrounding" },
-			{ "<C-g>S", mode = { "i" },                          desc = "Add Surrounding to Current Line" },
+			{ "cs", desc = "Change Surrounding" },
+			{ "ds", desc = "Delete Surrounding" },
+			{ "ys", desc = "Add Surrounding" },
+			{ "yS", desc = "Add Surrounding to Current Line" },
+			{ "S", mode = { "x" }, desc = "Add Surrounding" },
+			{ "gS", mode = { "x" }, desc = "Add Surrounding to Current Line" },
+			{ "<C-g>s", mode = { "i" }, desc = "Add Surrounding" },
+			{ "<C-g>S", mode = { "i" }, desc = "Add Surrounding to Current Line" },
 		},
 	},
 }

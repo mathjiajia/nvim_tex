@@ -6,10 +6,10 @@ return {
 		priority = 1000,
 		config = function()
 			require("tokyonight").setup({
-				style = "moon",
-				dim_inactive = true,
-				transparent = true,
-				-- terminal_colors = true,
+				-- style = "moon",
+				-- dim_inactive = true,
+				-- transparent = true,
+				terminal_colors = false,
 				plugins = {
 					all = false,
 					auto = false,
@@ -154,15 +154,13 @@ return {
 			{ "<leader>gB",      function() Snacks.gitbrowse() end,                                      desc = "Git Browse",               mode = { "n", "v" } },
 			{ "<leader>gg",      function() Snacks.lazygit() end,                                        desc = "Lazygit" },
 			{ "<leader>un",      function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
-			{ "<c-/>",           function() Snacks.terminal() end,                                       desc = "Toggle Terminal" },
-			{ "<c-_>",           function() Snacks.terminal() end,                                       desc = "which_key_ignore" },
 		},
 		opts = {
 			dashboard = {
 				enabled = true,
 				sections = {
 					{ section = "header" },
-					{ section = "keys",  gap = 1, padding = 1 },
+					{ section = "keys", gap = 1, padding = 1 },
 					{
 						pane = 2,
 						icon = " ",
@@ -234,11 +232,9 @@ return {
 			},
 			scroll = { enabled = not vim.g.neovide },
 			scope = { enabled = true },
-			terminal = { win = { wo = { winbar = "" } } },
 			styles = {
 				lazygit = { width = 0, height = 0 },
 				notification = { wo = { wrap = true } },
-				terminal = { height = 12 },
 			},
 		},
 	},
@@ -246,9 +242,9 @@ return {
 	-- rainbow delimiters
 	{ "HiPhish/rainbow-delimiters.nvim", submodules = false },
 
-	-- icons
+	-- mini
 	{
-		"echasnovski/mini.icons",
+		"echasnovski/mini.nvim",
 		config = function()
 			require("mini.icons").setup({
 				lsp = {
@@ -258,11 +254,9 @@ return {
 					value = { glyph = "" },
 				},
 			})
-		end,
-	},
-	{
-		"echasnovski/mini.hipatterns",
-		config = function()
+
+			require("mini.pairs").setup()
+
 			local hipatterns = require("mini.hipatterns")
 			hipatterns.setup({
 				highlighters = {
@@ -457,8 +451,8 @@ return {
 				init = function(self)
 					self.status_dict = vim.b.gitsigns_status_dict
 					self.has_changes = self.status_dict.added ~= 0
-							or self.status_dict.removed ~= 0
-							or self.status_dict.changed ~= 0
+						or self.status_dict.removed ~= 0
+						or self.status_dict.changed ~= 0
 				end,
 				hl = { fg = "orange" },
 				{
@@ -702,7 +696,7 @@ return {
 				{
 					condition = function(self)
 						return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr })
-								or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
+							or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
 					end,
 					provider = function(self)
 						if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then
@@ -882,10 +876,10 @@ return {
 				callback = function(ev)
 					local bufnr = ev.buf
 					if
-							vim.list_contains(
-								{ "wipe", "delete" },
-								vim.api.nvim_get_option_value("bufhidden", { buf = bufnr })
-							)
+						vim.list_contains(
+							{ "wipe", "delete" },
+							vim.api.nvim_get_option_value("bufhidden", { buf = bufnr })
+						)
 					then
 						vim.bo[bufnr].buflisted = false
 					end

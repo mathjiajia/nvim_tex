@@ -1,5 +1,5 @@
 vim.loader.enable()
-require("vim._extui").enable({})
+-- require("vim._extui").enable({})
 
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
@@ -26,7 +26,7 @@ if not vim.uv.fs_stat(lazypath) then
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
 			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-			{ out,                            "WarningMsg" },
+			{ out, "WarningMsg" },
 			{ "\nPress any key to exit..." },
 		}, true, {})
 		vim.fn.getchar()
@@ -198,10 +198,10 @@ autocmd("BufReadPost", {
 		local exclude_ft = { "gitcommit" }
 		local buf = event.buf
 		if
-				vim.list_contains(exclude_bt, vim.bo[buf].buftype)
-				or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
-				or vim.api.nvim_win_get_cursor(0)[1] > 1
-				or vim.b[buf].last_pos
+			vim.list_contains(exclude_bt, vim.bo[buf].buftype)
+			or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
+			or vim.api.nvim_win_get_cursor(0)[1] > 1
+			or vim.b[buf].last_pos
 		then
 			return
 		end
@@ -216,16 +216,16 @@ autocmd("BufReadPost", {
 })
 
 -- treesitter
-autocmd("FileType", {
-	callback = function(ev)
-		if not pcall(vim.treesitter.start, ev.buf) then
-			return
-		end
-		vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-	end,
-	desc = "Enable Treesitter",
-})
+-- autocmd("FileType", {
+-- 	callback = function(ev)
+-- 		if not pcall(vim.treesitter.start, ev.buf) then
+-- 			return
+-- 		end
+-- 		vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- 		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+-- 	end,
+-- 	desc = "Enable Treesitter",
+-- })
 
 -- Opens non-text files in the default program instead of in Neovim
 autocmd("BufReadPost", {

@@ -50,7 +50,7 @@ return {
 		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		keys = {
 			{ "<leader>aa", "<Cmd>CodeCompanionActions<CR>", desc = "CodeCompanion Actions", mode = { "n", "v" } },
-			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>",    desc = "CodeCompanion Chat",    mode = { "n", "v" } },
+			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>", desc = "CodeCompanion Chat", mode = { "n", "v" } },
 			{
 				"<leader>ae",
 				function()
@@ -232,10 +232,8 @@ When you receive a text input, output an improved version that adheres to these 
 	},
 
 	-- git signs
-	{ "echasnovski/mini.diff", version = false, lazy = true },
 	{
 		"lewis6991/gitsigns.nvim",
-		commit = "2149fc2009d1117d58e86e56836f70c969f60a82",
 		opts = {
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")
