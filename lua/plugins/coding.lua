@@ -1,42 +1,3 @@
-local kind_icons = {
-	Array = "",
-	Boolean = "",
-	Class = "",
-	Color = "",
-	Constant = "",
-	Constructor = "",
-	Enum = "",
-	EnumMember = "",
-	Event = "",
-	Field = "",
-	File = "",
-	Folder = "",
-	Function = "",
-	Interface = "",
-	Key = "",
-	Keyword = "",
-	Method = "",
-	Module = "",
-	Namespace = "",
-	Null = "",
-	Number = "",
-	Object = "",
-	Operator = "",
-	Package = "",
-	Property = "",
-	Reference = "",
-	Snippet = "",
-	String = "",
-	Struct = "",
-	Text = "",
-	TypeParameter = "",
-	Unit = "",
-	Value = "",
-	Variable = "",
-
-	Component = "󰅴",
-	Fragment = "󰅴",
-}
 return {
 
 	-- snippets
@@ -167,24 +128,46 @@ return {
 		},
 	},
 
-	-- {
-	-- 	"windwp/nvim-autopairs",
-	-- 	event = { "InsertEnter", "CmdlineEnter" },
-	-- 	config = function()
-	-- 		local Rule = require("nvim-autopairs.rule")
-	-- 		local npairs = require("nvim-autopairs")
-	-- 		local cond = require("nvim-autopairs.conds")
-	--
-	-- 		npairs.setup({ check_ts = true })
-	--
-	-- 		npairs.get_rules("'")[1]:with_pair(cond.not_filetypes({ "tex", "latex" }))
-	-- 		npairs.get_rules("`")[1]:with_pair(cond.not_filetypes({ "tex", "latex" }))
-	--
-	-- 		npairs.add_rule(Rule("`", "'", { "latex", "tex" }))
-	-- 		npairs.add_rule(Rule("``", "''", { "latex", "tex" }))
-	-- 	end,
-	-- },
+	-- pairs
+	{
+		"saghen/blink.pairs",
+		version = "*",
+		dependencies = "saghen/blink.download",
+		opts = {
+			mappings = {
+				pairs = {
+					["`"] = {
+						{
+							"```",
+							"```",
+							when = function()
+								local cursor = vim.api.nvim_win_get_cursor(0)
+								local line = vim.api.nvim_get_current_line()
+								return line:sub(cursor[2] - 1, cursor[2]) == "``"
+							end,
+							filetypes = { "markdown", "vimwiki", "rmarkdown", "rmd", "pandoc", "quarto", "typst" },
+						},
+						{ "`", "'", filetypes = { "bib", "latex", "tex" } },
+						{ "`", enter = false, space = false },
+					},
+				},
+			},
+			highlights = {
+				groups = {
+					"RainbowDelimiterRed",
+					"RainbowDelimiterYellow",
+					"RainbowDelimiterBlue",
+					"RainbowDelimiterOrange",
+					"RainbowDelimiterGreen",
+					"RainbowDelimiterViolet",
+					"RainbowDelimiterCyan",
+				},
+				matchparen = { enabled = true, group = "MatchParen" },
+			},
+		},
+	},
 
+	-- symbols
 	{
 		"stevearc/aerial.nvim",
 		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial Symbols" } },
@@ -221,27 +204,6 @@ return {
 			},
 		},
 	},
-
-	-- {
-	-- 	"saghen/blink.pairs",
-	-- 	version = "*",
-	-- 	dependencies = "saghen/blink.download",
-	-- 	opts = {
-	-- 		highlights = {
-	-- 			groups = {
-	-- 				"RainbowDelimiterRed",
-	-- 				"RainbowDelimiterYellow",
-	-- 				"RainbowDelimiterBlue",
-	-- 				"RainbowDelimiterOrange",
-	-- 				"RainbowDelimiterGreen",
-	-- 				"RainbowDelimiterViolet",
-	-- 				"RainbowDelimiterCyan",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- },
-	-- auto pairs
-	-- { "altermo/ultimate-autopair.nvim", event = { "InsertEnter", "CmdlineEnter" }, config = true },
 
 	-- surround
 	{

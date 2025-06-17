@@ -6,17 +6,17 @@ return {
 		dependencies = { "MunifTanjim/nui.nvim" },
 		config = true,
 	},
+
+	-- file explorer
 	{
 		"stevearc/oil.nvim",
 		config = function()
-			-- Declare a global function to retrieve the current directory
 			function _G.get_oil_winbar()
 				local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
 				local dir = require("oil").get_current_dir(bufnr)
 				if dir then
 					return vim.fn.fnamemodify(dir, ":~")
 				else
-					-- If there is no current directory (e.g. over ssh), just show the buffer name
 					return vim.api.nvim_buf_get_name(0)
 				end
 			end
@@ -50,7 +50,7 @@ return {
 		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		keys = {
 			{ "<leader>aa", "<Cmd>CodeCompanionActions<CR>", desc = "CodeCompanion Actions", mode = { "n", "v" } },
-			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>", desc = "CodeCompanion Chat", mode = { "n", "v" } },
+			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>",    desc = "CodeCompanion Chat",    mode = { "n", "v" } },
 			{
 				"<leader>ae",
 				function()
@@ -180,39 +180,6 @@ When you receive a text input, output an improved version that adheres to these 
 			},
 		},
 	},
-
-	-- {
-	-- 	"tpope/vim-abolish",
-	-- 	cmd = "S",
-	-- },
-	{
-		"yorickpeterse/nvim-tree-pairs",
-		main = "tree-pairs",
-		config = true,
-		keys = {
-			{ "%", mode = { "n", "v", "o" } },
-		},
-	},
-
-	-- {
-	-- 	"FluxxField/smart-motion.nvim",
-	-- 	opts = {
-	-- 		highlight = {
-	-- 			hint = { fg = "#E06C75" },
-	-- 			first_char = { fg = "#98C379" },
-	-- 			second_char = { fg = "#61AFEF" },
-	-- 			dim = { fg = "#5C6370" },
-	-- 		},
-	-- 		presets = {
-	-- 			words = true,
-	-- 			-- lines = true,
-	-- 			search = true,
-	-- 			delete = true,
-	-- 			yank = true,
-	-- 			change = true,
-	-- 		},
-	-- 	},
-	-- },
 
 	-- flash navigation.
 	{

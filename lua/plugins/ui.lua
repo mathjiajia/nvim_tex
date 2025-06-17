@@ -31,14 +31,6 @@ return {
 			vim.cmd.colorscheme("tokyonight")
 		end,
 	},
-	-- {
-	-- 	"ribru17/bamboo.nvim",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		require("bamboo").setup({ transparent = false })
-	-- 		require("bamboo").load()
-	-- 	end,
-	-- },
 
 	-- winbar
 	{
@@ -158,9 +150,35 @@ return {
 		opts = {
 			dashboard = {
 				enabled = true,
+				preset = {
+					header = [[
+██████████████████████████████████████████████████
+█████ ████████████████████████████████████████
+████   ███  ████████████████  █ ███████████
+███     █     █     ██  ████ █ ███
+██  █       ██ ██    █        ██
+██  ███   █   ██ ██ █   █  █ █  ██
+███████ ██    █    ███ █  █████ ██
+██████████████████████████████████████████████████
+]],
+					keys = {
+						{ action = ":lua Snacks.picker.files()", desc = "Find File", icon = " ", key = "f" },
+						{ action = ":ene | startinsert", desc = "New File", icon = " ", key = "n" },
+						{ action = ":lua Snacks.picker.grep()", desc = "Find Text", icon = " ", key = "g" },
+						{ action = ":lua Snacks.picker.recent()", desc = "Recent Files", icon = " ", key = "r" },
+						{
+							icon = " ",
+							key = "c",
+							desc = "Config",
+							action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
+						},
+						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
+						{ action = ":qa", desc = "Quit", icon = " ", key = "q" },
+					},
+				},
 				sections = {
 					{ section = "header" },
-					{ section = "keys", gap = 1, padding = 1 },
+					{ section = "keys",  gap = 1, padding = 1 },
 					{
 						pane = 2,
 						icon = " ",
@@ -169,13 +187,20 @@ return {
 						indent = 2,
 						padding = 1,
 					},
+					{ pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
 					{
 						pane = 2,
-						icon = " ",
-						title = "Projects",
-						section = "projects",
+						icon = " ",
+						title = "Git Status",
+						section = "terminal",
+						enabled = function()
+							return Snacks.git.get_root() ~= nil
+						end,
+						cmd = "git status --short --branch --renames",
+						height = 5,
+						padding = 1,
+						ttl = 300,
 						indent = 2,
-						padding = 2,
 					},
 					{ section = "startup" },
 				},
@@ -239,9 +264,6 @@ return {
 		},
 	},
 
-	-- rainbow delimiters
-	{ "HiPhish/rainbow-delimiters.nvim", submodules = false },
-
 	-- mini
 	{
 		"echasnovski/mini.nvim",
@@ -254,8 +276,6 @@ return {
 					value = { glyph = "" },
 				},
 			})
-
-			require("mini.pairs").setup()
 
 			local hipatterns = require("mini.hipatterns")
 			hipatterns.setup({
@@ -451,8 +471,8 @@ return {
 				init = function(self)
 					self.status_dict = vim.b.gitsigns_status_dict
 					self.has_changes = self.status_dict.added ~= 0
-						or self.status_dict.removed ~= 0
-						or self.status_dict.changed ~= 0
+							or self.status_dict.removed ~= 0
+							or self.status_dict.changed ~= 0
 				end,
 				hl = { fg = "orange" },
 				{
@@ -548,7 +568,7 @@ return {
 
 			local SearchCount = {
 				condition = function()
-					return vim.v.hlsearch ~= 0 and vim.o.cmdheight == 0
+					return vim.v.hlsearch ~= 0
 				end,
 				init = function(self)
 					local ok, search = pcall(vim.fn.searchcount)
@@ -696,7 +716,7 @@ return {
 				{
 					condition = function(self)
 						return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr })
-							or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
+								or vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
 					end,
 					provider = function(self)
 						if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then
@@ -876,10 +896,10 @@ return {
 				callback = function(ev)
 					local bufnr = ev.buf
 					if
-						vim.list_contains(
-							{ "wipe", "delete" },
-							vim.api.nvim_get_option_value("bufhidden", { buf = bufnr })
-						)
+							vim.list_contains(
+								{ "wipe", "delete" },
+								vim.api.nvim_get_option_value("bufhidden", { buf = bufnr })
+							)
 					then
 						vim.bo[bufnr].buflisted = false
 					end

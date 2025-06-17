@@ -1,3 +1,6 @@
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("texlab")
+
 return {
 
 	{ "mason-org/mason.nvim", config = true },
