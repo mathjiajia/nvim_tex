@@ -1,11 +1,11 @@
 return {
 
-	{
-		"m4xshen/hardtime.nvim",
-		lazy = false,
-		dependencies = { "MunifTanjim/nui.nvim" },
-		config = true,
-	},
+	-- {
+	-- 	"m4xshen/hardtime.nvim",
+	-- 	lazy = false,
+	-- 	dependencies = { "MunifTanjim/nui.nvim" },
+	-- 	config = true,
+	-- },
 
 	-- file explorer
 	{
@@ -50,7 +50,7 @@ return {
 		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		keys = {
 			{ "<leader>aa", "<Cmd>CodeCompanionActions<CR>", desc = "CodeCompanion Actions", mode = { "n", "v" } },
-			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>",    desc = "CodeCompanion Chat",    mode = { "n", "v" } },
+			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>", desc = "CodeCompanion Chat", mode = { "n", "v" } },
 			{
 				"<leader>ae",
 				function()
@@ -114,18 +114,6 @@ return {
 				},
 				diff = { provider = "mini_diff" },
 			},
-			strategies = {
-				chat = {
-					tools = {
-						["mcp"] = {
-							callback = function()
-								return require("mcphub.extensions.codecompanion")
-							end,
-							description = "Call tools and resources from the MCP Servers",
-						},
-					},
-				},
-			},
 			prompt_library = {
 				["Revision"] = {
 					strategy = "chat",
@@ -147,25 +135,11 @@ When you receive a text input, output an improved version that adheres to these 
 			},
 		},
 	},
-	{
-		"ravitemer/mcphub.nvim",
-		cmd = "MCPHub",
-		build = "bundled_build.lua",
-		config = function()
-			require("mcphub").setup({
-				port = 3000,
-				use_bundled_binary = true,
-			})
-		end,
-	},
 
 	-- search/replace in multiple files
 	{
 		"MagicDuck/grug-far.nvim",
-		opts = {
-			icons = { fileIconsProvider = "mini.icons" },
-			keymaps = { close = { n = "q" } },
-		},
+		opts = { icons = { fileIconsProvider = "mini.icons" } },
 		cmd = "GrugFar",
 		keys = {
 			{
@@ -201,6 +175,7 @@ When you receive a text input, output an improved version that adheres to these 
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
+		commit = "8bdaccdb897945a3c99c1ad8df94db0ddf5c8790",
 		opts = {
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")

@@ -1,7 +1,15 @@
 return {
 
 	-- filesype plugin for `LaTeX`
-	{ "mathjiajia/nvim-latex-conceal" },
+	{
+		"pxwg/math-conceal.nvim",
+		build = "make luajit",
+		main = "math-conceal",
+		config = true,
+	},
+
+	-- { "mathjiajia/nvim-latex-conceal", dev = true },
+
 	-- {
 	-- 	"mathjiajia/latex_concealer.nvim",
 	-- 	dev = true,

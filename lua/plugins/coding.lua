@@ -39,20 +39,6 @@ return {
 		dependencies = {
 			"mikavilpas/blink-ripgrep.nvim",
 			"fang2hou/blink-copilot",
-			{
-				"copilotlsp-nvim/copilot-lsp",
-				init = function()
-					vim.lsp.enable("copilot_ls")
-					vim.keymap.set("n", "<Tab>", function()
-						local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
-							or (
-								require("copilot-lsp.nes").apply_pending_nes()
-								and require("copilot-lsp.nes").walk_cursor_end_edit()
-							)
-					end)
-				end,
-				lazy = false,
-			},
 		},
 		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
@@ -75,54 +61,21 @@ return {
 						end
 					end),
 				},
-				["<Tab>"] = {
-					function(cmp)
-						if vim.b[vim.api.nvim_get_current_buf()].nes_state then
-							cmp.hide()
-							return (
-								require("copilot-lsp.nes").apply_pending_nes()
-								and require("copilot-lsp.nes").walk_cursor_end_edit()
-							)
-						end
-					end,
-					"snippet_forward",
-					"fallback",
-				},
 			},
-			appearance = { nerd_font_variant = "normal" },
 			completion = {
 				documentation = {
 					auto_show = true,
 					auto_show_delay_ms = 200,
 				},
-				menu = {
-					draw = {
-						components = {
-							kind_icon = {
-								text = function(ctx)
-									local kind_icon, _, _ = MiniIcons.get("lsp", ctx.kind)
-									return kind_icon
-								end,
-							},
-						},
-						treesitter = { "lsp" },
-					},
-				},
+				menu = { draw = { treesitter = { "lsp" } } },
 			},
 			snippets = { preset = "luasnip" },
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
 				providers = {
 					snippets = { opts = { show_autosnippets = false } },
-					ripgrep = {
-						module = "blink-ripgrep",
-						name = "Ripgrep",
-					},
-					copilot = {
-						async = true,
-						module = "blink-copilot",
-						name = "Copilot",
-					},
+					ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
+					copilot = { async = true, module = "blink-copilot", name = "Copilot" },
 				},
 			},
 		},
@@ -132,10 +85,35 @@ return {
 	{
 		"saghen/blink.pairs",
 		version = "*",
+		-- build = "nix run .#build-plugin",
 		dependencies = "saghen/blink.download",
 		opts = {
 			mappings = {
 				pairs = {
+					["'"] = {
+						{
+							"'''",
+							"'''",
+							when = function()
+								local cursor = vim.api.nvim_win_get_cursor(0)
+								local line = vim.api.nvim_get_current_line()
+								return line:sub(cursor[2] - 1, cursor[2]) == "''"
+							end,
+							filetypes = { "python" },
+						},
+						{
+							"'",
+							enter = false,
+							space = false,
+							when = function()
+								local cursor = vim.api.nvim_win_get_cursor(0)
+								local char = vim.api.nvim_get_current_line():sub(cursor[2], cursor[2])
+								return not char:match("%w")
+									and (vim.bo.filetype ~= "rust" or char:match("[&<]"))
+									and not vim.list_contains({ "bib", "tex", "plaintex" }, vim.bo.filetype)
+							end,
+						},
+					},
 					["`"] = {
 						{
 							"```",
@@ -147,22 +125,38 @@ return {
 							end,
 							filetypes = { "markdown", "vimwiki", "rmarkdown", "rmd", "pandoc", "quarto", "typst" },
 						},
-						{ "`", "'", filetypes = { "bib", "latex", "tex" } },
+						{ "`", "'", enter = false, space = false, filetypes = { "bib", "tex", "plaintex" } },
 						{ "`", enter = false, space = false },
 					},
 				},
 			},
 			highlights = {
 				groups = {
-					"RainbowDelimiterRed",
-					"RainbowDelimiterYellow",
-					"RainbowDelimiterBlue",
-					"RainbowDelimiterOrange",
-					"RainbowDelimiterGreen",
-					"RainbowDelimiterViolet",
-					"RainbowDelimiterCyan",
+					"BlinkPairsBlue",
+					"BlinkPairsYellow",
+					"BlinkPairsGreen",
+					"BlinkPairsTeal",
+					"BlinkPairsMagenta",
+					"BlinkPairsPurple",
+					"BlinkPairsOrange",
 				},
-				matchparen = { enabled = true, group = "MatchParen" },
+			},
+		},
+	},
+
+	{
+		"saghen/blink.indent",
+		opts = {
+			scope = {
+				highlights = {
+					"BlinkPairsBlue",
+					"BlinkPairsYellow",
+					"BlinkPairsGreen",
+					"BlinkPairsTeal",
+					"BlinkPairsMagenta",
+					"BlinkPairsPurple",
+					"BlinkPairsOrange",
+				},
 			},
 		},
 	},
