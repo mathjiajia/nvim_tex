@@ -65,8 +65,11 @@ return {
 			completion = {
 				documentation = {
 					auto_show = true,
-					auto_show_delay_ms = 200,
+					auto_show_delay_ms = 50,
+					update_delay_ms = 50,
+					treesitter_highlighting = true,
 				},
+				list = { max_items = 20 },
 				menu = { draw = { treesitter = { "lsp" } } },
 			},
 			snippets = { preset = "luasnip" },
@@ -85,8 +88,8 @@ return {
 	{
 		"saghen/blink.pairs",
 		version = "*",
-		-- build = "nix run .#build-plugin",
 		dependencies = "saghen/blink.download",
+		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
 			mappings = {
 				pairs = {
@@ -125,7 +128,7 @@ return {
 							end,
 							filetypes = { "markdown", "vimwiki", "rmarkdown", "rmd", "pandoc", "quarto", "typst" },
 						},
-						{ "`", "'", enter = false, space = false, filetypes = { "bib", "tex", "plaintex" } },
+						{ "`", "'", filetypes = { "bib", "latex", "tex" } },
 						{ "`", enter = false, space = false },
 					},
 				},
@@ -203,6 +206,7 @@ return {
 	{
 		"kylechui/nvim-surround",
 		config = true,
+		branch = "fix/treesitter-module",
 		keys = {
 			{ "cs", desc = "Change Surrounding" },
 			{ "ds", desc = "Delete Surrounding" },

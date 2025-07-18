@@ -1,11 +1,16 @@
 return {
 
-	-- {
-	-- 	"m4xshen/hardtime.nvim",
-	-- 	lazy = false,
-	-- 	dependencies = { "MunifTanjim/nui.nvim" },
-	-- 	config = true,
-	-- },
+	{
+		"dmtrKovalenko/fff.nvim",
+		build = "nix run .#release",
+		opts = { debug = { show_scores = true } },
+		-- stylua: ignore
+		keys = {
+			{ "<leader>ff", function() require("fff").find_files() end, desc = "Open Files Picker" },
+			{ "<leader>fg", function() require("fff").find_in_git_root() end, desc = "Git Files Picker" },
+			{ "<leader>fc", function() require("fff").find_files_in_dir(vim.fn.stdpath("config")) end, desc = "Find Config Files" },
+		},
+	},
 
 	-- file explorer
 	{
@@ -65,23 +70,6 @@ return {
 		},
 		opts = {
 			adapters = {
-				copilot = function()
-					return require("codecompanion.adapters").extend("copilot", {
-						schema = { model = { default = "o4-mini" } },
-					})
-				end,
-				deepseek = function()
-					return require("codecompanion.adapters").extend("deepseek", {
-						url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-						env = { api_key = "ALIYUN_API_KEY" },
-						schema = {
-							model = {
-								default = "deepseek-r1",
-								choices = { ["deepseek-r1"] = { opts = { can_reason = true } } },
-							},
-						},
-					})
-				end,
 				aliyun_qwen = function()
 					return require("codecompanion.adapters").extend("openai_compatible", {
 						name = "aliyun_qwen",
@@ -91,10 +79,11 @@ return {
 						},
 						schema = {
 							model = {
-								default = "qwen-max-0125",
+								default = "qwen-max",
 								choices = {
-									"qwen-max-0125",
-									["qwq-plus-2025-03-05"] = { opts = { can_reason = true } },
+									"qwen-max",
+									"qwen3-235b-a22b",
+									"qwen3-coder-480b-a35b-instruct",
 								},
 							},
 						},
@@ -102,6 +91,7 @@ return {
 				end,
 			},
 			display = {
+				action_palette = { provider = "snacks" },
 				chat = {
 					window = {
 						opts = {
@@ -165,8 +155,7 @@ When you receive a text input, output an improved version that adheres to these 
 			vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
 			vim.keymap.set({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
 			vim.keymap.set("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
-			vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end,
-				{ desc = "Treesitter Search" })
+			vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
 			vim.keymap.set("c", "<C-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
 			-- stylua: ignore end
 		end,
@@ -206,10 +195,8 @@ When you receive a text input, output an improved version that adheres to these 
 				-- Actions
 				map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage Hunk" })
 				map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
-				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end,
-					{ desc = "Stage Hunk" })
-				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end,
-					{ desc = "Reset Hunk" })
+				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Stage Hunk" })
+				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Reset Hunk" })
 
 				map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
 				map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset Buffer" })

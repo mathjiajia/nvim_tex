@@ -4,7 +4,6 @@ return {
 	{
 		"pxwg/math-conceal.nvim",
 		build = "make luajit",
-		main = "math-conceal",
 		config = true,
 	},
 
