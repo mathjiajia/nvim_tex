@@ -1,4 +1,4 @@
-vim.lsp.enable({ "copilot_ls", "lua_ls", "texlab" })
+vim.lsp.enable({ "copilot", "lua_ls", "marksman", "texlab" })
 
 return {
 
@@ -27,8 +27,6 @@ return {
 					bib = { "bibtex-tidy" },
 					lua = { "stylua" },
 					markdown = { "prettierd" },
-					["markdown.mdx"] = { "prettierd" },
-					typescriptreact = { "prettierd" },
 					tex = { "tex-fmt" },
 				},
 				format_on_save = function(bufnr)

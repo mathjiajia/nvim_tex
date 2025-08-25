@@ -1,5 +1,17 @@
 return {
 
+	-- {
+	-- 	"darianmorat/gruvdark.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("gruvdark").setup({
+	-- 			highlights = {},
+	-- 		})
+	--
+	-- 		vim.cmd.colorscheme("gruvdark")
+	-- 	end,
+	-- },
 	{
 		"folke/tokyonight.nvim",
 		lazy = false,
@@ -52,12 +64,8 @@ return {
 						["U"] = { short = "UNK" },
 					},
 				},
-				path = { hl = { primary = "Define" } },
 				git = { hl = { primary = "Function" } },
-				filetype_lsp = {
-					hl = { primary = "String" },
-					map_lsps = { ["copilot_ls"] = "copilot" },
-				},
+				progress = { column = true },
 			},
 		},
 	},
@@ -145,7 +153,7 @@ return {
 			-- LSP
 			{ "gd",              function() Snacks.picker.lsp_definitions() end,       desc = "Goto Definition" },
 			{ "gD",              function() Snacks.picker.lsp_declarations() end,      desc = "Goto Declaration" },
-			{ "gr",              function() Snacks.picker.lsp_references() end,        nowait = true,                     desc = "References" },
+			{ "gr",              function() Snacks.picker.lsp_references() end,        desc = "References",               nowait = true },
 			{ "gI",              function() Snacks.picker.lsp_implementations() end,   desc = "Goto Implementation" },
 			{ "gy",              function() Snacks.picker.lsp_type_definitions() end,  desc = "Goto T[y]pe Definition" },
 			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
@@ -184,7 +192,7 @@ return {
 							action = ":lua require('fff').find_files_in_dir(vim.fn.stdpath('config'))",
 							hidden = true,
 						},
-						{ key = "L", action = ":Lazy", hidden = true },
+						{ key = "l", action = ":Lazy", hidden = true },
 						{ action = ":qa", key = "q", hidden = true },
 					},
 				},
@@ -257,7 +265,7 @@ return {
 
 	-- mini
 	{
-		"echasnovski/mini.nvim",
+		"nvim-mini/mini.nvim",
 		config = function()
 			require("mini.icons").setup()
 
@@ -266,34 +274,22 @@ return {
 					fixme = {
 						pattern = "%f[%w]()FIXME()%f[%W]",
 						group = "MiniHipatternsFixme",
-						extmark_opts = {
-							sign_text = "",
-							sign_hl_group = "DiagnosticError",
-						},
+						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticError" },
 					},
 					hack = {
 						pattern = "%f[%w]()HACK()%f[%W]",
 						group = "MiniHipatternsHack",
-						extmark_opts = {
-							sign_text = "",
-							sign_hl_group = "DiagnosticWarn",
-						},
+						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticWarn" },
 					},
 					todo = {
 						pattern = "%f[%w]()TODO()%f[%W]",
 						group = "MiniHipatternsTodo",
-						extmark_opts = {
-							sign_text = "",
-							sign_hl_group = "DiagnosticInfo",
-						},
+						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticInfo" },
 					},
 					note = {
 						pattern = "%f[%w]()NOTE()%f[%W]",
 						group = "MiniHipatternsNote",
-						extmark_opts = {
-							sign_text = "",
-							sign_hl_group = "DiagnosticHint",
-						},
+						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticHint" },
 					},
 				},
 			})

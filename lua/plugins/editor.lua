@@ -3,16 +3,25 @@ return {
 	{
 		"dmtrKovalenko/fff.nvim",
 		build = "nix run .#release",
-		opts = { debug = { show_scores = true } },
-		-- stylua: ignore
-		keys = {
-			{ "<leader>ff", function() require("fff").find_files() end, desc = "Open Files Picker" },
-			{ "<leader>fg", function() require("fff").find_in_git_root() end, desc = "Git Files Picker" },
-			{ "<leader>fc", function() require("fff").find_files_in_dir(vim.fn.stdpath("config")) end, desc = "Find Config Files" },
-		},
+		config = function()
+			vim.g.fff = {
+				lazy_sync = true,
+				layout = { prompt_position = "top" },
+			}
+
+			-- stylua: ignore start
+			vim.keymap.set("n", "<leader>ff", function() require("fff").find_files() end, { desc = "Open Files Picker" })
+			vim.keymap.set("n", "<leader>fg", function() require("fff").find_in_git_root() end, { desc = "Git Files Picker" })
+			vim.keymap.set("n", "<leader>fc", function() require("fff").find_files_in_dir(vim.fn.stdpath("config")) end, { desc = "Find Config Files" })
+		end,
 	},
 
 	-- file explorer
+	-- {
+	-- 	"A7Lavinraj/fyler.nvim",
+	-- 	config = true,
+	-- 	keys = { { "<leader>e", "<Cmd>Fyler<CR>", desc = "Open File Explorer" } },
+	-- },
 	{
 		"stevearc/oil.nvim",
 		config = function()
@@ -26,24 +35,7 @@ return {
 				end
 			end
 
-			local detail = false
-
-			require("oil").setup({
-				win_options = { winbar = "%!v:lua.get_oil_winbar()" },
-				keymaps = {
-					["gd"] = {
-						desc = "Toggle file detail view",
-						callback = function()
-							detail = not detail
-							if detail then
-								require("oil").set_columns({ "icon", "permissions", "size", "mtime" })
-							else
-								require("oil").set_columns({ "icon" })
-							end
-						end,
-					},
-				},
-			})
+			require("oil").setup({ win_options = { winbar = "%!v:lua.get_oil_winbar()" } })
 			vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { desc = "Open parent directory" })
 		end,
 	},
@@ -51,6 +43,7 @@ return {
 	-- llm
 	{
 		"olimorris/codecompanion.nvim",
+		version = "*",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
 		keys = {
@@ -70,25 +63,27 @@ return {
 		},
 		opts = {
 			adapters = {
-				aliyun_qwen = function()
-					return require("codecompanion.adapters").extend("openai_compatible", {
-						name = "aliyun_qwen",
-						env = {
-							url = "https://dashscope.aliyuncs.com/compatible-mode",
-							api_key = "ALIYUN_API_KEY",
-						},
-						schema = {
-							model = {
-								default = "qwen-max",
-								choices = {
-									"qwen-max",
-									"qwen3-235b-a22b",
-									"qwen3-coder-480b-a35b-instruct",
+				http = {
+					aliyun_qwen = function()
+						return require("codecompanion.adapters").extend("openai_compatible", {
+							name = "aliyun_qwen",
+							env = {
+								url = "https://dashscope.aliyuncs.com/compatible-mode",
+								api_key = "ALIYUN_API_KEY",
+							},
+							schema = {
+								model = {
+									default = "qwen-max",
+									choices = {
+										"qwen-max",
+										"qwen3-235b-a22b",
+										"qwen3-coder-480b-a35b-instruct",
+									},
 								},
 							},
-						},
-					})
-				end,
+						})
+					end,
+				},
 			},
 			display = {
 				action_palette = { provider = "snacks" },

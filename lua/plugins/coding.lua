@@ -1,3 +1,13 @@
+local hl_groups = {
+	"BlinkPairsBlue",
+	"BlinkPairsYellow",
+	"BlinkPairsGreen",
+	"BlinkPairsTeal",
+	"BlinkPairsMagenta",
+	"BlinkPairsPurple",
+	"BlinkPairsOrange",
+}
+
 return {
 
 	-- snippets
@@ -14,21 +24,15 @@ return {
 			ls.setup({
 				update_events = "TextChanged,TextChangedI",
 				delete_check_events = "TextChanged",
+				enable_autosnippets = true,
+				store_selection_keys = "<Tab>",
 				ext_opts = {
 					[types.insertNode] = { active = { virt_text = { { "", "Boolean" } } } },
 					[types.choiceNode] = { active = { virt_text = { { "󱥸", "Special" } } } },
 				},
-				enable_autosnippets = true,
-				store_selection_keys = "<Tab>",
 			})
 
-			require("luasnip.loaders.from_lua").lazy_load({ paths = "~/Projects/nvim-math-snippets/luasnippets" })
-
-			-- stylua: ignore start
-			vim.keymap.set("i", "<C-k>", function() if ls.expandable() then ls.expand() end end, { desc = "LuaSnip Expand" })
-			vim.keymap.set({ "i", "s" }, "<C-;>", function() if ls.choice_active() then ls.change_choice(1) end end,
-				{ desc = "LuaSnip Next Choice" })
-			-- stylua: ignore end
+			require("luasnip.loaders.from_lua").lazy_load()
 		end,
 	},
 
@@ -37,7 +41,7 @@ return {
 		"saghen/blink.cmp",
 		version = "1.*",
 		dependencies = {
-			"mikavilpas/blink-ripgrep.nvim",
+			{ "mikavilpas/blink-ripgrep.nvim", version = "*" },
 			"fang2hou/blink-copilot",
 		},
 		event = { "InsertEnter", "CmdlineEnter" },
@@ -77,8 +81,8 @@ return {
 				default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
 				providers = {
 					snippets = { opts = { show_autosnippets = false } },
-					ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
 					copilot = { async = true, module = "blink-copilot", name = "Copilot" },
+					ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
 				},
 			},
 		},
@@ -91,6 +95,7 @@ return {
 		dependencies = "saghen/blink.download",
 		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
+			highlights = { groups = hl_groups },
 			mappings = {
 				pairs = {
 					["'"] = {
@@ -133,36 +138,10 @@ return {
 					},
 				},
 			},
-			highlights = {
-				groups = {
-					"BlinkPairsBlue",
-					"BlinkPairsYellow",
-					"BlinkPairsGreen",
-					"BlinkPairsTeal",
-					"BlinkPairsMagenta",
-					"BlinkPairsPurple",
-					"BlinkPairsOrange",
-				},
-			},
 		},
 	},
 
-	{
-		"saghen/blink.indent",
-		opts = {
-			scope = {
-				highlights = {
-					"BlinkPairsBlue",
-					"BlinkPairsYellow",
-					"BlinkPairsGreen",
-					"BlinkPairsTeal",
-					"BlinkPairsMagenta",
-					"BlinkPairsPurple",
-					"BlinkPairsOrange",
-				},
-			},
-		},
-	},
+	{ "saghen/blink.indent", opts = { scope = { highlights = hl_groups } } },
 
 	-- symbols
 	{
@@ -212,10 +191,10 @@ return {
 			{ "ds", desc = "Delete Surrounding" },
 			{ "ys", desc = "Add Surrounding" },
 			{ "yS", desc = "Add Surrounding to Current Line" },
-			{ "S", mode = { "x" }, desc = "Add Surrounding" },
-			{ "gS", mode = { "x" }, desc = "Add Surrounding to Current Line" },
-			{ "<C-g>s", mode = { "i" }, desc = "Add Surrounding" },
-			{ "<C-g>S", mode = { "i" }, desc = "Add Surrounding to Current Line" },
+			{ "S", mode = "x", desc = "Add Surrounding" },
+			{ "gS", mode = "x", desc = "Add Surrounding to Current Line" },
+			{ "<C-g>s", mode = "i", desc = "Add Surrounding" },
+			{ "<C-g>S", mode = "i", desc = "Add Surrounding to Current Line" },
 		},
 	},
 }
