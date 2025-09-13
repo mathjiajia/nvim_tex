@@ -1,17 +1,5 @@
 return {
 
-	-- {
-	-- 	"darianmorat/gruvdark.nvim",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		require("gruvdark").setup({
-	-- 			highlights = {},
-	-- 		})
-	--
-	-- 		vim.cmd.colorscheme("gruvdark")
-	-- 	end,
-	-- },
 	{
 		"folke/tokyonight.nvim",
 		lazy = false,
@@ -20,12 +8,15 @@ return {
 			require("tokyonight").setup({
 				-- style = "storm",
 				dim_inactive = true,
-				-- transparent = true,
+				transparent = true,
 				terminal_colors = false,
 				on_highlights = function(hl, c)
-					hl["@module.latex"] = { fg = "#DCDCAF" }
-					hl["@label.latex"] = { fg = "#AADAFA" }
-					hl["@function.latex"] = { fg = "#71C6B1" }
+					c.bg_statusline = "NONE"
+					hl.StatusLine = { fg = c.fg_sidebar }
+					hl.StatusLineNC = { fg = c.fg_gutter }
+					hl["@module.latex"] = { fg = c.yellow }
+					hl["@label.latex"] = { fg = c.blue }
+					hl["@function.latex"] = { fg = c.magenta }
 					hl.BlinkPairsBlue = { fg = c.blue }
 					hl.BlinkPairsYellow = { fg = c.yellow }
 					hl.BlinkPairsGreen = { fg = c.green }
@@ -33,7 +24,6 @@ return {
 					hl.BlinkPairsMagenta = { fg = c.magenta }
 					hl.BlinkPairsPurple = { fg = c.purple }
 					hl.BlinkPairsOrange = { fg = c.orange }
-					-- hl.BlinkPairsRed = { fg = c.red }
 				end,
 			})
 			vim.cmd.colorscheme("tokyonight")
@@ -109,7 +99,6 @@ return {
 		keys = {
 			-- Top Pickers & Explorer
 			{ "<leader><space>", function() Snacks.picker.smart() end,                 desc = "Smart Find Files" },
-			{ "<leader>:",       function() Snacks.picker.command_history() end,       desc = "Command History" },
 			{ "<leader>n",       function() Snacks.picker.notifications() end,         desc = "Notification History" },
 			-- find
 			{ "<leader>fb",      function() Snacks.picker.buffers() end,               desc = "Buffers" },
@@ -139,12 +128,10 @@ return {
 			{ "<leader>sD",      function() Snacks.picker.diagnostics_buffer() end,    desc = "Buffer Diagnostics" },
 			{ "<leader>sh",      function() Snacks.picker.help() end,                  desc = "Help Pages" },
 			{ "<leader>sH",      function() Snacks.picker.highlights() end,            desc = "Highlights" },
-			{ "<leader>si",      function() Snacks.picker.icons() end,                 desc = "Icons" },
 			{ "<leader>sj",      function() Snacks.picker.jumps() end,                 desc = "Jumps" },
 			{ "<leader>sk",      function() Snacks.picker.keymaps() end,               desc = "Keymaps" },
 			{ "<leader>sl",      function() Snacks.picker.loclist() end,               desc = "Location List" },
 			{ "<leader>sm",      function() Snacks.picker.marks() end,                 desc = "Marks" },
-			{ "<leader>sM",      function() Snacks.picker.man() end,                   desc = "Man Pages" },
 			{ "<leader>sp",      function() Snacks.picker.lazy() end,                  desc = "Search for Plugin Spec" },
 			{ "<leader>sq",      function() Snacks.picker.qflist() end,                desc = "Quickfix List" },
 			{ "<leader>sR",      function() Snacks.picker.resume() end,                desc = "Resume" },
@@ -171,91 +158,9 @@ return {
 			{ "<leader>un",      function() Snacks.notifier.hide() end,                desc = "Dismiss All Notifications" },
 		},
 		opts = {
-			dashboard = {
-				preset = {
-					header = [[
-██████████████████████████████████████████████████
-█████ ████████████████████████████████████████
-████   ███  ████████████████  █ ███████████
-███     █     █     ██  ████ █ ███
-██  █       ██ ██    █        ██
-██  ███   █   ██ ██ █   █  █ █  ██
-███████ ██    █    ███ █  █████ ██
-██████████████████████████████████████████████████]],
-					keys = {
-						{ action = ":lua require('fff').find_files()", key = "f", hidden = true },
-						{ action = ":ene | startinsert", key = "n", hidden = true },
-						{ action = ":lua Snacks.picker.grep()", key = "g", hidden = true },
-						{ action = ":lua Snacks.picker.recent()", key = "r", hidden = true },
-						{
-							key = "c",
-							action = ":lua require('fff').find_files_in_dir(vim.fn.stdpath('config'))",
-							hidden = true,
-						},
-						{ key = "l", action = ":Lazy", hidden = true },
-						{ action = ":qa", key = "q", hidden = true },
-					},
-				},
-				sections = {
-					{ section = "header" },
-					{ section = "keys" },
-					{
-						padding = 2,
-						align = "center",
-						text = {
-							{ " [f]ile ", hl = "BlinkPairsBlue" },
-							{ " [n]ew ", hl = "BlinkPairsYellow" },
-							{ " [g]rep ", hl = "BlinkPairsGreen" },
-							{ " [r]ecent ", hl = "BlinkPairsTeal" },
-							{ " [c]onfig ", hl = "BlinkPairsMagenta" },
-							{ "󰒲 [L]azy ", hl = "BlinkPairsPurple" },
-							{ " [q]uit", hl = "BlinkPairsOrange" },
-						},
-					},
-					{
-						icon = " ",
-						title = "Recent Files",
-						section = "recent_files",
-						indent = 2,
-						padding = 1,
-					},
-					{ icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-					{ section = "startup" },
-				},
-			},
 			input = { enabled = true },
 			notifier = { enabled = true },
-			picker = {
-				win = {
-					input = {
-						keys = {
-							["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } },
-							["<M-s>"] = { "flash", mode = { "n", "i" } },
-							["s"] = { "flash" },
-						},
-					},
-				},
-				actions = {
-					flash = function(picker)
-						require("flash").jump({
-							pattern = "^",
-							label = { after = { 0, 0 } },
-							search = {
-								mode = "search",
-								exclude = {
-									function(win)
-										return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "snacks_picker_list"
-									end,
-								},
-							},
-							action = function(match)
-								local idx = picker.list:row2idx(match.pos[1])
-								picker.list:_move(idx, true, true)
-							end,
-						})
-					end,
-				},
-			},
+			picker = { win = { input = { keys = { ["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } } } } } },
 			styles = {
 				lazygit = { width = 0, height = 0 },
 				notification = { wo = { wrap = true } },

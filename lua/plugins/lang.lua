@@ -1,9 +1,17 @@
 return {
 
+	{
+		"saxon1964/neovim-tips",
+		version = "*",
+		dependencies = { "MunifTanjim/nui.nvim" },
+		cmd = { "NeovimTips" },
+		config = true,
+	},
+
 	-- filesype plugin for `LaTeX`
+	-- "mathjiajia/nvim-latex-conceal",
 	{
 		"pxwg/math-conceal.nvim",
-		lazy = true,
 		build = "make luajit",
 		opts = {
 			conceal = {
@@ -15,7 +23,6 @@ return {
 			},
 		},
 	},
-	{ "mathjiajia/nvim-latex-conceal", dev = true },
 
 	-- viewing Markdown files in Neovim
 	{

@@ -1,5 +1,5 @@
 vim.loader.enable()
-require("vim._extui").enable({ msg = { target = "msg" } })
+require("vim._extui").enable({})
 
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
@@ -57,7 +57,7 @@ opt.number = true
 opt.relativenumber = true
 
 -- 5 syntax, highlighting and spelling
-opt.colorcolumn = "120"
+-- opt.colorcolumn = "120"
 opt.cursorline = true
 opt.spelllang = "en_gb"
 
@@ -148,10 +148,10 @@ autocmd("TextYankPost", {
 -- go to last loc when opening a buffer
 autocmd("BufReadPost", {
 	group = augroup("LastPlace", {}),
-	callback = function(args)
+	callback = function(ev)
 		local exclude_bt = { "help", "nofile", "quickfix" }
 		local exclude_ft = { "gitcommit" }
-		local buf = args.buf
+		local buf = ev.buf
 		if
 			vim.list_contains(exclude_bt, vim.bo[buf].buftype)
 			or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
@@ -173,9 +173,9 @@ autocmd("BufReadPost", {
 -- lsp
 autocmd("LspAttach", {
 	group = augroup("my.lsp", {}),
-	callback = function(event)
-		local client = vim.lsp.get_client_by_id(event.data.client_id)
-		local bufnr = event.buf
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		local bufnr = ev.buf
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go Declaration" })
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go Definition" })
 		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "Signature Help" })
@@ -251,6 +251,18 @@ vim.keymap.set("n", "<leader>qq", vim.diagnostic.setqflist, { desc = "Set Quickf
 vim.keymap.set("n", "<leader>ql", vim.diagnostic.setloclist, { desc = "Set Loclist" })
 
 require("lazy").setup("plugins", {
-	dev = { path = "~/Projects" },
 	ui = { border = "rounded" },
+})
+
+autocmd("LspProgress", {
+	callback = function(ev)
+		local value = ev.data.params.value
+		if value.kind == "begin" then
+			vim.api.nvim_ui_send("\027]9;4;1;0\027\\")
+		elseif value.kind == "end" then
+			vim.api.nvim_ui_send("\027]9;4;0\027\\")
+		elseif value.kind == "report" then
+			vim.api.nvim_ui_send(string.format("\027]9;4;1;%d\027\\", value.percentage or 0))
+		end
+	end,
 })

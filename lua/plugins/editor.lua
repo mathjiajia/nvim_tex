@@ -1,8 +1,58 @@
 return {
 
 	{
+		"folke/sidekick.nvim",
+		config = true,
+		-- stylua: ignore
+		keys = {
+			{
+				"<Tab>",
+				function() if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end end,
+				expr = true,
+				desc = "Goto/Apply Next Edit Suggestion",
+			},
+			{
+				"<leader>aa",
+				function() require("sidekick.cli").toggle() end,
+				desc = "Sidekick Toggle CLI",
+			},
+			{
+				"<leader>as",
+				function() require("sidekick.cli").select({ filter = { installed = true } }) end,
+				desc = "Sidekick Select CLI",
+			},
+			{
+				"<leader>at",
+				function() require("sidekick.cli").send({ msg = "{this}" }) end,
+				mode = { "x", "n" },
+				desc = "Send This",
+			},
+			{
+				"<leader>av",
+				function() require("sidekick.cli").send({ msg = "{selection}" }) end,
+				mode = { "x" },
+				desc = "Send Visual Selection",
+			},
+			{
+				"<leader>ap",
+				function() require("sidekick.cli").prompt() end,
+				mode = { "n", "x" },
+				desc = "Sidekick Select Prompt",
+			},
+			{
+				"<c-.>",
+				function() require("sidekick.cli").focus() end,
+				mode = { "n", "x", "i", "t" },
+				desc = "Sidekick Switch Focus",
+			},
+		},
+	},
+
+	{
 		"dmtrKovalenko/fff.nvim",
-		build = "nix run .#release",
+		build = function()
+			require("fff.download").download_or_build_binary()
+		end,
 		config = function()
 			vim.g.fff = {
 				lazy_sync = true,
@@ -17,115 +67,37 @@ return {
 	},
 
 	-- file explorer
-	-- {
-	-- 	"A7Lavinraj/fyler.nvim",
-	-- 	config = true,
-	-- 	keys = { { "<leader>e", "<Cmd>Fyler<CR>", desc = "Open File Explorer" } },
-	-- },
 	{
-		"stevearc/oil.nvim",
+		"A7Lavinraj/fyler.nvim",
+		branch = "stable",
 		config = function()
-			function _G.get_oil_winbar()
-				local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-				local dir = require("oil").get_current_dir(bufnr)
-				if dir then
-					return vim.fn.fnamemodify(dir, ":~")
-				else
-					return vim.api.nvim_buf_get_name(0)
-				end
-			end
-
-			require("oil").setup({ win_options = { winbar = "%!v:lua.get_oil_winbar()" } })
-			vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { desc = "Open parent directory" })
-		end,
-	},
-
-	-- llm
-	{
-		"olimorris/codecompanion.nvim",
-		version = "*",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
-		keys = {
-			{ "<leader>aa", "<Cmd>CodeCompanionActions<CR>", desc = "CodeCompanion Actions", mode = { "n", "v" } },
-			{ "<leader>ac", "<Cmd>CodeCompanionChat<CR>", desc = "CodeCompanion Chat", mode = { "n", "v" } },
-			{
-				"<leader>ae",
-				function()
-					local prompt = vim.fn.input("Inline Assistant: ")
-					if prompt ~= "" then
-						vim.cmd.CodeCompanion(prompt)
-					end
-				end,
-				mode = { "n", "v" },
-				desc = "CodeCompanion Inline Assistant",
-			},
-		},
-		opts = {
-			adapters = {
-				http = {
-					aliyun_qwen = function()
-						return require("codecompanion.adapters").extend("openai_compatible", {
-							name = "aliyun_qwen",
-							env = {
-								url = "https://dashscope.aliyuncs.com/compatible-mode",
-								api_key = "ALIYUN_API_KEY",
-							},
-							schema = {
-								model = {
-									default = "qwen-max",
-									choices = {
-										"qwen-max",
-										"qwen3-235b-a22b",
-										"qwen3-coder-480b-a35b-instruct",
-									},
-								},
-							},
-						})
+			require("fyler").setup({
+				default_explorer = true,
+				hooks = {
+					on_rename = function(src_path, destination_path)
+						Snacks.rename.on_rename_file(src_path, destination_path)
 					end,
 				},
-			},
-			display = {
-				action_palette = { provider = "snacks" },
-				chat = {
-					window = {
-						opts = {
-							conceallevel = 2,
-							colorcolumn = "",
-							number = false,
-							relativenumber = false,
-						},
-					},
+				icon = {
+					directory_collapsed = "",
+					directory_expanded = "",
+					directory_empty = "󰜌",
 				},
-				diff = { provider = "mini_diff" },
-			},
-			prompt_library = {
-				["Revision"] = {
-					strategy = "chat",
-					description = "Academic Revision Assistant",
-					opts = { modes = { "v" } },
-					prompts = {
-						{
-							role = "user",
-							content = [[
-You are an AI writing assistant with expertise in academic writing and algebraic geometry using LaTeX.
-Your task is to revise provided academic text excerpts to enhance clarity, conciseness,
-and grammatical accuracy while preserving all mathematical precision and LaTeX formatting.
-Ensure that the revised text maintains the formal tone appropriate for a research paper.
-When you receive a text input, output an improved version that adheres to these guidelines.
-]],
-						},
-					},
+				win = {
+					kind = "split_left",
+					kind_presets = { split_left = { width = "0.2rel" } },
 				},
-			},
-		},
+			})
+
+			vim.keymap.set("n", "<leader>e", "<Cmd>Fyler<CR>", { desc = "Open File Explorer" })
+		end,
 	},
 
 	-- search/replace in multiple files
 	{
 		"MagicDuck/grug-far.nvim",
+		cmd = { "GrugFar", "GrugFarWithin" },
 		opts = { icons = { fileIconsProvider = "mini.icons" } },
-		cmd = "GrugFar",
 		keys = {
 			{
 				"<leader>sr",
@@ -140,26 +112,10 @@ When you receive a text input, output an improved version that adheres to these 
 		},
 	},
 
-	-- flash navigation.
-	{
-		"folke/flash.nvim",
-		config = function()
-			require("flash").setup()
-
-			-- stylua: ignore start
-			vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
-			vim.keymap.set({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
-			vim.keymap.set("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
-			vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
-			vim.keymap.set("c", "<C-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
-			-- stylua: ignore end
-		end,
-	},
-
 	-- git signs
 	{
 		"lewis6991/gitsigns.nvim",
-		commit = "8bdaccdb897945a3c99c1ad8df94db0ddf5c8790",
+		commit = "f780609807eca1f783a36a8a31c30a48fbe150c5",
 		opts = {
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")

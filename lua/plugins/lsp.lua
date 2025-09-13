@@ -2,8 +2,6 @@ vim.lsp.enable({ "copilot", "lua_ls", "marksman", "texlab" })
 
 return {
 
-	{ "mason-org/mason.nvim", config = true },
-
 	-- formatting
 	{
 		"stevearc/conform.nvim",

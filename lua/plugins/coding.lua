@@ -14,9 +14,9 @@ return {
 	{
 		"L3MON4D3/LuaSnip",
 		lazy = true,
-		build = "make install_jsregexp",
-		dependencies = { "mathjiajia/nvim-math-snippets", dev = true },
+		-- build = "make install_jsregexp",
 		submodules = false,
+		dependencies = "mathjiajia/nvim-math-snippets",
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")
@@ -70,8 +70,6 @@ return {
 				documentation = {
 					auto_show = true,
 					auto_show_delay_ms = 50,
-					update_delay_ms = 50,
-					treesitter_highlighting = true,
 				},
 				list = { max_items = 20 },
 				menu = { draw = { treesitter = { "lsp" } } },
@@ -143,49 +141,11 @@ return {
 
 	{ "saghen/blink.indent", opts = { scope = { highlights = hl_groups } } },
 
-	-- symbols
-	{
-		"stevearc/aerial.nvim",
-		keys = { { "<leader>cs", "<Cmd>AerialToggle<CR>", desc = "Aerial Symbols" } },
-		opts = {
-			backends = { "lsp", "treesitter", "markdown", "man" },
-			show_guides = true,
-			filter_kind = {
-				"Array",
-				"Boolean",
-				"Class",
-				-- "Constant",
-				"Constructor",
-				"Enum",
-				"EnumMember",
-				"Event",
-				"Field",
-				"File",
-				"Function",
-				"Interface",
-				"Key",
-				"Method",
-				"Module",
-				"Namespace",
-				"Null",
-				"Number",
-				"Object",
-				"Operator",
-				-- "Package",
-				"Property",
-				"String",
-				"Struct",
-				"TypeParameter",
-				"Variable",
-			},
-		},
-	},
-
 	-- surround
 	{
 		"kylechui/nvim-surround",
+		version = "^3.0.0",
 		config = true,
-		branch = "fix/treesitter-module",
 		keys = {
 			{ "cs", desc = "Change Surrounding" },
 			{ "ds", desc = "Delete Surrounding" },
