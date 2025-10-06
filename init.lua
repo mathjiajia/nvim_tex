@@ -119,6 +119,7 @@ opt.updatetime = 200
 opt.virtualedit = "block"
 opt.signcolumn = "yes"
 opt.winborder = "rounded"
+opt.pumborder = "rounded"
 
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })

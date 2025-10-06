@@ -31,34 +31,18 @@ return {
 	},
 
 	-- statusline
+	-- lazy
 	{
-		"sschleemilch/slimline.nvim",
-		opts = {
-			components = { center = { "searchcount", "selectioncount" } },
-			configs = {
-				mode = {
-					format = {
-						["n"] = { short = "NOR" },
-						["v"] = { short = "VIS" },
-						["V"] = { short = "V-L" },
-						["\22"] = { short = "V-B" },
-						["s"] = { short = "SEL" },
-						["S"] = { short = "S-L" },
-						["\19"] = { short = "S-B" },
-						["i"] = { short = "INS" },
-						["R"] = { short = "REP" },
-						["c"] = { short = "CMD" },
-						["r"] = { short = "PRO" },
-						["!"] = { short = "SHE" },
-						["t"] = { short = "TER" },
-						["U"] = { short = "UNK" },
-					},
-				},
-				git = { hl = { primary = "Function" } },
-				progress = { column = true },
-			},
-		},
+		"sontungexpt/witch-line",
+		opts = {},
 	},
+	-- {
+	-- 	"sschleemilch/slimline.nvim",
+	-- 	opts = {
+	-- 		components = { center = { "searchcount", "selectioncount" } },
+	-- 		configs = { git = { hl = { primary = "Function" } } },
+	-- 	},
+	-- },
 
 	-- winbar
 	{
@@ -140,7 +124,7 @@ return {
 			-- LSP
 			{ "gd",              function() Snacks.picker.lsp_definitions() end,       desc = "Goto Definition" },
 			{ "gD",              function() Snacks.picker.lsp_declarations() end,      desc = "Goto Declaration" },
-			{ "gr",              function() Snacks.picker.lsp_references() end,        desc = "References",               nowait = true },
+			-- { "gr",              function() Snacks.picker.lsp_references() end,        desc = "References",               nowait = true },
 			{ "gI",              function() Snacks.picker.lsp_implementations() end,   desc = "Goto Implementation" },
 			{ "gy",              function() Snacks.picker.lsp_type_definitions() end,  desc = "Goto T[y]pe Definition" },
 			{ "<leader>ss",      function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
@@ -157,47 +141,82 @@ return {
 			{ "<leader>gg",      function() Snacks.lazygit() end,                      desc = "Lazygit" },
 			{ "<leader>un",      function() Snacks.notifier.hide() end,                desc = "Dismiss All Notifications" },
 		},
-		opts = {
-			input = { enabled = true },
-			notifier = { enabled = true },
-			picker = { win = { input = { keys = { ["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } } } } } },
-			styles = {
-				lazygit = { width = 0, height = 0 },
-				notification = { wo = { wrap = true } },
-			},
-		},
+		config = function()
+			require("snacks").setup({
+				input = { enabled = true },
+				picker = { win = { input = { keys = { ["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } } } } } },
+				styles = {
+					lazygit = { width = 0, height = 0 },
+				},
+			})
+
+			local Snacks = require("snacks")
+
+			-- Called by scooter to open the selected file at the correct line from the scooter search list
+			_G.EditLineFromScooter = function(file_path, line)
+				local current_path = vim.fn.expand("%:p")
+				local target_path = vim.fn.fnamemodify(file_path, ":p")
+				if current_path ~= target_path then
+					vim.cmd.edit(vim.fn.fnameescape(file_path))
+				end
+				vim.api.nvim_win_set_cursor(0, { line, 0 })
+			end
+
+			-- Opens scooter with the search text populated by the `search_text` arg
+			_G.OpenScooterSearchText = function(search_text)
+				local escaped_text = vim.fn.shellescape(search_text:gsub("\r?\n", " "))
+				Snacks.terminal("scooter --search-text " .. escaped_text, {
+					interactive = true,
+					auto_close = true,
+				})
+			end
+
+			vim.keymap.set("n", "<leader>sr", function()
+				Snacks.terminal("scooter", { border = "rounded" })
+			end, { desc = "Open scooter" })
+
+			vim.keymap.set(
+				"v",
+				"<leader>sr",
+				'"ay<Esc><Cmd>lua OpenScooterSearchText(vim.fn.getreg("a"))<CR>',
+				{ desc = "Search selected text in scooter" }
+			)
+		end,
 	},
 
 	-- mini
 	{
-		"nvim-mini/mini.nvim",
+		"nvim-mini/mini.icons",
 		config = function()
 			require("mini.icons").setup()
-
-			require("mini.hipatterns").setup({
-				highlighters = {
-					fixme = {
-						pattern = "%f[%w]()FIXME()%f[%W]",
-						group = "MiniHipatternsFixme",
-						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticError" },
-					},
-					hack = {
-						pattern = "%f[%w]()HACK()%f[%W]",
-						group = "MiniHipatternsHack",
-						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticWarn" },
-					},
-					todo = {
-						pattern = "%f[%w]()TODO()%f[%W]",
-						group = "MiniHipatternsTodo",
-						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticInfo" },
-					},
-					note = {
-						pattern = "%f[%w]()NOTE()%f[%W]",
-						group = "MiniHipatternsNote",
-						extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticHint" },
-					},
-				},
-			})
+			MiniIcons.mock_nvim_web_devicons()
 		end,
+	},
+	{
+		"nvim-mini/mini.hipatterns",
+		opts = {
+			highlighters = {
+				fixme = {
+					pattern = "%f[%w]()FIXME()%f[%W]",
+					group = "MiniHipatternsFixme",
+					extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticError" },
+				},
+				hack = {
+					pattern = "%f[%w]()HACK()%f[%W]",
+					group = "MiniHipatternsHack",
+					extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticWarn" },
+				},
+				todo = {
+					pattern = "%f[%w]()TODO()%f[%W]",
+					group = "MiniHipatternsTodo",
+					extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticInfo" },
+				},
+				note = {
+					pattern = "%f[%w]()NOTE()%f[%W]",
+					group = "MiniHipatternsNote",
+					extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticHint" },
+				},
+			},
+		},
 	},
 }

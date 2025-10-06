@@ -33,6 +33,11 @@ return {
 			})
 
 			require("luasnip.loaders.from_lua").lazy_load()
+
+			-- stylua: ignore start
+			vim.keymap.set({ "i", "s" }, "<C-;>", function()
+				if ls.choice_active() then ls.change_choice(1) end
+			end, { silent = true })
 		end,
 	},
 
@@ -46,31 +51,8 @@ return {
 		},
 		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
-			keymap = {
-				preset = "default",
-				["<C-y>"] = {
-					"select_and_accept",
-					vim.schedule_wrap(function()
-						local ls = require("luasnip")
-						if ls.expandable() then
-							ls.expand()
-						end
-					end),
-				},
-				["<C-;>"] = {
-					vim.schedule_wrap(function()
-						local ls = require("luasnip")
-						if ls.choice_active() then
-							ls.change_choice(1)
-						end
-					end),
-				},
-			},
 			completion = {
-				documentation = {
-					auto_show = true,
-					auto_show_delay_ms = 50,
-				},
+				documentation = { auto_show = true },
 				list = { max_items = 20 },
 				menu = { draw = { treesitter = { "lsp" } } },
 			},
@@ -78,9 +60,9 @@ return {
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
 				providers = {
-					snippets = { opts = { show_autosnippets = false } },
 					copilot = { async = true, module = "blink-copilot", name = "Copilot" },
 					ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
+					snippets = { opts = { show_autosnippets = false } },
 				},
 			},
 		},
@@ -91,7 +73,6 @@ return {
 		"saghen/blink.pairs",
 		version = "*",
 		dependencies = "saghen/blink.download",
-		event = { "InsertEnter", "CmdlineEnter" },
 		opts = {
 			highlights = { groups = hl_groups },
 			mappings = {

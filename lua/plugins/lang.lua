@@ -8,6 +8,18 @@ return {
 		config = true,
 	},
 
+	-- {
+	-- 	"Julian/lean.nvim",
+	-- 	event = { "BufReadPre *.lean", "BufNewFile *.lean" },
+	-- 	dependencies = {
+	-- 		"neovim/nvim-lspconfig",
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- 	opts = {
+	-- 		mappings = true,
+	-- 	},
+	-- },
+
 	-- filesype plugin for `LaTeX`
 	-- "mathjiajia/nvim-latex-conceal",
 	{
