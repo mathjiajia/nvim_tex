@@ -96,31 +96,34 @@ return {
 				win = {
 					kind = "split_left",
 					kind_presets = { split_left = { width = "0.2rel" } },
+					win_opts = {
+						number = false,
+						relativenumber = false,
+					},
 				},
 			})
-
 			vim.keymap.set("n", "<leader>e", "<Cmd>Fyler<CR>", { desc = "Open File Explorer" })
 		end,
 	},
 
 	-- search/replace in multiple files
-	-- {
-	-- 	"MagicDuck/grug-far.nvim",
-	-- 	cmd = { "GrugFar", "GrugFarWithin" },
-	-- 	opts = { icons = { fileIconsProvider = "mini.icons" } },
-	-- 	keys = {
-	-- 		{
-	-- 			"<leader>sr",
-	-- 			function()
-	-- 				local grug = require("grug-far")
-	-- 				local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-	-- 				grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
-	-- 			end,
-	-- 			mode = { "n", "v" },
-	-- 			desc = "Search and Replace",
-	-- 		},
-	-- 	},
-	-- },
+	{
+		"MagicDuck/grug-far.nvim",
+		cmd = { "GrugFar", "GrugFarWithin" },
+		opts = { icons = { fileIconsProvider = "mini.icons" } },
+		keys = {
+			{
+				"<leader>sr",
+				function()
+					local grug = require("grug-far")
+					local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+					grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
+				end,
+				mode = { "n", "v" },
+				desc = "Search and Replace",
+			},
+		},
+	},
 
 	-- git signs
 	{
@@ -182,4 +185,19 @@ return {
 			end,
 		},
 	},
+	-- {
+	-- 	"nvim-mini/mini.diff",
+	-- 	config = function()
+	-- 		require("mini.diff").setup({
+	-- 			view = {
+	-- 				style = "sign",
+	-- 				signs = { add = "┃", change = "┃", delete = "_" },
+	-- 			},
+	-- 		})
+	--
+	-- 		vim.keymap.set("n", "<leader>hp", function()
+	-- 			MiniDiff.toggle_overlay()
+	-- 		end, { desc = "Hunk Diff Preview" })
+	-- 	end,
+	-- },
 }

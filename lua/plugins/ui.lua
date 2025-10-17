@@ -1,77 +1,71 @@
 return {
 
 	{
-		"folke/tokyonight.nvim",
+		"ribru17/bamboo.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("tokyonight").setup({
-				-- style = "storm",
-				dim_inactive = true,
+			require("bamboo").setup({
 				transparent = true,
-				terminal_colors = false,
-				on_highlights = function(hl, c)
-					c.bg_statusline = "NONE"
-					hl.StatusLine = { fg = c.fg_sidebar }
-					hl.StatusLineNC = { fg = c.fg_gutter }
-					hl["@module.latex"] = { fg = c.yellow }
-					hl["@label.latex"] = { fg = c.blue }
-					hl["@function.latex"] = { fg = c.magenta }
-					hl.BlinkPairsBlue = { fg = c.blue }
-					hl.BlinkPairsYellow = { fg = c.yellow }
-					hl.BlinkPairsGreen = { fg = c.green }
-					hl.BlinkPairsTeal = { fg = c.teal }
-					hl.BlinkPairsMagenta = { fg = c.magenta }
-					hl.BlinkPairsPurple = { fg = c.purple }
-					hl.BlinkPairsOrange = { fg = c.orange }
-				end,
+				dim_inactive = true,
+				code_style = { comments = { fg = "#5b5e5a", italic = true } },
+				highlights = {
+					CursorLine = { bg = "$bg2" },
+					StatusLine = { bg = "$none" },
+					BlinkPairsBlue = { fg = "$blue" },
+					BlinkPairsYellow = { fg = "$yellow" },
+					BlinkPairsGreen = { fg = "$green" },
+					BlinkPairsTeal = { fg = "$cyan" },
+					BlinkPairsMagenta = { fg = "$coral" },
+					BlinkPairsPurple = { fg = "$purple" },
+					BlinkPairsOrange = { fg = "$orange" },
+				},
 			})
-			vim.cmd.colorscheme("tokyonight")
+			require("bamboo").load()
 		end,
 	},
 
-	-- statusline
-	-- lazy
-	{
-		"sontungexpt/witch-line",
-		opts = {},
-	},
 	-- {
-	-- 	"sschleemilch/slimline.nvim",
-	-- 	opts = {
-	-- 		components = { center = { "searchcount", "selectioncount" } },
-	-- 		configs = { git = { hl = { primary = "Function" } } },
-	-- 	},
+	-- 	"folke/tokyonight.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("tokyonight").setup({
+	-- 			-- style = "storm",
+	-- 			dim_inactive = true,
+	-- 			transparent = true,
+	-- 			terminal_colors = false,
+	-- 			on_highlights = function(hl, c)
+	-- 				c.bg_statusline = "NONE"
+	-- 				hl.StatusLine = { fg = c.fg_sidebar }
+	-- 				hl.StatusLineNC = { fg = c.fg_gutter }
+	-- 				hl["@module.latex"] = { fg = c.yellow }
+	-- 				hl["@label.latex"] = { fg = c.blue }
+	-- 				hl["@function.latex"] = { fg = c.magenta }
+	-- 				hl.BlinkPairsBlue = { fg = c.blue }
+	-- 				hl.BlinkPairsYellow = { fg = c.yellow }
+	-- 				hl.BlinkPairsGreen = { fg = c.green }
+	-- 				hl.BlinkPairsTeal = { fg = c.teal }
+	-- 				hl.BlinkPairsMagenta = { fg = c.magenta }
+	-- 				hl.BlinkPairsPurple = { fg = c.purple }
+	-- 				hl.BlinkPairsOrange = { fg = c.orange }
+	-- 			end,
+	-- 		})
+	-- 		vim.cmd.colorscheme("tokyonight")
+	-- 	end,
 	-- },
 
-	-- winbar
+	-- statusline
+	-- {
+	-- 	"sontungexpt/witch-line",
+	-- 	opts = {},
+	-- },
 	{
-		"Bekaboo/dropbar.nvim",
+		"sschleemilch/slimline.nvim",
 		opts = {
-			icons = {
-				kinds = {
-					file_icon = function(path)
-						local file_icon = "󰈔 "
-						local file_icon_hl = "DropBarIconKindFile"
-
-						local mini_icon, mini_icon_hl = require("mini.icons").get("file", vim.fs.basename(path))
-
-						if not mini_icon then
-							local buf = vim.iter(vim.api.nvim_list_bufs()):find(function(buf)
-								return vim.api.nvim_buf_get_name(buf) == path
-							end)
-							if buf then
-								local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-								mini_icon, mini_icon_hl = require("mini.icons").get("filetype", filetype)
-							end
-						end
-
-						file_icon = mini_icon and mini_icon .. " " or file_icon
-						file_icon_hl = mini_icon_hl
-						return file_icon, file_icon_hl
-					end,
-				},
-			},
+			style = "fg",
+			components = { center = { "searchcount" } },
+			configs = { git = { hl = { primary = "Function" } } },
 		},
 	},
 
@@ -145,9 +139,7 @@ return {
 			require("snacks").setup({
 				input = { enabled = true },
 				picker = { win = { input = { keys = { ["<M-d>"] = { "toggle_hidden", mode = { "n", "i" } } } } } },
-				styles = {
-					lazygit = { width = 0, height = 0 },
-				},
+				styles = { lazygit = { width = 0, height = 0 } },
 			})
 
 			local Snacks = require("snacks")
@@ -189,7 +181,7 @@ return {
 		"nvim-mini/mini.icons",
 		config = function()
 			require("mini.icons").setup()
-			MiniIcons.mock_nvim_web_devicons()
+			-- MiniIcons.mock_nvim_web_devicons()
 		end,
 	},
 	{
