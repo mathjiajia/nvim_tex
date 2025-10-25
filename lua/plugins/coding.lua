@@ -50,22 +50,41 @@ return {
 			"fang2hou/blink-copilot",
 		},
 		event = { "InsertEnter", "CmdlineEnter" },
-		opts = {
-			completion = {
-				documentation = { auto_show = true },
-				list = { max_items = 20 },
-				menu = { draw = { treesitter = { "lsp" } } },
-			},
-			snippets = { preset = "luasnip" },
-			sources = {
-				default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
-				providers = {
-					copilot = { async = true, module = "blink-copilot", name = "Copilot" },
-					ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
-					snippets = { opts = { show_autosnippets = false } },
+		config = function()
+			local source_dedup_priority = { "lsp", "path", "snippets", "buffer", "ripgrep" }
+
+			local show_orig = require("blink.cmp.completion.list").show
+			require("blink.cmp.completion.list").show = function(ctx, items_by_source)
+				local seen = {}
+				for _, source in ipairs(source_dedup_priority) do
+					if items_by_source[source] then
+						items_by_source[source] = vim.tbl_filter(function(item)
+							local did_seen = seen[item.label]
+							seen[item.label] = true
+							return not did_seen
+						end, items_by_source[source])
+					end
+				end
+				return show_orig(ctx, items_by_source)
+			end
+
+			require("blink.cmp").setup({
+				completion = {
+					documentation = { auto_show = true },
+					list = { max_items = 20 },
+					menu = { draw = { treesitter = { "lsp" } } },
 				},
-			},
-		},
+				snippets = { preset = "luasnip" },
+				sources = {
+					default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
+					providers = {
+						copilot = { async = true, module = "blink-copilot", name = "Copilot" },
+						ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
+						snippets = { opts = { show_autosnippets = false } },
+					},
+				},
+			})
+		end,
 	},
 
 	-- pairs
