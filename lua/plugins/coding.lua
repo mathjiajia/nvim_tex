@@ -1,13 +1,3 @@
-local hl_groups = {
-	"BlinkPairsBlue",
-	"BlinkPairsYellow",
-	"BlinkPairsGreen",
-	"BlinkPairsTeal",
-	"BlinkPairsMagenta",
-	"BlinkPairsPurple",
-	"BlinkPairsOrange",
-}
-
 return {
 
 	-- snippets
@@ -35,9 +25,7 @@ return {
 			require("luasnip.loaders.from_lua").lazy_load()
 
 			-- stylua: ignore start
-			vim.keymap.set({ "i", "s" }, "<C-;>", function()
-				if ls.choice_active() then ls.change_choice(1) end
-			end, { silent = true })
+			vim.keymap.set({ "i", "s" }, "<C-;>", function() if ls.choice_active() then ls.change_choice(1) end end, { silent = true })
 		end,
 	},
 
@@ -46,8 +34,8 @@ return {
 		"saghen/blink.cmp",
 		version = "1.*",
 		dependencies = {
-			{ "mikavilpas/blink-ripgrep.nvim", version = "*" },
 			"fang2hou/blink-copilot",
+			{ "mikavilpas/blink-ripgrep.nvim", version = "*" },
 		},
 		event = { "InsertEnter", "CmdlineEnter" },
 		config = function()
@@ -92,54 +80,8 @@ return {
 		"saghen/blink.pairs",
 		version = "*",
 		dependencies = "saghen/blink.download",
-		opts = {
-			highlights = { groups = hl_groups },
-			mappings = {
-				pairs = {
-					["'"] = {
-						{
-							"'''",
-							"'''",
-							when = function()
-								local cursor = vim.api.nvim_win_get_cursor(0)
-								local line = vim.api.nvim_get_current_line()
-								return line:sub(cursor[2] - 1, cursor[2]) == "''"
-							end,
-							filetypes = { "python" },
-						},
-						{
-							"'",
-							enter = false,
-							space = false,
-							when = function()
-								local cursor = vim.api.nvim_win_get_cursor(0)
-								local char = vim.api.nvim_get_current_line():sub(cursor[2], cursor[2])
-								return not char:match("%w")
-									and (vim.bo.filetype ~= "rust" or char:match("[&<]"))
-									and not vim.list_contains({ "bib", "tex", "plaintex" }, vim.bo.filetype)
-							end,
-						},
-					},
-					["`"] = {
-						{
-							"```",
-							"```",
-							when = function()
-								local cursor = vim.api.nvim_win_get_cursor(0)
-								local line = vim.api.nvim_get_current_line()
-								return line:sub(cursor[2] - 1, cursor[2]) == "``"
-							end,
-							filetypes = { "markdown", "vimwiki", "rmarkdown", "rmd", "pandoc", "quarto", "typst" },
-						},
-						{ "`", "'", filetypes = { "bib", "latex", "tex" } },
-						{ "`", enter = false, space = false },
-					},
-				},
-			},
-		},
+		config = true,
 	},
-
-	{ "saghen/blink.indent", opts = { scope = { highlights = hl_groups } } },
 
 	-- surround
 	{

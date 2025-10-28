@@ -21,22 +21,15 @@ return {
 	-- },
 
 	-- filesype plugin for `LaTeX`
-	-- "mathjiajia/nvim-latex-conceal",
-	{
-		"pxwg/math-conceal.nvim",
-		build = "make luajit",
-		opts = {
-			conceal = {
-				"greek",
-				"script",
-				"math",
-				"font",
-				"delim",
-			},
-		},
-	},
+	"mathjiajia/nvim-latex-conceal",
+	-- {
+	-- 	"pxwg/math-conceal.nvim",
+	-- 	build = "make luajit",
+	-- 	opts = { conceal = { "greek", "script", "math", "font", "delim" } },
+	-- },
 
 	-- viewing Markdown files in Neovim
+	-- { "yousefhadder/markdown-plus.nvim", ft = "markdown" },
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		ft = { "markdown", "codecompanion", "quarto" },

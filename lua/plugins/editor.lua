@@ -1,8 +1,10 @@
 return {
 
+	"saghen/blink.indent",
+
 	{
 		"folke/sidekick.nvim",
-		config = true,
+		opts = { nes = { enabled = false } },
 		-- stylua: ignore
 		keys = {
 			{
@@ -76,36 +78,6 @@ return {
 		end,
 	},
 
-	-- file explorer
-	{
-		"A7Lavinraj/fyler.nvim",
-		branch = "stable",
-		config = function()
-			require("fyler").setup({
-				default_explorer = true,
-				hooks = {
-					on_rename = function(src_path, destination_path)
-						Snacks.rename.on_rename_file(src_path, destination_path)
-					end,
-				},
-				icon = {
-					directory_collapsed = "",
-					directory_expanded = "",
-					directory_empty = "󰜌",
-				},
-				win = {
-					kind = "split_left",
-					kind_presets = { split_left = { width = "0.2rel" } },
-					win_opts = {
-						number = false,
-						relativenumber = false,
-					},
-				},
-			})
-			vim.keymap.set("n", "<leader>e", "<Cmd>Fyler<CR>", { desc = "Open File Explorer" })
-		end,
-	},
-
 	-- search/replace in multiple files
 	{
 		"MagicDuck/grug-far.nvim",
@@ -125,79 +97,20 @@ return {
 		},
 	},
 
-	-- git signs
+	-- diff signs
 	{
-		"lewis6991/gitsigns.nvim",
-		commit = "23ae90a2a52fdc9b8c50dc61d6c30ebb18521343",
-		opts = {
-			on_attach = function(bufnr)
-				local gitsigns = require("gitsigns")
+		"nvim-mini/mini.diff",
+		config = function()
+			require("mini.diff").setup({
+				view = {
+					style = "sign",
+					signs = { add = "┃", change = "┃", delete = "_" },
+				},
+			})
 
-				local function map(mode, lhs, rhs, opts)
-					opts = opts or {}
-					opts.buffer = bufnr
-					vim.keymap.set(mode, lhs, rhs, opts)
-				end
-
-				map("n", "]c", function()
-					if vim.wo.diff then
-						vim.cmd.normal({ "]c", bang = true })
-					else
-						gitsigns.nav_hunk("next")
-					end
-				end)
-
-				map("n", "[c", function()
-					if vim.wo.diff then
-						vim.cmd.normal({ "[c", bang = true })
-					else
-						gitsigns.nav_hunk("prev")
-					end
-				end)
-
-				-- stylua: ignore start
-				-- Actions
-				map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage Hunk" })
-				map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
-				map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Stage Hunk" })
-				map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Reset Hunk" })
-
-				map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
-				map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset Buffer" })
-				map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
-				map("n", "<leader>hi", gitsigns.preview_hunk_inline, { desc = "Undo Stage Hunk" })
-
-				map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end, { desc = "Blame Line" })
-
-				map("n", "<leader>hd", gitsigns.diffthis, { desc = "Diff This" })
-				map("n", "<leader>hD", function() gitsigns.diffthis("~") end, { desc = "Diff This (File)" })
-
-				map("n", "<leader>hQ", function() gitsigns.setqflist("all") end, { desc = "Set qflist (all)" })
-				map("n", "<leader>hq", gitsigns.setqflist, { desc = "Set qflist" })
-
-				-- Toggles
-				map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Current Line Blame" })
-				map("n", "<leader>tw", gitsigns.toggle_word_diff, { desc = "Toggle Word Diff" })
-				-- stylua: ignore end
-
-				-- Text object
-				map({ "o", "x" }, "ih", gitsigns.select_hunk)
-			end,
-		},
+			vim.keymap.set("n", "<leader>hp", function()
+				MiniDiff.toggle_overlay()
+			end, { desc = "Hunk Diff Preview" })
+		end,
 	},
-	-- {
-	-- 	"nvim-mini/mini.diff",
-	-- 	config = function()
-	-- 		require("mini.diff").setup({
-	-- 			view = {
-	-- 				style = "sign",
-	-- 				signs = { add = "┃", change = "┃", delete = "_" },
-	-- 			},
-	-- 		})
-	--
-	-- 		vim.keymap.set("n", "<leader>hp", function()
-	-- 			MiniDiff.toggle_overlay()
-	-- 		end, { desc = "Hunk Diff Preview" })
-	-- 	end,
-	-- },
 }
