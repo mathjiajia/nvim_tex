@@ -8,19 +8,11 @@ return {
 		config = true,
 	},
 
-	{
-		"Julian/lean.nvim",
-		event = { "BufReadPre *.lean", "BufNewFile *.lean" },
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = { mappings = true },
-	},
-
-	-- filesype plugin for `LaTeX`
-	"mathjiajia/nvim-latex-conceal",
 	-- {
-	-- 	"pxwg/math-conceal.nvim",
-	-- 	build = "make luajit",
-	-- 	opts = { conceal = { "greek", "script", "math", "font", "delim" } },
+	-- 	"Julian/lean.nvim",
+	-- 	event = { "BufReadPre *.lean", "BufNewFile *.lean" },
+	-- 	dependencies = { "nvim-lua/plenary.nvim" },
+	-- 	opts = { mappings = true },
 	-- },
 
 	-- filesype plugin for `LaTeX`
@@ -33,6 +25,7 @@ return {
 
 	-- viewing Markdown files in Neovim
 	-- { "yousefhadder/markdown-plus.nvim", ft = "markdown" },
+
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		ft = { "markdown", "codecompanion", "quarto" },

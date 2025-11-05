@@ -1,10 +1,25 @@
 return {
 
-	"saghen/blink.indent",
+	{
+		"saghen/blink.indent",
+		commit = "a8feeeae8510d16f26afbb5c81f2ad1ccea38d62",
+		opts = {
+			scope = {
+				highlights = {
+					"BlinkIndentOrange",
+					"BlinkIndentViolet",
+					"BlinkIndentBlue",
+					"BlinkIndentCyan",
+					"BlinkIndentYellow",
+					"BlinkIndentGreen",
+				},
+			},
+		},
+	},
 
 	{
 		"folke/sidekick.nvim",
-		opts = { nes = { enabled = false } },
+		opts = { nes = { enabled = true } },
 		-- stylua: ignore
 		keys = {
 			{
@@ -68,6 +83,7 @@ return {
 		config = function()
 			vim.g.fff = {
 				lazy_sync = true,
+				prompt = "   ",
 				layout = { prompt_position = "top" },
 			}
 
@@ -104,10 +120,13 @@ return {
 			require("mini.diff").setup({
 				view = {
 					style = "sign",
-					signs = { add = "┃", change = "┃", delete = "_" },
+					signs = {
+						add = "┃",
+						change = "┃",
+						delete = "-",
+					},
 				},
 			})
-
 			vim.keymap.set("n", "<leader>hp", function()
 				MiniDiff.toggle_overlay()
 			end, { desc = "Hunk Diff Preview" })

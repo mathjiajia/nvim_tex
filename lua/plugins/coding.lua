@@ -80,7 +80,18 @@ return {
 		"saghen/blink.pairs",
 		version = "*",
 		dependencies = "saghen/blink.download",
-		config = true,
+		opts = {
+			highlights = {
+				groups = {
+					"BlinkPairsOrange",
+					"BlinkPairsPurple",
+					"BlinkPairsBlue",
+					"BlinkPairsCyan",
+					"BlinkPairsYellow",
+					"BlinkPairsGreen",
+				},
+			},
+		},
 	},
 
 	-- surround
