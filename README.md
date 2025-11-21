@@ -1,6 +1,6 @@
 # config.tex
 
-A simple Neovim configuration for linux or macOS.
+A simple Neovim configuration for linux and macOS.
 
 This setup is mainly used for taking notes and writing documents in LaTeX.
 For the useful snippets (of mathematics, especially algebraic geometry)

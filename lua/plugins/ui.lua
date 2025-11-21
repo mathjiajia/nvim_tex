@@ -3,11 +3,11 @@ return {
 	{
 		"folke/snacks.nvim",
 		lazy = false,
+		priority = 1000,
 		-- stylua: ignore
 		keys = {
 			-- Top Pickers & Explorer
 			{ "<leader><space>", function() Snacks.picker.smart() end,                 desc = "Smart Find Files" },
-			{ "<leader>n",       function() Snacks.picker.notifications() end,         desc = "Notification History" },
 			{ "<leader>e",       function() Snacks.explorer() end,                     desc = "File Explorer" },
 			-- find
 			{ "<leader>fb",      function() Snacks.picker.buffers() end,               desc = "Buffers" },
@@ -62,17 +62,14 @@ return {
 			{ "<leader>Z",       function() Snacks.zen.zoom() end,                     desc = "Toggle Zoom" },
 			{ "<leader>.",       function() Snacks.scratch() end,                      desc = "Toggle Scratch Buffer" },
 			{ "<leader>S",       function() Snacks.scratch.select() end,               desc = "Select Scratch Buffer" },
-			{ "<leader>n",       function() Snacks.notifier.show_history() end,        desc = "Notification History" },
 			{ "<leader>bd",      function() Snacks.bufdelete() end,                    desc = "Delete Buffer" },
 			{ "<leader>cR",      function() Snacks.rename.rename_file() end,           desc = "Rename File" },
 			{ "<leader>gB",      function() Snacks.gitbrowse() end,                    desc = "Git Browse",               mode = { "n", "v" } },
 			{ "<leader>gg",      function() Snacks.lazygit() end,                      desc = "Lazygit" },
-			{ "<leader>un",      function() Snacks.notifier.hide() end,                desc = "Dismiss All Notifications" },
 		},
 		opts = {
 			explorer = { enabled = true },
 			input = { enabled = true },
-			notifier = { enabled = true },
 			picker = { enabled = true },
 			styles = { lazygit = { width = 0, height = 0 } },
 		},

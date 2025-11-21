@@ -24,7 +24,7 @@ return {
 				formatters_by_ft = {
 					bib = { "bibtex-tidy" },
 					lua = { "stylua" },
-					markdown = { "prettierd" },
+					markdown = { "prettier" },
 					tex = { "tex-fmt" },
 				},
 				format_on_save = function(bufnr)

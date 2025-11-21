@@ -6,7 +6,6 @@ return {
 		lazy = true,
 		-- build = "make install_jsregexp",
 		submodules = false,
-		dependencies = "mathjiajia/nvim-math-snippets",
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")

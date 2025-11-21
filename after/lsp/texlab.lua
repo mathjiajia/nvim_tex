@@ -120,7 +120,6 @@ return {
 				if not input or input == "" then
 					return vim.notify("No environment name provided", vim.log.levels.WARN)
 				end
-
 				local pos = vim.api.nvim_win_get_cursor(0)
 				return client:exec_cmd({
 					title = "change_environment",
@@ -129,7 +128,7 @@ return {
 						{
 							textDocument = { uri = vim.uri_from_bufnr(bufnr) },
 							position = { line = pos[1] - 1, character = pos[2] },
-							newName = tostring(input),
+							newName = input,
 						},
 					},
 				}, { bufnr = bufnr })
@@ -202,9 +201,14 @@ return {
 			{ desc = "Clean the auxiliary files" }
 		)
 
-		vim.keymap.set("n", "<leader>ll", buf_build, { buffer = bufnr, desc = "Build the current buffer" })
-		vim.keymap.set("n", "<leader>lf", buf_search, { buffer = bufnr, desc = "Forward search from current position" })
-		vim.keymap.set("n", "<leader>lc", buf_cancel_build, { buffer = bufnr, desc = "Cancel the current build" })
+		vim.keymap.set("n", "<localleader>ll", buf_build, { buffer = bufnr, desc = "Build the current buffer" })
+		vim.keymap.set(
+			"n",
+			"<localleader>lf",
+			buf_search,
+			{ buffer = bufnr, desc = "Forward search from current position" }
+		)
+		vim.keymap.set("n", "<localleader>lc", buf_cancel_build, { buffer = bufnr, desc = "Cancel the current build" })
 		vim.keymap.set("n", "cse", buf_change_env, { buffer = bufnr, desc = "Change the current environment" })
 		vim.keymap.set("i", ";]", close_env, { buffer = bufnr, desc = "Close the current environment" })
 		vim.keymap.set("n", "tss", toggle_star, { buffer = bufnr, desc = "Toggle starred environment" })

@@ -36,7 +36,8 @@ return {
 	settings = {
 		Lua = {
 			completion = { callSnippet = "Replace" },
-			hint = { enable = true },
+			codeLens = { enable = true },
+			hint = { enable = true, semicolon = "Disable" },
 			telemetry = { enable = false },
 		},
 	},

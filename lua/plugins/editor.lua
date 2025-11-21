@@ -1,33 +1,27 @@
 return {
 
 	{
+		"esmuellert/vscode-diff.nvim",
+		cmd = { "CodeDiff" },
+		dependencies = { "MunifTanjim/nui.nvim" },
+	},
+
+	{
 		"saghen/blink.indent",
-		commit = "a8feeeae8510d16f26afbb5c81f2ad1ccea38d62",
-		opts = {
-			scope = {
-				highlights = {
-					"BlinkIndentOrange",
-					"BlinkIndentViolet",
-					"BlinkIndentBlue",
-					"BlinkIndentCyan",
-					"BlinkIndentYellow",
-					"BlinkIndentGreen",
-				},
-			},
-		},
+		commit = "2f4ac0d1bc642049d97da909cae02a5a5bd0beab",
 	},
 
 	{
 		"folke/sidekick.nvim",
-		opts = { nes = { enabled = true } },
+		opts = { nes = { enabled = false } },
 		-- stylua: ignore
 		keys = {
-			{
-				"<Tab>",
-				function() if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end end,
-				expr = true,
-				desc = "Goto/Apply Next Edit Suggestion",
-			},
+			-- {
+			-- 	"<Tab>",
+			-- 	function() if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end end,
+			-- 	expr = true,
+			-- 	desc = "Goto/Apply Next Edit Suggestion",
+			-- },
 			{
 				"<C-.>",
 				function() require("sidekick.cli").toggle() end,
@@ -97,20 +91,15 @@ return {
 	-- search/replace in multiple files
 	{
 		"MagicDuck/grug-far.nvim",
-		cmd = { "GrugFar", "GrugFarWithin" },
-		opts = { icons = { fileIconsProvider = "mini.icons" } },
-		keys = {
-			{
-				"<leader>sr",
-				function()
-					local grug = require("grug-far")
-					local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-					grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
-				end,
-				mode = { "n", "v" },
-				desc = "Search and Replace",
-			},
-		},
+		lazy = false,
+		config = function()
+			vim.g.grug_far = { icons = { fileIconsProvider = "mini.icons" } }
+			vim.keymap.set({ "n", "v" }, "<leader>sr", function()
+				local grug = require("grug-far")
+				local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+				grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
+			end, { desc = "[S]earch and [R]eplace" })
+		end,
 	},
 
 	-- diff signs
@@ -127,9 +116,7 @@ return {
 					},
 				},
 			})
-			vim.keymap.set("n", "<leader>hp", function()
-				MiniDiff.toggle_overlay()
-			end, { desc = "Hunk Diff Preview" })
+			vim.keymap.set("n", "<leader>hp", MiniDiff.toggle_overlay, { desc = "Hunk Diff Preview" })
 		end,
 	},
 }
