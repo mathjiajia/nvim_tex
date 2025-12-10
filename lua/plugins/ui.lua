@@ -1,4 +1,20 @@
 return {
+	{
+		"tpope/vim-fugitive",
+		config = function()
+			local keymap = vim.keymap -- for conciseness
+			-- Git keybinds / fugitive keybinds
+			keymap.set("n", "<leader>go", ":G<CR>") -- open Git view
+
+			keymap.set("n", "<leader>gs", ":Gwrite <CR>") -- git stage
+			keymap.set("n", "<leader>gc", ":G commit<CR>") -- git commit
+			keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>") -- git stage and commit
+
+			keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
+			keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
+			keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
+		end,
+	},
 
 	{
 		"folke/snacks.nvim",
@@ -65,13 +81,13 @@ return {
 			{ "<leader>bd",      function() Snacks.bufdelete() end,                    desc = "Delete Buffer" },
 			{ "<leader>cR",      function() Snacks.rename.rename_file() end,           desc = "Rename File" },
 			{ "<leader>gB",      function() Snacks.gitbrowse() end,                    desc = "Git Browse",               mode = { "n", "v" } },
-			{ "<leader>gg",      function() Snacks.lazygit() end,                      desc = "Lazygit" },
+			-- { "<leader>gg",      function() Snacks.lazygit() end,                      desc = "Lazygit" },
 		},
 		opts = {
 			explorer = { enabled = true },
 			input = { enabled = true },
 			picker = { enabled = true },
-			styles = { lazygit = { width = 0, height = 0 } },
+			-- styles = { lazygit = { width = 0, height = 0 } },
 		},
 	},
 
