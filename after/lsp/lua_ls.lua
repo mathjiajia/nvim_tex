@@ -2,6 +2,7 @@ return {
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
 	root_markers = {
+		".emmyrc.json",
 		".luarc.json",
 		".luarc.jsonc",
 		".luacheckrc",
@@ -24,12 +25,18 @@ return {
 
 		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
 			runtime = {
-				version = "LuaJIT",
-				path = { "lua/?.lua", "lua/?/init.lua" },
+				path = {
+					"lua/?.lua",
+					"lua/?/init.lua",
+				},
 			},
 			workspace = {
 				checkThirdParty = false,
-				library = { vim.env.VIMRUNTIME },
+				library = {
+					vim.env.VIMRUNTIME,
+					"${3rd}/luv/library",
+					-- '${3rd}/busted/library'
+				},
 			},
 		})
 	end,
@@ -37,7 +44,10 @@ return {
 		Lua = {
 			completion = { callSnippet = "Replace" },
 			codeLens = { enable = true },
+			diagnostics = { globals = { "vim" } },
+			format = { enable = false },
 			hint = { enable = true, semicolon = "Disable" },
+			runtime = { version = "LuaJIT" },
 			telemetry = { enable = false },
 		},
 	},
