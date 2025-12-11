@@ -138,14 +138,7 @@ end
 return {
 	cmd = { "texlab" },
 	filetypes = { "tex", "plaintex", "bib" },
-	root_markers = {
-		".git",
-		".latexmkrc",
-		"latexmkrc",
-		".texlabroot",
-		"texlabroot",
-		"Tectonic.toml",
-	},
+	root_markers = { ".git", ".latexmkrc", "latexmkrc", ".texlabroot", "texlabroot", "Tectonic.toml" },
 	settings = {
 		texlab = {
 			build = {
@@ -160,7 +153,7 @@ return {
 					"--execute-command",
 					"turn_on_synctex",
 					"--inverse-search",
-					vim.fn.stdpath("data") .. "/mason/bin/texlab inverse-search -i %%1 --line1 %%2",
+					"texlab inverse-search -i %%1 --line1 %%2",
 					"--forward-search-file",
 					"%f",
 					"--forward-search-line",
@@ -170,6 +163,7 @@ return {
 				-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
 				-- args = { "-r", "%l", "%p", "%f" },
 			},
+			diagnosticsDelay = 300,
 			diagnostics = {
 				ignoredPatterns = {
 					"Overfull",

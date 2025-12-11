@@ -20,6 +20,39 @@ do
 		loaded_zip = 1,
 		loaded_zipPlugin = 1,
 		mapleader = " ",
+
+		fff = { layout = { prompt_position = "top" }, lazy_sync = true, prompt = "   " },
+		["grug-far"] = { icons = { fileIconsProvider = "mini.icons" } },
+		render_markdown_config = {
+			file_types = { "markdown", "quarto" },
+			anti_conceal = {
+				disabled_modes = { "n" },
+				ignore = {
+					bullet = true,
+					code_border = true,
+					head_background = true,
+					head_border = true,
+				},
+			},
+			completions = { lsp = { enabled = true } },
+			heading = {
+				render_modes = true,
+				icons = { " 󰼏 ", " 󰎨 ", " 󰼑 ", " 󰎲 ", " 󰼓 ", " 󰎴 " },
+				border = true,
+			},
+			code = {
+				position = "right",
+				width = "block",
+				min_width = 80,
+				border = "thin",
+			},
+			pipe_table = {
+				alignment_indicator = "─",
+				border = { "╭", "┬", "╮", "├", "┼", "┤", "╰", "┴", "╯", "│", "─" },
+			},
+			sign = { enabled = false },
+			win_options = { concealcursor = { rendered = "nvc" } },
+		},
 	}
 
 	for k, v in pairs(user_globals) do
@@ -34,7 +67,7 @@ do
 		breakindent = true,
 		clipboard = "unnamedplus",
 		cmdheight = 0,
-		cursorline = true,
+		-- cursorline = true,
 		fillchars = { eob = " ", fold = " ", foldclose = "", foldopen = "", foldsep = " " },
 		foldexpr = "v:lua.vim.treesitter.foldexpr()",
 		foldlevel = 99,
@@ -84,411 +117,238 @@ vim.diagnostic.config({
 	virtual_text = { current_line = false },
 })
 
-vim.cmd.colorscheme("bamboo")
+-- Set up vim.pack {{{
+vim.pack.add({
+	"https://github.com/scottmckendry/cyberdream.nvim",
 
--- Set up Coding {{{
-do
-	vim.pack.add({
-		"https://github.com/L3MON4D3/LuaSnip",
-		"https://github.com/mathjiajia/nvim-math-snippets",
-	})
+	-- coding
+	"https://github.com/L3MON4D3/LuaSnip",
+	"https://github.com/mathjiajia/nvim-math-snippets",
 
-	local ls = require("luasnip")
-	local types = require("luasnip.util.types")
+	"https://github.com/fang2hou/blink-copilot",
+	-- { src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
+	-- { src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
+	"https://github.com/saghen/blink.download",
+	-- { src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
+	"https://github.com/kylechui/nvim-surround",
 
-	ls.setup({
-		update_events = "TextChanged,TextChangedI",
-		delete_check_events = "TextChanged",
-		enable_autosnippets = true,
-		store_selection_keys = "<Tab>",
-		ext_opts = {
-			[types.insertNode] = { active = { virt_text = { { "", "Boolean" } } } },
-			[types.choiceNode] = { active = { virt_text = { { "󱥸", "Special" } } } },
+	-- editor
+	"https://github.com/esmuellert/vscode-diff.nvim",
+	"https://github.com/saghen/blink.indent",
+
+	"https://github.com/dmtrKovalenko/fff.nvim",
+
+	"https://github.com/folke/snacks.nvim",
+
+	"https://github.com/folke/sidekick.nvim",
+
+	"https://github.com/MagicDuck/grug-far.nvim",
+
+	"https://github.com/nvim-mini/mini.diff",
+	"https://github.com/tpope/vim-fugitive",
+
+	-- lang
+	-- "https://github.com/nvim-lua/plenary.nvim",
+	-- "https://github.com/Julian/lean.nvim",
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
+	"https://github.com/mathjiajia/nvim-latex-conceal",
+
+	-- formatters
+	"https://github.com/stevearc/conform.nvim",
+
+	-- treesitter
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+
+	-- ui
+	"https://github.com/nvim-mini/mini.statusline",
+	"https://github.com/nvim-mini/mini.hipatterns",
+	"https://github.com/nvim-mini/mini.icons",
+	"https://github.com/MunifTanjim/nui.nvim",
+})
+-- }}}
+
+vim.keymap.set("n", "<leader>go", ":G<CR>") -- open Git view
+
+vim.keymap.set("n", "<leader>gs", ":Gwrite <CR>") -- git stage
+vim.keymap.set("n", "<leader>gc", ":G commit<CR>") -- git commit
+vim.keymap.set("n", "<leader>gd", ":G diff<CR>") -- git diff
+vim.keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>") -- git stage and commit
+
+vim.keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
+vim.keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
+vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
+
+require("cyberdream").setup({
+	variant = "default",
+	transparent = true,
+	saturation = 0.6,
+	italic_comments = false,
+	cache = true,
+	overrides = function(colors)
+		return {
+			BlinkPairsOrange = { fg = colors.orange },
+			BlinkPairsPurple = { fg = colors.purple },
+			BlinkPairsBlue = { fg = colors.blue },
+			BlinkPairsCyan = { fg = colors.cyan },
+			BlinkPairsYellow = { fg = colors.yellow },
+			BlinkPairsGreen = { fg = colors.green },
+
+			BlinkIndentOrange = { fg = colors.orange },
+			BlinkIndentPurple = { fg = colors.purple },
+			BlinkIndentBlue = { fg = colors.blue },
+			BlinkIndentCyan = { fg = colors.cyan },
+			BlinkIndentYellow = { fg = colors.yellow },
+			BlinkIndentGreen = { fg = colors.green },
+		}
+	end,
+})
+require("cyberdream").load()
+
+require("mini.icons").setup()
+
+require("snacks").setup({
+	opts = {
+		explorer = { enabled = true },
+		input = { enabled = true },
+		picker = { enabled = true },
+		words = { enabled = true },
+	},
+})
+
+require("sidekick").setup({})
+
+require("nvim-surround").setup({})
+
+require("mini.statusline").setup()
+
+require("mini.hipatterns").setup({
+	highlighters = {
+		fixme = {
+			pattern = "%f[%w]()FIXME()%f[%W]",
+			group = "MiniHipatternsFixme",
+			extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticError" },
 		},
-	})
+		hack = {
+			pattern = "%f[%w]()HACK()%f[%W]",
+			group = "MiniHipatternsHack",
+			extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticWarn" },
+		},
+		todo = {
+			pattern = "%f[%w]()TODO()%f[%W]",
+			group = "MiniHipatternsTodo",
+			extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticInfo" },
+		},
+		note = {
+			pattern = "%f[%w]()NOTE()%f[%W]",
+			group = "MiniHipatternsNote",
+			extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticHint" },
+		},
+	},
+})
 
-	require("luasnip.loaders.from_lua").lazy_load()
+require("mini.diff").setup({
+	view = {
+		style = "sign",
+		signs = {
+			add = "┃",
+			change = "┃",
+			delete = "-",
+		},
+	},
+})
 
-	vim.keymap.set({ "i", "s" }, "<C-;>", function()
-		if ls.choice_active() then
-			ls.change_choice(1)
+require("luasnip").setup({
+	update_events = "TextChanged,TextChangedI",
+	delete_check_events = "TextChanged",
+	enable_autosnippets = true,
+	store_selection_keys = "<Tab>",
+	ext_opts = {
+		[require("luasnip.util.types").insertNode] = { active = { virt_text = { { "", "Boolean" } } } },
+		[require("luasnip.util.types").choiceNode] = { active = { virt_text = { { "󱥸", "Special" } } } },
+	},
+})
+
+require("luasnip.loaders.from_lua").lazy_load()
+
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+require("conform").setup({
+	formatters = {
+		["bibtex-tidy"] = {
+			prepend_args = {
+				"--curly",
+				"--tab",
+				"--trailing-commas",
+				"--sort-fields=author,year,month,day,title,shorttitle",
+				"--remove-braces",
+			},
+		},
+	},
+	formatters_by_ft = {
+		bib = { "bibtex-tidy" },
+		fish = { "fish_indent" },
+		lua = { "stylua" },
+		markdown = { "prettier" },
+		tex = { "tex-fmt" },
+	},
+	format_on_save = function(bufnr)
+		-- Disable with a global or buffer-local variable
+		if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+			return
 		end
-	end, { silent = true })
+		return { timeout_ms = 500, lsp_format = "fallback" }
+	end,
+})
 
-	vim.pack.add({
-		"https://github.com/fang2hou/blink-copilot",
-		{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
-		{ src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
-	})
+local source_dedup_priority = { "lsp", "path", "snippets", "buffer", "ripgrep" }
 
-	local source_dedup_priority = { "lsp", "path", "snippets", "buffer", "ripgrep" }
-
-	local show_orig = require("blink.cmp.completion.list").show
-	require("blink.cmp.completion.list").show = function(ctx, items_by_source)
-		local seen = {}
-		for _, source in ipairs(source_dedup_priority) do
-			if items_by_source[source] then
-				items_by_source[source] = vim.tbl_filter(function(item)
-					local did_seen = seen[item.label]
-					seen[item.label] = true
-					return not did_seen
-				end, items_by_source[source])
-			end
+local show_orig = require("blink.cmp.completion.list").show
+require("blink.cmp.completion.list").show = function(ctx, items_by_source)
+	local seen = {}
+	for _, source in ipairs(source_dedup_priority) do
+		if items_by_source[source] then
+			items_by_source[source] = vim.tbl_filter(function(item)
+				local did_seen = seen[item.label]
+				seen[item.label] = true
+				return not did_seen
+			end, items_by_source[source])
 		end
-		return show_orig(ctx, items_by_source)
 	end
-
-	require("blink.cmp").setup({
-		completion = {
-			documentation = { auto_show = true },
-			list = { max_items = 20 },
-			menu = { draw = { treesitter = { "lsp" } } },
-		},
-		snippets = { preset = "luasnip" },
-		sources = {
-			default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
-			providers = {
-				copilot = { async = true, module = "blink-copilot", name = "Copilot" },
-				ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
-				snippets = { opts = { show_autosnippets = false } },
-			},
-		},
-	})
-
-	vim.pack.add({
-		"https://github.com/saghen/blink.download",
-		{ src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
-	})
-	require("blink.pairs").setup({
-		highlights = {
-			groups = {
-				"BlinkPairsOrange",
-				"BlinkPairsPurple",
-				"BlinkPairsBlue",
-				"BlinkPairsCyan",
-				"BlinkPairsYellow",
-				"BlinkPairsGreen",
-			},
-		},
-	})
-
-	vim.pack.add({ "https://github.com/kylechui/nvim-surround" })
-	require("nvim-surround").setup({})
-end
--- }}}
-
--- Set up Editor {{{
-do
-	vim.pack.add({
-		"https://github.com/esmuellert/vscode-diff.nvim",
-		"https://github.com/saghen/blink.indent",
-	})
-
-	vim.pack.add({ "https://github.com/dmtrKovalenko/fff.nvim" })
-
-	vim.api.nvim_create_autocmd("PackChanged", {
-		callback = function(event)
-			if event.data.updated then
-				require("fff.download").download_or_build_binary()
-			end
-		end,
-	})
-
-	vim.g.fff = {
-		lazy_sync = true,
-		prompt = "   ",
-		layout = { prompt_position = "top" },
-	}
-
--- stylua: ignore start
-vim.keymap.set("n", "<leader>ff", function() require("fff").find_files() end, { desc = "Open Files Picker" })
-vim.keymap.set("n", "<leader>fg", function() require("fff").find_in_git_root() end, { desc = "Git Files Picker" })
-vim.keymap.set("n", "<leader>fc", function() require("fff").find_files_in_dir(vim.fn.stdpath("config")) end, { desc = "Find Config Files" })
-	-- stylua: ignore end
-
-	vim.pack.add({ "https://github.com/folke/sidekick.nvim" })
-
-	require("sidekick").setup({})
-
--- stylua: ignore start
-vim.keymap.set("n", "<Tab>", function() if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end end, { desc = "Goto/Apply Next Edit Suggestion" })
-vim.keymap.set({ "n", "x", "i", "t" }, "<C-.>", function() require("sidekick.cli").toggle() end, { desc = "Sidekick Toggle" })
-vim.keymap.set("n", "<leader>aa", function() require("sidekick.cli").toggle() end, { desc = "Sidekick Toggle CLI" })
-vim.keymap.set("n", "<leader>as", function() require("sidekick.cli").select({ filter = { installed = true } }) end, { desc = "Sidekick Select CLI" })
-vim.keymap.set("n", "<leader>ad", function() require("sidekick.cli").close() end, { desc = "Detach a CLI Session" })
-vim.keymap.set({ "x", "n" }, "<leader>at", function() require("sidekick.cli").send({ msg = "{this}" }) end, { desc = "Send This" })
-vim.keymap.set("n", "<leader>af", function() require("sidekick.cli").send({ msg = "{file}" }) end, { desc = "Send File" })
-vim.keymap.set("x", "<leader>av", function() require("sidekick.cli").send({ msg = "{selection}" }) end, { desc = "Send Visual Selection" })
-vim.keymap.set({ "n", "x" }, "<leader>ap", function() require("sidekick.cli").prompt() end, { desc = "Sidekick Select Prompt" })
-	-- stylua: ignore end
-
-	vim.pack.add({ "https://github.com/MagicDuck/grug-far.nvim" })
-
-	vim.g.grug_far = { icons = { fileIconsProvider = "mini.icons" } }
-	vim.keymap.set({ "n", "v" }, "<leader>sr", function()
-		local grug = require("grug-far")
-		local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-		grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
-	end, { desc = "[S]earch and [R]eplace" })
-
-	vim.pack.add({ "https://github.com/nvim-mini/mini.diff" })
-
-	require("mini.diff").setup({
-		view = {
-			style = "sign",
-			signs = {
-				add = "┃",
-				change = "┃",
-				delete = "-",
-			},
-		},
-	})
-
-	vim.keymap.set("n", "<leader>hp", MiniDiff.toggle_overlay, { desc = "Hunk Diff Preview" })
-end
--- }}}
-
--- Set up Lang {{{
-do
-	vim.pack.add({
-		-- "https://github.com/nvim-lua/plenary.nvim",
-		-- "https://github.com/Julian/lean.nvim",
-		"https://github.com/MeanderingProgrammer/render-markdown.nvim",
-		"https://github.com/mathjiajia/nvim-latex-conceal",
-	})
-
-	vim.g.render_markdown_config = {
-		file_types = { "markdown", "quarto" },
-		anti_conceal = {
-			disabled_modes = { "n" },
-			ignore = {
-				bullet = true,
-				code_border = true,
-				head_background = true,
-				head_border = true,
-			},
-		},
-		completions = { lsp = { enabled = true } },
-		heading = {
-			render_modes = true,
-			icons = { " 󰼏 ", " 󰎨 ", " 󰼑 ", " 󰎲 ", " 󰼓 ", " 󰎴 " },
-			border = true,
-		},
-		code = {
-			position = "right",
-			width = "block",
-			min_width = 80,
-			border = "thin",
-		},
-		pipe_table = {
-			alignment_indicator = "─",
-			border = { "╭", "┬", "╮", "├", "┼", "┤", "╰", "┴", "╯", "│", "─" },
-		},
-		sign = { enabled = false },
-		win_options = { concealcursor = { rendered = "nvc" } },
-	}
-end
--- }}}
-
--- Set up Formatters {{{
-do
-	vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
-
-	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-	require("conform").setup({
-		formatters = {
-			["bibtex-tidy"] = {
-				prepend_args = {
-					"--curly",
-					"--tab",
-					"--trailing-commas",
-					"--sort-fields=author,year,month,day,title,shorttitle",
-					"--remove-braces",
-				},
-			},
-		},
-		formatters_by_ft = {
-			bib = { "bibtex-tidy" },
-			lua = { "stylua" },
-			markdown = { "prettier" },
-			tex = { "tex-fmt" },
-		},
-		format_on_save = function(bufnr)
-			-- Disable with a global or buffer-local variable
-			if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-				return
-			end
-			return { timeout_ms = 500, lsp_format = "fallback" }
-		end,
-	})
-
-	vim.keymap.set({ "n", "v" }, "<leader>cF", function()
-		require("conform").format({ formatters = { "injected" } })
-	end, { desc = "Format Injected Langs" })
-
-	vim.api.nvim_create_user_command("FormatDisable", function(args)
-		if args.bang then
-			-- FormatDisable! will disable formatting just for this buffer
-			vim.b.disable_autoformat = true
-		else
-			vim.g.disable_autoformat = true
-		end
-	end, {
-		desc = "Disable autoformat-on-save",
-		bang = true,
-	})
-	vim.api.nvim_create_user_command("FormatEnable", function()
-		vim.b.disable_autoformat = false
-		vim.g.disable_autoformat = false
-	end, {
-		desc = "Re-enable autoformat-on-save",
-	})
-end
---- }}}
-
--- Set up tree-sitter {{{
-do
-	vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
-	vim.api.nvim_create_autocmd("PackChanged", {
-		callback = function(event)
-			if event.data.updated then
-				vim.cmd.TSUpdate()
-			end
-		end,
-	})
+	return show_orig(ctx, items_by_source)
 end
 
--- }}}
-
--- Set up UI {{{
-do
-	vim.pack.add({ "https://github.com/tpope/vim-fugitive" })
-	vim.keymap.set("n", "<leader>go", ":G<CR>") -- open Git view
-
-	vim.keymap.set("n", "<leader>gs", ":Gwrite <CR>") -- git stage
-	vim.keymap.set("n", "<leader>gc", ":G commit<CR>") -- git commit
-	vim.keymap.set("n", "<leader>gd", ":G diff<CR>") -- git diff
-	vim.keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>") -- git stage and commit
-
-	vim.keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
-	vim.keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
-	vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
-
-	vim.pack.add({
-		"https://github.com/folke/snacks.nvim",
-	})
-
-	require("snacks").setup({
-		opts = {
-			explorer = { enabled = true },
-			input = { enabled = true },
-			picker = { enabled = true },
-			-- styles = { lazygit = { width = 0, height = 0 } },
-			words = { enabled = true },
+require("blink.cmp").setup({
+	completion = {
+		documentation = { auto_show = true },
+		list = { max_items = 20 },
+		menu = { draw = { treesitter = { "lsp" } } },
+	},
+	snippets = { preset = "luasnip" },
+	sources = {
+		default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
+		providers = {
+			copilot = { async = true, module = "blink-copilot", name = "Copilot" },
+			ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
+			snippets = { opts = { show_autosnippets = false } },
 		},
-	})
-	-- stylua: ignore start
-	-- Top Pickers & Explorer
-	vim.keymap.set("n", "<leader><space>", function() Snacks.picker.smart() end, { desc = "Smart Find Files" })
-	vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "File Explorer" })
-	-- find
-	vim.keymap.set("n", "<leader>fb", function() Snacks.picker.buffers() end, { desc = "Buffers" })
-	vim.keymap.set("n", "<leader>fm", function() Snacks.picker({ layout = "select" }) end, { desc = "Pickers Meta" })
-	vim.keymap.set("n", "<leader>fp", function() Snacks.picker.projects() end, { desc = "Projects" })
-	vim.keymap.set("n", "<leader>fr", function() Snacks.picker.recent() end, { desc = "Recent" })
-	-- git
-	vim.keymap.set("n", "<leader>gb", function() Snacks.picker.git_branches() end, { desc = "Git Branches" })
-	-- vim.keymap.set("n", "<leader>gl", function() Snacks.picker.git_log() end, { desc = "Git Log" })
-	vim.keymap.set("n", "<leader>gL", function() Snacks.picker.git_log_line() end, { desc = "Git Log Line" })
-	-- vim.keymap.set("n", "<leader>gs", function() Snacks.picker.git_status() end, { desc = "Git Status" })
-	-- vim.keymap.set("n", "<leader>gS", function() Snacks.picker.git_stash() end, { desc = "Git Stash" })
-	-- vim.keymap.set("n", "<leader>gd", function() Snacks.picker.git_diff() end, { desc = "Git Diff (Hunks)" })
-	vim.keymap.set("n", "<leader>gf", function() Snacks.picker.git_log_file() end, { desc = "Git Log File" })
-	-- Grep
-	vim.keymap.set("n", "<leader>sb", function() Snacks.picker.lines() end, { desc = "Buffer Lines" })
-	vim.keymap.set("n", "<leader>sB", function() Snacks.picker.grep_buffers() end, { desc = "Grep Open Buffers" })
-	vim.keymap.set("n", "<leader>sg", function() Snacks.picker.grep() end, { desc = "Grep" })
-	vim.keymap.set({ "n", "x" }, "<leader>sw", function() Snacks.picker.grep_word() end, { desc = "Visual selection or word" })
-	-- search
-	vim.keymap.set("n", '<leader>s"', function() Snacks.picker.registers() end, { desc = "Registers" })
-	vim.keymap.set("n", '<leader>s/', function() Snacks.picker.search_history() end, { desc = "Search History" })
-	vim.keymap.set("n", "<leader>sa", function() Snacks.picker.autocmds() end, { desc = "Autocmds" })
-	vim.keymap.set("n", "<leader>sb", function() Snacks.picker.lines() end, { desc = "Buffer Lines" })
-	vim.keymap.set("n", "<leader>sc", function() Snacks.picker.command_history() end, { desc = "Command History" })
-	vim.keymap.set("n", "<leader>sC", function() Snacks.picker.commands() end, { desc = "Commands" })
-	vim.keymap.set("n", "<leader>sd", function() Snacks.picker.diagnostics() end, { desc = "Diagnostics" })
-	vim.keymap.set("n", "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, { desc = "Buffer Diagnostics" })
-	vim.keymap.set("n", "<leader>sh", function() Snacks.picker.help() end, { desc = "Help Pages" })
-	vim.keymap.set("n", "<leader>sH", function() Snacks.picker.highlights() end, { desc = "Highlights" })
-	vim.keymap.set("n", "<leader>si", function() Snacks.picker.icons() end, { desc = "Icons" })
-	vim.keymap.set("n", "<leader>sj", function() Snacks.picker.jumps() end, { desc = "Jumps" })
-	vim.keymap.set("n", "<leader>sk", function() Snacks.picker.keymaps() end, { desc = "Keymaps" })
-	vim.keymap.set("n", "<leader>sl", function() Snacks.picker.loclist() end, { desc = "Location List" })
-	vim.keymap.set("n", "<leader>sm", function() Snacks.picker.marks() end, { desc = "Marks" })
-	vim.keymap.set("n", "<leader>sM", function() Snacks.picker.man() end, { desc = "Man Pages" })
-	vim.keymap.set("n", "<leader>sp", function() Snacks.picker.lazy() end, { desc = "Search for Plugin Spec" })
-	vim.keymap.set("n", "<leader>sq", function() Snacks.picker.qflist() end, { desc = "Quickfix List" })
-	vim.keymap.set("n", "<leader>sr", function() Snacks.picker.resume() end, { desc = "Resume" })
-	vim.keymap.set("n", "<leader>su", function() Snacks.picker.undo() end, { desc = "Undo History" })
-	vim.keymap.set("n", "<leader>uC", function() Snacks.picker.colorschemes() end, { desc = "Colorschemes" })
-	-- LSP
-	vim.keymap.set("n", "gd", function() Snacks.picker.lsp_definitions() end, { desc = "Goto Definition" })
-	vim.keymap.set("n", "gD", function() Snacks.picker.lsp_declarations() end, { desc = "Goto Declaration" })
-	-- vim.keymap.set("n", "gr", function() Snacks.picker.lsp_references() end, { desc = "References", nowait = true })
-	vim.keymap.set("n", "gI", function() Snacks.picker.lsp_implementations() end, { desc = "Goto Implementation" })
-	vim.keymap.set("n", "gy", function() Snacks.picker.lsp_type_definitions() end, { desc = "Goto T[y]pe Definition" })
-	vim.keymap.set("n", "<leader>ss", function() Snacks.picker.lsp_symbols() end, { desc = "LSP Symbols" })
-	vim.keymap.set("n", "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, { desc = "LSP Workspace Symbols" })
-	-- Other
-	vim.keymap.set("n", "<leader>z", function() Snacks.zen() end, { desc = "Toggle Zen Mode" })
-	vim.keymap.set("n", "<leader>Z", function() Snacks.zen.zoom() end, { desc = "Toggle Zoom" })
-	vim.keymap.set("n", "<leader>.", function() Snacks.scratch() end, { desc = "Toggle Scratch Buffer" })
-	vim.keymap.set("n", "<leader>S", function() Snacks.scratch.select() end, { desc = "Select Scratch Buffer" })
-	vim.keymap.set("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffer" })
-	vim.keymap.set("n", "<leader>cR", function() Snacks.rename.rename_file() end, { desc = "Rename File" })
-	vim.keymap.set({ "n", "v" }, "<leader>gB", function() Snacks.gitbrowse() end, { desc = "Git Browse" })
-	-- vim.keymap.set("n", "<leader>gg", function() Snacks.lazygit() end, { desc = "Lazygit" })
-	-- stylua: ignore end
+	},
+})
 
-	vim.pack.add({
-		"https://github.com/nvim-mini/mini.statusline",
-		"https://github.com/nvim-mini/mini.hipatterns",
-		"https://github.com/nvim-mini/mini.icons",
-		"https://github.com/MunifTanjim/nui.nvim",
-	})
-
-	require("mini.hipatterns").setup({
-		highlighters = {
-			fixme = {
-				pattern = "%f[%w]()FIXME()%f[%W]",
-				group = "MiniHipatternsFixme",
-				extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticError" },
-			},
-			hack = {
-				pattern = "%f[%w]()HACK()%f[%W]",
-				group = "MiniHipatternsHack",
-				extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticWarn" },
-			},
-			todo = {
-				pattern = "%f[%w]()TODO()%f[%W]",
-				group = "MiniHipatternsTodo",
-				extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticInfo" },
-			},
-			note = {
-				pattern = "%f[%w]()NOTE()%f[%W]",
-				group = "MiniHipatternsNote",
-				extmark_opts = { sign_text = "", sign_hl_group = "DiagnosticHint" },
-			},
+require("blink.pairs").setup({
+	highlights = {
+		groups = {
+			"BlinkPairsOrange",
+			"BlinkPairsPurple",
+			"BlinkPairsBlue",
+			"BlinkPairsCyan",
+			"BlinkPairsYellow",
+			"BlinkPairsGreen",
 		},
-	})
-	require("mini.icons").setup()
-	require("mini.statusline").setup()
-end
--- }}}
+	},
+})
 
 -- Set up keybinds {{{
 do
-	local user_binds = {
+	local __nixvim_binds = {
 		{
 			action = "v:count == 0 ? 'gk' : 'k'",
 			key = "k",
@@ -522,18 +382,458 @@ do
 		{ action = "<Esc>/\\%V", key = "/", mode = "x", options = { desc = "search within visual selection" } },
 		{ action = vim.diagnostic.setqflist, key = "<leader>qq", mode = "n", options = { desc = "Set [Q]uickfix" } },
 		{ action = vim.diagnostic.setloclist, key = "<leader>ql", mode = "n", options = { desc = "Set [L]oclist" } },
+		{
+			action = function()
+				MiniDiff.toggle_overlay()
+			end,
+			key = "<leader>go",
+			mode = "n",
+			options = { desc = "Hunk Diff [O]verlay" },
+		},
+
+		{
+			action = function()
+				require("conform").format({ formatters = { "injected" }, timeout_ms = 2000 })
+			end,
+			key = "<leader>cF",
+			mode = { "n", "v" },
+			options = { desc = "[F]ormat Injected Langs" },
+		},
+
+		{
+			action = function()
+				local grug = require("grug-far")
+				local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+				grug.open({ prefills = { filesFilter = ext and ext ~= "" and "*." .. ext or nil } })
+			end,
+			key = "<leader>sr",
+			mode = { "n", "v" },
+			options = { desc = "[S]earch and [R]eplace" },
+		},
+
+		{ action = "<Cmd>FFFFind<CR>", key = "<leader>ff", mode = "n", options = { desc = "[F]ile [F]inder" } },
+		{
+			action = function()
+				require("fff").find_in_git_root()
+			end,
+			key = "<leader>fg",
+			mode = "n",
+			options = { desc = "[F]ind [G]it Files" },
+		},
+
+		{
+			action = function()
+				Snacks.picker.smart()
+			end,
+			key = "<leader><space>",
+			mode = "n",
+			options = { desc = "Smart Open" },
+		},
+		{
+			action = function()
+				Snacks.explorer()
+			end,
+			key = "<leader>e",
+			mode = "n",
+			options = { desc = "[E]xplorer" },
+		},
+		{
+			action = function()
+				Snacks.picker.buffers({ layout = "select" })
+			end,
+			key = "<leader>fb",
+			mode = "n",
+			options = { desc = "[F]ind [B]uffers" },
+		},
+		{
+			action = function()
+				Snacks.picker({ layout = "select" })
+			end,
+			key = "<leader>fm",
+			mode = "n",
+			options = { desc = "[F]ind [M]eta" },
+		},
+		{
+			action = function()
+				Snacks.picker.projects()
+			end,
+			key = "<leader>fp",
+			mode = "n",
+			options = { desc = "[F]ind [P]rojects" },
+		},
+		{
+			action = function()
+				Snacks.picker.recent()
+			end,
+			key = "<leader>fr",
+			mode = "n",
+			options = { desc = "[F]ind [R]ecent" },
+		},
+		{
+			action = function()
+				Snacks.picker.git_diff()
+			end,
+			key = "<leader>gd",
+			mode = "n",
+			options = { desc = "[G]it [D]iff (Hunks)" },
+		},
+		{
+			action = function()
+				Snacks.picker.git_log_file()
+			end,
+			key = "<leader>gf",
+			mode = "n",
+			options = { desc = "[G]it Log [F]ile" },
+		},
+		{
+			action = function()
+				Snacks.picker.git_log_line()
+			end,
+			key = "<leader>gL",
+			mode = "n",
+			options = { desc = "[G]it Log [L]ine" },
+		},
+		{
+			action = function()
+				Snacks.picker.lines()
+			end,
+			key = "<leader>sb",
+			mode = "n",
+			options = { desc = "[B]uffer Lines" },
+		},
+		{
+			action = function()
+				Snacks.picker.grep_buffers()
+			end,
+			key = "<leader>sB",
+			mode = "n",
+			options = { desc = "Grep Open [B]uffers" },
+		},
+		{
+			action = function()
+				Snacks.picker.grep()
+			end,
+			key = "<leader>sg",
+			mode = "n",
+			options = { desc = "[G]rep" },
+		},
+		{
+			action = function()
+				Snacks.picker.grep_word()
+			end,
+			key = "<leader>sw",
+			mode = { "n", "x" },
+			options = { desc = "Visual selection or [W]ord" },
+		},
+		{
+			action = function()
+				Snacks.picker.registers()
+			end,
+			key = '<leader>s"',
+			mode = "n",
+			options = { desc = "Registers" },
+		},
+		{
+			action = function()
+				Snacks.picker.search_history()
+			end,
+			key = "<leader>s/",
+			mode = "n",
+			options = { desc = "Search History" },
+		},
+		{
+			action = function()
+				Snacks.picker.command_history()
+			end,
+			key = "<leader>sc",
+			mode = "n",
+			options = { desc = "[C]ommand History" },
+		},
+		{
+			action = function()
+				Snacks.picker.commands()
+			end,
+			key = "<leader>sC",
+			mode = "n",
+			options = { desc = "[C]ommands" },
+		},
+		{
+			action = function()
+				Snacks.picker.diagnostics()
+			end,
+			key = "<leader>sd",
+			mode = "n",
+			options = { desc = "[D]iagnostics" },
+		},
+		{
+			action = function()
+				Snacks.picker.help()
+			end,
+			key = "<leader>sh",
+			mode = "n",
+			options = { desc = "[H]elp Pages" },
+		},
+		{
+			action = function()
+				Snacks.picker.jumps()
+			end,
+			key = "<leader>sj",
+			mode = "n",
+			options = { desc = "[J]umps" },
+		},
+		{
+			action = function()
+				Snacks.picker.loclist()
+			end,
+			key = "<leader>sl",
+			mode = "n",
+			options = { desc = "[L]ocation List" },
+		},
+		{
+			action = function()
+				Snacks.picker.marks()
+			end,
+			key = "<leader>sm",
+			mode = "n",
+			options = { desc = "[M]arks" },
+		},
+		{
+			action = function()
+				Snacks.picker.qflist()
+			end,
+			key = "<leader>sq",
+			mode = "n",
+			options = { desc = "[Q]uickfix List" },
+		},
+		{
+			action = function()
+				Snacks.picker.resume()
+			end,
+			key = "<leader>sR",
+			mode = "n",
+			options = { desc = "[R]esume" },
+		},
+		{
+			action = function()
+				Snacks.picker.undo()
+			end,
+			key = "<leader>su",
+			mode = "n",
+			options = { desc = "[U]ndo History" },
+		},
+		{
+			action = function()
+				Snacks.picker.lsp_symbols()
+			end,
+			key = "<leader>ss",
+			mode = "n",
+			options = { desc = "Lsp [S]ymbols" },
+		},
+		{
+			action = function()
+				Snacks.zen()
+			end,
+			key = "<leader>z",
+			mode = "n",
+			options = { desc = "Toggle [Z]en Mode" },
+		},
+		{
+			action = function()
+				Snacks.zen.zoom()
+			end,
+			key = "<leader>Z",
+			mode = "n",
+			options = { desc = "Toggle [Z]oom" },
+		},
+		{
+			action = function()
+				Snacks.scratch()
+			end,
+			key = "<leader>.",
+			mode = "n",
+			options = { desc = "Toggle Scratch Buffer" },
+		},
+		{
+			action = function()
+				Snacks.scratch.select()
+			end,
+			key = "<leader>S",
+			mode = "n",
+			options = { desc = "Select [S]cratch Buffer" },
+		},
+		{
+			action = function()
+				Snacks.bufdelete()
+			end,
+			key = "<leader>bd",
+			mode = "n",
+			options = { desc = "[D]elete [B]uffer" },
+		},
+		{
+			action = function()
+				Snacks.bufdelete.other()
+			end,
+			key = "<leader>bD",
+			mode = "n",
+			options = { desc = "[D]elete Other [B]uffers" },
+		},
+		{
+			action = function()
+				Snacks.rename.rename_file()
+			end,
+			key = "<leader>cr",
+			mode = "n",
+			options = { desc = "[R]ename File" },
+		},
+
+		{
+			action = function()
+				if require("luasnip").choice_active() then
+					require("luasnip").change_choice(1)
+				end
+			end,
+			key = "<C-;>",
+			mode = { "i", "s" },
+			options = { desc = "Change Choice", silent = true },
+		},
+
+		{
+			action = function()
+				if not require("sidekick").nes_jump_or_apply() then
+					return "<Tab>"
+				end
+			end,
+			key = "<Tab>",
+			mode = "n",
+			options = { desc = "Sidekick Toggle CLI", expr = true },
+		},
+		{
+			action = function()
+				require("sidekick.cli").toggle()
+			end,
+			key = "<C-.>",
+			mode = { "n", "x", "i", "t" },
+			options = { desc = "Sidekick Switch Focus" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").toggle()
+			end,
+			key = "<leader>aa",
+			mode = "n",
+			options = { desc = "Sidekick Toggle CLI" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").select({ filter = { installed = true } })
+			end,
+			key = "<leader>as",
+			mode = "n",
+			options = { desc = "Sidekick Select CLI" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").close()
+			end,
+			key = "<leader>ad",
+			mode = "n",
+			options = { desc = "Detach a CLI Session" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").send({ msg = "{this}" })
+			end,
+			key = "<leader>at",
+			mode = { "x", "n" },
+			options = { desc = "Send This" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").send({ msg = "{file}" })
+			end,
+			key = "<leader>af",
+			mode = "n",
+			options = { desc = "Send File" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").send({ msg = "{selection}" })
+			end,
+			key = "<leader>av",
+			mode = "x",
+			options = { desc = "Send Visual Selection" },
+		},
+		{
+			action = function()
+				require("sidekick.cli").select_prompt()
+			end,
+			key = "<leader>ap",
+			mode = { "n", "x" },
+			options = { desc = "Sidekick Prompt Picker" },
+		},
 	}
-	for _, map in ipairs(user_binds) do
+	for i, map in ipairs(__nixvim_binds) do
 		vim.keymap.set(map.mode, map.key, map.action, map.options)
 	end
 end
 -- }}}
 
+do
+	local cmds = {
+		FormatDisable = {
+			command = function(args)
+				if args.bang then
+					-- FormatDisable! will disable formatting just for this buffer
+					vim.b.disable_autoformat = true
+				else
+					vim.g.disable_autoformat = true
+				end
+			end,
+			options = { bang = true, desc = "Disable autoformat-on-save" },
+		},
+		FormatEnable = {
+			command = function()
+				vim.b.disable_autoformat = false
+				vim.g.disable_autoformat = false
+			end,
+			options = { desc = "Re-enable autoformat-on-save" },
+		},
+	}
+	for name, cmd in pairs(cmds) do
+		vim.api.nvim_create_user_command(name, cmd.command, cmd.options or {})
+	end
+end
+
+-- Set up Editor {{{
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(event)
+		if event.data.updated then
+			require("fff.download").download_or_build_binary()
+		end
+	end,
+})
+
+-- }}}
+
+-- Set up Lang {{{
+-- }}}
+
+-- Set up tree-sitter {{{
+do
+	vim.api.nvim_create_autocmd("PackChanged", {
+		callback = function(event)
+			if event.data.updated then
+				vim.cmd.TSUpdate()
+			end
+		end,
+	})
+end
+
 -- }}}
 
 -- LSP {{{
 do
-	vim.lsp.enable("copilot")
+	vim.lsp.enable({ "copilot", "lua_ls", "marksman", "texlab" })
 end
 -- }}}
 
@@ -696,3 +996,32 @@ do
 	end
 end
 -- }}
+
+local function complete_packages()
+	return vim.iter(vim.pack.get())
+		:map(function(pack)
+			return pack.spec.name
+		end)
+		:totable()
+end
+
+vim.api.nvim_create_user_command("PackUpdate", function(info)
+	if #info.fargs ~= 0 then
+		vim.pack.update(info.fargs, { force = info.bang })
+	else
+		vim.pack.update(nil, { force = info.bang })
+	end
+end, {
+	desc = "Update packages",
+	nargs = "*",
+	bang = true,
+	complete = complete_packages,
+})
+
+vim.api.nvim_create_user_command("PackDelete", function(info)
+	vim.pack.del(info.fargs)
+end, {
+	desc = "Delete packages",
+	nargs = "+",
+	complete = complete_packages,
+})
