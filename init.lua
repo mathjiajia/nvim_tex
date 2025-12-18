@@ -9,16 +9,14 @@ do
 		loaded_matchparen = 1,
 		loaded_netrw = 1,
 		loaded_netrwPlugin = 1,
-		loaded_perl_provider = 0,
-		loaded_python3_provider = 0,
 		loaded_remote_plugins = 1,
-		loaded_ruby_provider = 0,
 		loaded_shada_plugin = 1,
 		loaded_spellfile_plugin = 1,
 		loaded_tarPlugin = 1,
 		loaded_tutor_mode_plugin = 1,
 		loaded_zip = 1,
 		loaded_zipPlugin = 1,
+
 		mapleader = " ",
 
 		fff = { layout = { prompt_position = "top" }, lazy_sync = true, prompt = "   " },
@@ -67,7 +65,8 @@ do
 		breakindent = true,
 		clipboard = "unnamedplus",
 		cmdheight = 0,
-		-- cursorline = true,
+		cursorline = true,
+		cursorlineopt = "number",
 		fillchars = { eob = " ", fold = " ", foldclose = "", foldopen = "", foldsep = " " },
 		foldexpr = "v:lua.vim.treesitter.foldexpr()",
 		foldlevel = 99,
@@ -119,25 +118,19 @@ vim.diagnostic.config({
 
 -- Set up vim.pack {{{
 vim.pack.add({
-	"https://github.com/scottmckendry/cyberdream.nvim",
-
 	-- coding
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/mathjiajia/nvim-math-snippets",
 
 	"https://github.com/fang2hou/blink-copilot",
-	-- { src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
-	-- { src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
+	{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
+	{ src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
 	"https://github.com/saghen/blink.download",
-	-- { src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
+	{ src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
 	"https://github.com/kylechui/nvim-surround",
 
 	-- editor
-	"https://github.com/esmuellert/vscode-diff.nvim",
-	"https://github.com/saghen/blink.indent",
-
 	"https://github.com/dmtrKovalenko/fff.nvim",
-
 	"https://github.com/folke/snacks.nvim",
 
 	"https://github.com/folke/sidekick.nvim",
@@ -146,6 +139,7 @@ vim.pack.add({
 
 	"https://github.com/nvim-mini/mini.diff",
 	"https://github.com/tpope/vim-fugitive",
+	"https://github.com/esmuellert/vscode-diff.nvim",
 
 	-- lang
 	-- "https://github.com/nvim-lua/plenary.nvim",
@@ -167,7 +161,7 @@ vim.pack.add({
 })
 -- }}}
 
-vim.keymap.set("n", "<leader>go", ":G<CR>") -- open Git view
+vim.keymap.set("n", "<leader>gv", ":G<CR>") -- open Git view
 
 vim.keymap.set("n", "<leader>gs", ":Gwrite <CR>") -- git stage
 vim.keymap.set("n", "<leader>gc", ":G commit<CR>") -- git commit
@@ -178,39 +172,17 @@ vim.keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
 vim.keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
 vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
 
-require("cyberdream").setup({
-	variant = "default",
-	transparent = true,
-	saturation = 0.6,
-	italic_comments = false,
-	cache = true,
-	overrides = function(colors)
-		return {
-			BlinkPairsOrange = { fg = colors.orange },
-			BlinkPairsPurple = { fg = colors.purple },
-			BlinkPairsBlue = { fg = colors.blue },
-			BlinkPairsCyan = { fg = colors.cyan },
-			BlinkPairsYellow = { fg = colors.yellow },
-			BlinkPairsGreen = { fg = colors.green },
-
-			BlinkIndentOrange = { fg = colors.orange },
-			BlinkIndentPurple = { fg = colors.purple },
-			BlinkIndentBlue = { fg = colors.blue },
-			BlinkIndentCyan = { fg = colors.cyan },
-			BlinkIndentYellow = { fg = colors.yellow },
-			BlinkIndentGreen = { fg = colors.green },
-		}
-	end,
-})
-require("cyberdream").load()
+vim.cmd.colorscheme("bamboo")
 
 require("mini.icons").setup()
 
 require("snacks").setup({
 	opts = {
 		explorer = { enabled = true },
+		indent = { enabled = true },
 		input = { enabled = true },
 		picker = { enabled = true },
+		scope = { enabled = true },
 		words = { enabled = true },
 	},
 })
@@ -348,7 +320,7 @@ require("blink.pairs").setup({
 
 -- Set up keybinds {{{
 do
-	local __nixvim_binds = {
+	local user_binds = {
 		{
 			action = "v:count == 0 ? 'gk' : 'k'",
 			key = "k",
@@ -469,14 +441,14 @@ do
 			mode = "n",
 			options = { desc = "[F]ind [R]ecent" },
 		},
-		{
-			action = function()
-				Snacks.picker.git_diff()
-			end,
-			key = "<leader>gd",
-			mode = "n",
-			options = { desc = "[G]it [D]iff (Hunks)" },
-		},
+		-- {
+		-- 	action = function()
+		-- 		Snacks.picker.git_diff()
+		-- 	end,
+		-- 	key = "<leader>gd",
+		-- 	mode = "n",
+		-- 	options = { desc = "[G]it [D]iff (Hunks)" },
+		-- },
 		{
 			action = function()
 				Snacks.picker.git_log_file()
@@ -772,7 +744,7 @@ do
 			options = { desc = "Sidekick Prompt Picker" },
 		},
 	}
-	for i, map in ipairs(__nixvim_binds) do
+	for _, map in ipairs(user_binds) do
 		vim.keymap.set(map.mode, map.key, map.action, map.options)
 	end
 end
@@ -804,30 +776,15 @@ do
 	end
 end
 
--- Set up Editor {{{
+-- Set up fff and treesitter {{{
 vim.api.nvim_create_autocmd("PackChanged", {
 	callback = function(event)
 		if event.data.updated then
 			require("fff.download").download_or_build_binary()
+			vim.cmd.TSUpdate()
 		end
 	end,
 })
-
--- }}}
-
--- Set up Lang {{{
--- }}}
-
--- Set up tree-sitter {{{
-do
-	vim.api.nvim_create_autocmd("PackChanged", {
-		callback = function(event)
-			if event.data.updated then
-				vim.cmd.TSUpdate()
-			end
-		end,
-	})
-end
 
 -- }}}
 
@@ -996,32 +953,3 @@ do
 	end
 end
 -- }}
-
-local function complete_packages()
-	return vim.iter(vim.pack.get())
-		:map(function(pack)
-			return pack.spec.name
-		end)
-		:totable()
-end
-
-vim.api.nvim_create_user_command("PackUpdate", function(info)
-	if #info.fargs ~= 0 then
-		vim.pack.update(info.fargs, { force = info.bang })
-	else
-		vim.pack.update(nil, { force = info.bang })
-	end
-end, {
-	desc = "Update packages",
-	nargs = "*",
-	bang = true,
-	complete = complete_packages,
-})
-
-vim.api.nvim_create_user_command("PackDelete", function(info)
-	vim.pack.del(info.fargs)
-end, {
-	desc = "Delete packages",
-	nargs = "+",
-	complete = complete_packages,
-})

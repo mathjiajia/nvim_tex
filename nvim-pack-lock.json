@@ -22,10 +22,6 @@
       "rev": "86361b98f3c8317904a08e3bd12cf3cdcbe3e925",
       "src": "https://github.com/saghen/blink.download"
     },
-    "blink.indent": {
-      "rev": "93ff30292d34116444ff9db5264f6ccd34f3f71f",
-      "src": "https://github.com/saghen/blink.indent"
-    },
     "blink.pairs": {
       "rev": "5a34bf6ea72340a70083548e186d745ac4882899",
       "src": "https://github.com/saghen/blink.pairs",
@@ -34,10 +30,6 @@
     "conform.nvim": {
       "rev": "9b8fa5e0b78168f68bee9bf886dc20f287c61e02",
       "src": "https://github.com/stevearc/conform.nvim"
-    },
-    "cyberdream.nvim": {
-      "rev": "a43b45423e8494898c353c0604e0b2e4e99bd056",
-      "src": "https://github.com/scottmckendry/cyberdream.nvim"
     },
     "fff.nvim": {
       "rev": "003c05cf6d3e25e7022fbf6a5f2e285c92d13220",
