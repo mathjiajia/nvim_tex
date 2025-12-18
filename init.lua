@@ -1,5 +1,6 @@
 vim.loader.enable()
-require("vim._extui").enable({ msg = { target = "msg" } })
+
+vim.cmd.colorscheme("bamboo")
 
 -- Set up globals {{{
 do
@@ -72,6 +73,7 @@ do
 		foldlevel = 99,
 		foldlevelstart = 99,
 		foldmethod = "expr",
+		formatexpr = "v:lua.require'conform'.formatexpr()",
 		ignorecase = true,
 		inccommand = "split",
 		laststatus = 3,
@@ -102,6 +104,7 @@ do
 end
 -- }}}
 
+-- Set up diagnostic {{{
 vim.diagnostic.config({
 	severity_sort = true,
 	signs = {
@@ -115,6 +118,11 @@ vim.diagnostic.config({
 	virtual_lines = { current_line = true },
 	virtual_text = { current_line = false },
 })
+-- }}}
+
+vim.schedule(function()
+	require("vim._extui").enable({ msg = { target = "msg" } })
+end)
 
 -- Set up vim.pack {{{
 vim.pack.add({
@@ -124,7 +132,7 @@ vim.pack.add({
 
 	"https://github.com/fang2hou/blink-copilot",
 	{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
-	{ src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
+	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 	"https://github.com/saghen/blink.download",
 	{ src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
 	"https://github.com/kylechui/nvim-surround",
@@ -139,7 +147,7 @@ vim.pack.add({
 
 	"https://github.com/nvim-mini/mini.diff",
 	"https://github.com/tpope/vim-fugitive",
-	"https://github.com/esmuellert/vscode-diff.nvim",
+	{ src = "https://github.com/esmuellert/vscode-diff.nvim", version = vim.version.range("^1") },
 
 	-- lang
 	-- "https://github.com/nvim-lua/plenary.nvim",
@@ -151,13 +159,24 @@ vim.pack.add({
 	"https://github.com/stevearc/conform.nvim",
 
 	-- treesitter
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	"https://github.com/nvim-treesitter/nvim-treesitter",
 
 	-- ui
 	"https://github.com/nvim-mini/mini.statusline",
 	"https://github.com/nvim-mini/mini.hipatterns",
 	"https://github.com/nvim-mini/mini.icons",
 	"https://github.com/MunifTanjim/nui.nvim",
+})
+-- }}}
+
+-- Set up fff and treesitter {{{
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(event)
+		if event.data.updated then
+			require("fff.download").download_or_build_binary()
+			vim.cmd.TSUpdate()
+		end
+	end,
 })
 -- }}}
 
@@ -171,8 +190,6 @@ vim.keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>") -- git stage and co
 vim.keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
 vim.keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
 vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
-
-vim.cmd.colorscheme("bamboo")
 
 require("mini.icons").setup()
 
@@ -242,7 +259,6 @@ require("luasnip").setup({
 
 require("luasnip.loaders.from_lua").lazy_load()
 
-vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 require("conform").setup({
 	formatters = {
 		["bibtex-tidy"] = {
@@ -775,18 +791,6 @@ do
 		vim.api.nvim_create_user_command(name, cmd.command, cmd.options or {})
 	end
 end
-
--- Set up fff and treesitter {{{
-vim.api.nvim_create_autocmd("PackChanged", {
-	callback = function(event)
-		if event.data.updated then
-			require("fff.download").download_or_build_binary()
-			vim.cmd.TSUpdate()
-		end
-	end,
-})
-
--- }}}
 
 -- LSP {{{
 do

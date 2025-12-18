@@ -16,7 +16,7 @@
     "blink.cmp": {
       "rev": "b19413d214068f316c78978b08264ed1c41830ec",
       "src": "https://github.com/saghen/blink.cmp",
-      "version": "'v1.8.0'"
+      "version": "1.0.0 - 2.0.0"
     },
     "blink.download": {
       "rev": "86361b98f3c8317904a08e3bd12cf3cdcbe3e925",
@@ -28,15 +28,15 @@
       "version": "'v0.4.1'"
     },
     "conform.nvim": {
-      "rev": "9b8fa5e0b78168f68bee9bf886dc20f287c61e02",
+      "rev": "328c2f1dda56f933d3337a1316e1020ba30ba6aa",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "fff.nvim": {
-      "rev": "003c05cf6d3e25e7022fbf6a5f2e285c92d13220",
+      "rev": "f6af8353c3cb02ddde1588f24f27ff8b3a4037cf",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "grug-far.nvim": {
-      "rev": "b58b2d65863f4ebad88b10a1ddd519e5380466e0",
+      "rev": "bc589a1ba340a00ae40bf1436401eac5b1454687",
       "src": "https://github.com/MagicDuck/grug-far.nvim"
     },
     "mini.diff": {
@@ -52,7 +52,7 @@
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "mini.statusline": {
-      "rev": "14919901649d20d020e659c63c03baa75cd94f33",
+      "rev": "3e96596ebe51b899874d8174409cdc4f3c749d9a",
       "src": "https://github.com/nvim-mini/mini.statusline"
     },
     "nui.nvim": {
@@ -72,12 +72,11 @@
       "src": "https://github.com/kylechui/nvim-surround"
     },
     "nvim-treesitter": {
-      "rev": "d3218d988f72ed34414959c9ccd802d393432d6e",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter",
-      "version": "'main'"
+      "rev": "4fc09bee78e91bf4ba471cdab4bf9dfa37fde51c",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "render-markdown.nvim": {
-      "rev": "7a43c8b444fa15b7736b34b248addb951126f723",
+      "rev": "07d088bf8bdadd159eb807b90eaee86a4778383f",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "sidekick.nvim": {
@@ -93,8 +92,9 @@
       "src": "https://github.com/tpope/vim-fugitive"
     },
     "vscode-diff.nvim": {
-      "rev": "1610dbfeda57b003e666f93e88df5b33cd8c721b",
-      "src": "https://github.com/esmuellert/vscode-diff.nvim"
+      "rev": "dec74c0a9cae098006dc9e52f57f4e95cd88b3f3",
+      "src": "https://github.com/esmuellert/vscode-diff.nvim",
+      "version": "1.0.0 - 2.0.0"
     }
   }
 }
