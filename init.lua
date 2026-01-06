@@ -1,5 +1,4 @@
 vim.loader.enable()
-
 vim.cmd.colorscheme("bamboo")
 
 -- Set up globals {{{
@@ -19,7 +18,6 @@ do
 		loaded_zipPlugin = 1,
 
 		mapleader = " ",
-
 		fff = { layout = { prompt_position = "top" }, lazy_sync = true, prompt = "   " },
 		["grug-far"] = { icons = { fileIconsProvider = "mini.icons" } },
 		render_markdown_config = {
@@ -93,6 +91,7 @@ do
 		splitright = true,
 		tabstop = 2,
 		timeoutlen = 300,
+		ttimeoutlen = 100,
 		undofile = true,
 		updatetime = 250,
 		winborder = "rounded",
@@ -129,12 +128,11 @@ vim.pack.add({
 	-- coding
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/mathjiajia/nvim-math-snippets",
-
 	"https://github.com/fang2hou/blink-copilot",
-	{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = "v2.2.0" },
+	{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = vim.version.range("^2") },
 	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 	"https://github.com/saghen/blink.download",
-	{ src = "https://github.com/saghen/blink.pairs", version = "v0.4.1" },
+	{ src = "https://github.com/saghen/blink.pairs", version = vim.version.range("^0") },
 	"https://github.com/kylechui/nvim-surround",
 
 	-- editor
@@ -171,9 +169,15 @@ vim.pack.add({
 
 -- Set up fff and treesitter {{{
 vim.api.nvim_create_autocmd("PackChanged", {
-	callback = function(event)
-		if event.data.updated then
+	callback = function(ev)
+		local name, kind = ev.data.spec.name, ev.data.kind
+		if kind ~= "install" and kind ~= "update" then
+			return
+		end
+
+		if name == "fff.nvim" then
 			require("fff.download").download_or_build_binary()
+		elseif name == "nvim-treesitter" then
 			vim.cmd.TSUpdate()
 		end
 	end,
