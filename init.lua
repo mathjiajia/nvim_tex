@@ -4,6 +4,11 @@ vim.cmd.colorscheme("bamboo")
 -- Set up globals {{{
 do
 	local user_globals = {
+		loaded_node_provider = 0,
+		loaded_perl_provider = 0,
+		loaded_python3_provider = 0,
+		loaded_ruby_provider = 0,
+
 		loaded_gzip = 1,
 		loaded_matchit = 1,
 		loaded_matchparen = 1,
@@ -120,7 +125,7 @@ vim.diagnostic.config({
 -- }}}
 
 vim.schedule(function()
-	require("vim._extui").enable({ msg = { target = "msg" } })
+	require("vim._core.ui2").enable({ msg = { target = "msg" } })
 end)
 
 -- Set up vim.pack {{{
@@ -128,30 +133,31 @@ vim.pack.add({
 	-- coding
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/mathjiajia/nvim-math-snippets",
-	"https://github.com/fang2hou/blink-copilot",
+	-- "https://github.com/fang2hou/blink-copilot",
 	{ src = "https://github.com/mikavilpas/blink-ripgrep.nvim", version = vim.version.range("^2") },
-	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
-	"https://github.com/saghen/blink.download",
-	{ src = "https://github.com/saghen/blink.pairs", version = vim.version.range("^0") },
+	{ src = "https://github.com/saghen/blink.cmp",              version = vim.version.range("^1") },
+	"https://github.com/saghen/blink.lib",
+	{ src = "https://github.com/saghen/blink.pairs",       version = "v0.5.0" },
 	"https://github.com/kylechui/nvim-surround",
 
 	-- editor
 	"https://github.com/dmtrKovalenko/fff.nvim",
 	"https://github.com/folke/snacks.nvim",
 
-	"https://github.com/folke/sidekick.nvim",
+	-- "https://github.com/folke/sidekick.nvim",
 
 	"https://github.com/MagicDuck/grug-far.nvim",
 
 	"https://github.com/nvim-mini/mini.diff",
 	"https://github.com/tpope/vim-fugitive",
-	{ src = "https://github.com/esmuellert/vscode-diff.nvim", version = vim.version.range("^1") },
+	{ src = "https://github.com/esmuellert/codediff.nvim", version = vim.version.range("^2") },
 
 	-- lang
 	-- "https://github.com/nvim-lua/plenary.nvim",
 	-- "https://github.com/Julian/lean.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
-	"https://github.com/mathjiajia/nvim-latex-conceal",
+	-- "https://github.com/mathjiajia/nvim-latex-conceal",
+	"https://github.com/pxwg/math-conceal.nvim",
 
 	-- formatters
 	"https://github.com/stevearc/conform.nvim",
@@ -175,25 +181,31 @@ vim.api.nvim_create_autocmd("PackChanged", {
 			return
 		end
 
-		if name == "fff.nvim" then
-			require("fff.download").download_or_build_binary()
-		elseif name == "nvim-treesitter" then
+		if name == "nvim-treesitter" then
+			if not ev.data.active then
+				vim.cmd.packadd("nvim-treesitter")
+			end
 			vim.cmd.TSUpdate()
+		elseif name == "fff.nvim" then
+			if not ev.data.active then
+				vim.cmd.packadd("fff.nvim")
+			end
+			require("fff.download").download_or_build_binary()
 		end
 	end,
 })
 -- }}}
 
-vim.keymap.set("n", "<leader>gv", ":G<CR>") -- open Git view
+vim.keymap.set("n", "<leader>gv", ":G<CR>")                        -- open Git view
 
-vim.keymap.set("n", "<leader>gs", ":Gwrite <CR>") -- git stage
-vim.keymap.set("n", "<leader>gc", ":G commit<CR>") -- git commit
-vim.keymap.set("n", "<leader>gd", ":G diff<CR>") -- git diff
-vim.keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>") -- git stage and commit
+vim.keymap.set("n", "<leader>gs", ":Gwrite <CR>")                  -- git stage
+vim.keymap.set("n", "<leader>gc", ":G commit<CR>")                 -- git commit
+vim.keymap.set("n", "<leader>gd", ":G diff<CR>")                   -- git diff
+vim.keymap.set("n", "<leader>gg", ":Gwrite | :G commit<CR>")       -- git stage and commit
 
-vim.keymap.set("n", "<leader>gp", ":G push<CR>") -- git push
+vim.keymap.set("n", "<leader>gp", ":G push<CR>")                   -- git push
 vim.keymap.set("n", "<leader>gl", ":G log --pretty --oneline<CR>") -- git log
-vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>") -- git rebase
+vim.keymap.set("n", "<leader>gi", ":G rebase -i<CR>")              -- git rebase
 
 require("mini.icons").setup()
 
@@ -208,7 +220,7 @@ require("snacks").setup({
 	},
 })
 
-require("sidekick").setup({})
+-- require("sidekick").setup({})
 
 require("nvim-surround").setup({})
 
@@ -278,7 +290,6 @@ require("conform").setup({
 	formatters_by_ft = {
 		bib = { "bibtex-tidy" },
 		fish = { "fish_indent" },
-		lua = { "stylua" },
 		markdown = { "prettier" },
 		tex = { "tex-fmt" },
 	},
@@ -316,9 +327,10 @@ require("blink.cmp").setup({
 	},
 	snippets = { preset = "luasnip" },
 	sources = {
-		default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
+		default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+		-- default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
 		providers = {
-			copilot = { async = true, module = "blink-copilot", name = "Copilot" },
+			-- copilot = { async = true, module = "blink-copilot", name = "Copilot" },
 			ripgrep = { module = "blink-ripgrep", name = "Ripgrep" },
 			snippets = { opts = { show_autosnippets = false } },
 		},
@@ -371,8 +383,8 @@ do
 			mode = "x",
 			options = { desc = "Paste w/o overwriting clipboard (unnamedplus)" },
 		},
-		{ action = "<Esc>/\\%V", key = "/", mode = "x", options = { desc = "search within visual selection" } },
-		{ action = vim.diagnostic.setqflist, key = "<leader>qq", mode = "n", options = { desc = "Set [Q]uickfix" } },
+		{ action = "<Esc>/\\%V",              key = "/",          mode = "x", options = { desc = "search within visual selection" } },
+		{ action = vim.diagnostic.setqflist,  key = "<leader>qq", mode = "n", options = { desc = "Set [Q]uickfix" } },
 		{ action = vim.diagnostic.setloclist, key = "<leader>ql", mode = "n", options = { desc = "Set [L]oclist" } },
 		{
 			action = function()
@@ -406,11 +418,27 @@ do
 		{ action = "<Cmd>FFFFind<CR>", key = "<leader>ff", mode = "n", options = { desc = "[F]ile [F]inder" } },
 		{
 			action = function()
-				require("fff").find_in_git_root()
+				require("fff").live_grep()
 			end,
 			key = "<leader>fg",
 			mode = "n",
-			options = { desc = "[F]ind [G]it Files" },
+			options = { desc = "LiFFFe grep" },
+		},
+		{
+			action = function()
+				require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
+			end,
+			key = "<leader>fz",
+			mode = "n",
+			options = { desc = "Live fffuzy grep" },
+		},
+		{
+			action = function()
+				require("fff").live_grep({ query = vim.fn.expand("<cword>") })
+			end,
+			key = "<leader>fc",
+			mode = "n",
+			options = { desc = "Search current word" },
 		},
 
 		{
@@ -501,22 +529,22 @@ do
 			mode = "n",
 			options = { desc = "Grep Open [B]uffers" },
 		},
-		{
-			action = function()
-				Snacks.picker.grep()
-			end,
-			key = "<leader>sg",
-			mode = "n",
-			options = { desc = "[G]rep" },
-		},
-		{
-			action = function()
-				Snacks.picker.grep_word()
-			end,
-			key = "<leader>sw",
-			mode = { "n", "x" },
-			options = { desc = "Visual selection or [W]ord" },
-		},
+		-- {
+		-- 	action = function()
+		-- 		Snacks.picker.grep()
+		-- 	end,
+		-- 	key = "<leader>sg",
+		-- 	mode = "n",
+		-- 	options = { desc = "[G]rep" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		Snacks.picker.grep_word()
+		-- 	end,
+		-- 	key = "<leader>sw",
+		-- 	mode = { "n", "x" },
+		-- 	options = { desc = "Visual selection or [W]ord" },
+		-- },
 		{
 			action = function()
 				Snacks.picker.registers()
@@ -689,80 +717,80 @@ do
 			options = { desc = "Change Choice", silent = true },
 		},
 
-		{
-			action = function()
-				if not require("sidekick").nes_jump_or_apply() then
-					return "<Tab>"
-				end
-			end,
-			key = "<Tab>",
-			mode = "n",
-			options = { desc = "Sidekick Toggle CLI", expr = true },
-		},
-		{
-			action = function()
-				require("sidekick.cli").toggle()
-			end,
-			key = "<C-.>",
-			mode = { "n", "x", "i", "t" },
-			options = { desc = "Sidekick Switch Focus" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").toggle()
-			end,
-			key = "<leader>aa",
-			mode = "n",
-			options = { desc = "Sidekick Toggle CLI" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").select({ filter = { installed = true } })
-			end,
-			key = "<leader>as",
-			mode = "n",
-			options = { desc = "Sidekick Select CLI" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").close()
-			end,
-			key = "<leader>ad",
-			mode = "n",
-			options = { desc = "Detach a CLI Session" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").send({ msg = "{this}" })
-			end,
-			key = "<leader>at",
-			mode = { "x", "n" },
-			options = { desc = "Send This" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").send({ msg = "{file}" })
-			end,
-			key = "<leader>af",
-			mode = "n",
-			options = { desc = "Send File" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").send({ msg = "{selection}" })
-			end,
-			key = "<leader>av",
-			mode = "x",
-			options = { desc = "Send Visual Selection" },
-		},
-		{
-			action = function()
-				require("sidekick.cli").select_prompt()
-			end,
-			key = "<leader>ap",
-			mode = { "n", "x" },
-			options = { desc = "Sidekick Prompt Picker" },
-		},
+		-- {
+		-- 	action = function()
+		-- 		if not require("sidekick").nes_jump_or_apply() then
+		-- 			return "<Tab>"
+		-- 		end
+		-- 	end,
+		-- 	key = "<Tab>",
+		-- 	mode = "n",
+		-- 	options = { desc = "Sidekick Toggle CLI", expr = true },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").toggle()
+		-- 	end,
+		-- 	key = "<C-.>",
+		-- 	mode = { "n", "x", "i", "t" },
+		-- 	options = { desc = "Sidekick Switch Focus" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").toggle()
+		-- 	end,
+		-- 	key = "<leader>aa",
+		-- 	mode = "n",
+		-- 	options = { desc = "Sidekick Toggle CLI" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").select({ filter = { installed = true } })
+		-- 	end,
+		-- 	key = "<leader>as",
+		-- 	mode = "n",
+		-- 	options = { desc = "Sidekick Select CLI" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").close()
+		-- 	end,
+		-- 	key = "<leader>ad",
+		-- 	mode = "n",
+		-- 	options = { desc = "Detach a CLI Session" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").send({ msg = "{this}" })
+		-- 	end,
+		-- 	key = "<leader>at",
+		-- 	mode = { "x", "n" },
+		-- 	options = { desc = "Send This" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").send({ msg = "{file}" })
+		-- 	end,
+		-- 	key = "<leader>af",
+		-- 	mode = "n",
+		-- 	options = { desc = "Send File" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").send({ msg = "{selection}" })
+		-- 	end,
+		-- 	key = "<leader>av",
+		-- 	mode = "x",
+		-- 	options = { desc = "Send Visual Selection" },
+		-- },
+		-- {
+		-- 	action = function()
+		-- 		require("sidekick.cli").select_prompt()
+		-- 	end,
+		-- 	key = "<leader>ap",
+		-- 	mode = { "n", "x" },
+		-- 	options = { desc = "Sidekick Prompt Picker" },
+		-- },
 	}
 	for _, map in ipairs(user_binds) do
 		vim.keymap.set(map.mode, map.key, map.action, map.options)
@@ -798,7 +826,8 @@ end
 
 -- LSP {{{
 do
-	vim.lsp.enable({ "copilot", "lua_ls", "marksman", "texlab" })
+	vim.lsp.enable({ "emmylua_ls", "marksman", "texlab" })
+	-- vim.lsp.enable({ "copilot", "emmylua_ls", "marksman", "texlab" })
 end
 -- }}}
 
@@ -843,10 +872,10 @@ do
 				local exclude_ft = { "gitcommit" }
 				local buf = ev.buf
 				if
-					vim.list_contains(exclude_bt, vim.bo[buf].buftype)
-					or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
-					or vim.api.nvim_win_get_cursor(0)[1] > 1
-					or vim.b[buf].last_pos
+						vim.list_contains(exclude_bt, vim.bo[buf].buftype)
+						or vim.list_contains(exclude_ft, vim.bo[buf].filetype)
+						or vim.api.nvim_win_get_cursor(0)[1] > 1
+						or vim.b[buf].last_pos
 				then
 					return
 				end
@@ -922,12 +951,7 @@ do
 					end
 
 					if client:supports_method("textDocument/codeLens", bufnr) then
-						vim.lsp.codelens.refresh()
-						vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "CursorHold" }, {
-							group = vim.api.nvim_create_augroup("CodelensRefresh", {}),
-							buffer = bufnr,
-							callback = vim.lsp.codelens.refresh,
-						})
+						vim.lsp.codelens.enable(true, { bufnr = bufnr })
 					end
 
 					if client:supports_method("textDocument/inlayHint", bufnr) then
@@ -951,12 +975,8 @@ do
 		vim.api.nvim_create_autocmd(autocmd.event, {
 			group = autocmd.group,
 			pattern = autocmd.pattern,
-			buffer = autocmd.buffer,
 			desc = autocmd.desc,
 			callback = autocmd.callback,
-			command = autocmd.command,
-			once = autocmd.once,
-			nested = autocmd.nested,
 		})
 	end
 end

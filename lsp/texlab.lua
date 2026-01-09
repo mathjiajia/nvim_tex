@@ -146,6 +146,17 @@ return {
 				forwardSearchAfter = false,
 				onSave = true,
 			},
+			diagnostics = {
+				ignoredPatterns = {
+					"Overfull",
+					"Underfull",
+					"Package hyperref Warning",
+					"Float too large for page",
+					"contains only floats",
+				},
+			},
+			diagnosticsDelay = 300,
+			formatterLineLength = 120,
 			forwardSearch = {
 				executable = "sioyek",
 				args = {
@@ -163,16 +174,7 @@ return {
 				-- executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
 				-- args = { "-r", "%l", "%p", "%f" },
 			},
-			diagnosticsDelay = 300,
-			diagnostics = {
-				ignoredPatterns = {
-					"Overfull",
-					"Underfull",
-					"Package hyperref Warning",
-					"Float too large for page",
-					"contains only floats",
-				},
-			},
+			latexFormatter = "tex-fmt",
 		},
 	},
 	on_attach = function(client, bufnr)
